@@ -2,87 +2,124 @@
 // MASH — Martinez Star Home | main.js
 // ============================================
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-  /* ─── NAV: scroll state ─── */
-  const nav = document.getElementById('nav');
-  const onScroll = () => {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  /* ───────── NAV SCROLL ───────── */
+  const nav = document.getElementById("nav");
 
-  /* ─── NAV: mobile toggle ─── */
-  const navToggle = document.getElementById('navToggle');
-  const navLinks  = document.getElementById('navLinks');
+  window.addEventListener("scroll", () => {
+    nav.classList.toggle("scrolled", window.scrollY > 40);
+  }, { passive: true });
 
-  navToggle.addEventListener('click', () => {
-    const open = navLinks.classList.toggle('open');
-    navToggle.classList.toggle('open', open);
-    document.body.style.overflow = open ? 'hidden' : '';
+
+
+  /* ───────── NAV MOBILE ───────── */
+  const navToggle = document.getElementById("navToggle");
+  const navLinks = document.getElementById("navLinks");
+
+  navToggle.addEventListener("click", () => {
+
+    const isOpen = navLinks.classList.toggle("is-open");
+
+    navToggle.classList.toggle("is-open", isOpen);
+
+    document.body.style.overflow = isOpen ? "hidden" : "";
+
   });
 
-  // Close on link click
-  navLinks.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      navLinks.classList.remove('open');
-      navToggle.classList.remove('open');
-      document.body.style.overflow = '';
+  navLinks.querySelectorAll("a").forEach(a => {
+    a.addEventListener("click", () => {
+      navLinks.classList.remove("is-open");
+      navToggle.classList.remove("is-open");
+      document.body.style.overflow = "";
     });
   });
 
-  /* ─── CAROUSEL: pause/resume + manual prev/next ─── */
-  document.querySelectorAll('.car-btn').forEach(btn => {
-    const trackId = btn.dataset.track;
-    const track   = document.getElementById(trackId);
+  navLinks.addEventListener("click", (e) => {
+    if (e.target === navLinks) {
+      navLinks.classList.remove("is-open");
+      navToggle.classList.remove("is-open");
+      document.body.style.overflow = "";
+    }
+  });
+
+
+
+  /* ───────── CAROUSEL BUTTONS ───────── */
+
+  const buttons = document.querySelectorAll(".car-btn");
+
+  buttons.forEach(button => {
+
+    const trackId = button.dataset.track;
+    const track = document.getElementById(trackId);
+
     if (!track) return;
 
-    btn.addEventListener('click', () => {
-      const slideW  = track.querySelector('.slide')?.offsetWidth || 0;
-      const gap     = 20;
-      const step    = slideW + gap;
-      const dir     = btn.classList.contains('prev') ? -1 : 1;
+    button.addEventListener("click", () => {
 
-      // Temporarily pause animation
-      track.style.animationPlayState = 'paused';
+      const slide = track.querySelector(".slide");
 
-      // Shift current offset
-      const current = getComputedStyle(track).transform;
-      const mat     = new DOMMatrix(current);
-      let   newX    = mat.m41 + dir * -step;
+      if (!slide) return;
 
-      // Clamp: reset to 0 when reaching half (duplicated slides start)
-      const half = track.scrollWidth / 2;
-      if (newX < -half) newX = 0;
-      if (newX > 0)     newX = -half + step;
+      const slideWidth = slide.offsetWidth + 20;
+
+      const direction = button.classList.contains("next") ? -1 : 1;
+
+      const currentTransform = getComputedStyle(track).transform;
+
+      const matrix = new DOMMatrix(currentTransform);
+
+      let newX = matrix.m41 + (direction * slideWidth);
+
+      const limit = track.scrollWidth / 2;
+
+      if (newX < -limit) newX = 0;
+
+      if (newX > 0) newX = -limit + slideWidth;
+
+      track.style.animationPlayState = "paused";
 
       track.style.transform = `translateX(${newX}px)`;
 
-      // Resume auto-scroll after a short delay
-      clearTimeout(track._resumeTimer);
-      track._resumeTimer = setTimeout(() => {
-        track.style.transform = '';
-        track.style.animationPlayState = 'running';
+      clearTimeout(track._resume);
+
+      track._resume = setTimeout(() => {
+
+        track.style.transform = "";
+
+        track.style.animationPlayState = "running";
+
       }, 3500);
+
     });
+
   });
 
-  /* ─── SCROLL REVEAL ─── */
-  const reveals = document.querySelectorAll(
-    '.section-intro, .material-card, .care-card, .yascari-content, .yascari-portrait, .materials-quote'
+
+
+  /* ───────── SCROLL REVEAL ───────── */
+
+  const revealElements = document.querySelectorAll(
+    ".section-intro, .material-card, .care-card, .yascari-content, .yascari-portrait, .materials-quote"
   );
 
-  reveals.forEach(el => el.classList.add('reveal'));
+  revealElements.forEach(el => el.classList.add("reveal"));
 
-  const revealObs = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
+  const observer = new IntersectionObserver(entries => {
+
+    entries.forEach(entry => {
+
       if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 80);
-        revealObs.unobserve(entry.target);
+
+        entry.target.classList.add("visible");
+
       }
+
     });
+
   }, { threshold: 0.12 });
 
-  reveals.forEach(el => revealObs.observe(el));
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
 
 });
