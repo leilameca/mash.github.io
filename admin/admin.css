@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Outfit:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #f5efe7;
+  --panel: rgba(255, 255, 255, 0.82);
+  --panel-dark: #201611;
+  --gold: #b6945c;
+  --gold-soft: #dcc7a1;
+  --text: #231914;
+  --text-soft: #6f6157;
+  --line: rgba(74, 53, 40, 0.12);
+  --shadow: 0 24px 80px rgba(27, 17, 12, 0.12);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Outfit', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--sans);
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(182, 148, 92, 0.18), transparent 28%),
+    linear-gradient(180deg, #fbf7f1 0%, #f4ede4 100%);
+}
+
+.admin-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+}
+
+.admin-brand {
+  padding: 48px 38px;
+  background: linear-gradient(180deg, rgba(32, 22, 17, 0.96) 0%, rgba(45, 31, 24, 0.94) 100%);
+  color: #f7efe4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-brand::after {
+  content: "";
+  position: absolute;
+  inset: auto -120px -120px auto;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(215, 195, 154, 0.35) 0%, rgba(215, 195, 154, 0) 72%);
+}
+
+.admin-logo {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  border-radius: 24px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.admin-kicker {
+  margin: 0;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--gold-soft);
+}
+
+.admin-brand h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  line-height: 0.94;
+  letter-spacing: 0.02em;
+}
+
+.admin-copy {
+  margin: 0;
+  max-width: 34ch;
+  line-height: 1.8;
+  color: rgba(247, 239, 228, 0.84);
+}
+
+.admin-app {
+  padding: 24px;
+}
+
+#nc-root {
+  min-height: calc(100vh - 48px);
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 980px) {
+  .admin-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-brand {
+    padding: 32px 24px;
+  }
+
+  .admin-app {
+    padding: 18px;
+  }
+
+  #nc-root {
+    min-height: 70vh;
+  }
+}

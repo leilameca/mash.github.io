@@ -734,6 +734,10 @@ ul {
   display: none;
 }
 
+.gallery-track-featured {
+  grid-auto-columns: minmax(100%, 100%);
+}
+
 .product-card {
   scroll-snap-align: start;
   min-width: 0;
@@ -757,6 +761,10 @@ ul {
 
 .product-card:hover img {
   transform: scale(1.02);
+}
+
+.product-card-full {
+  min-width: 100%;
 }
 
 .product-copy {

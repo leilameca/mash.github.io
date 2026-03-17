@@ -1,0 +1,54 @@
+local_backend: true
+
+backend:
+  name: github
+  repo: leilameca/mash.github.io
+  branch: main
+  # GitHub Pages necesita un servidor OAuth intermedio para completar el login.
+  # Cuando lo tengas publicado, agrega:
+  # base_url: https://TU-AUTH-SERVER.ejemplo.com
+  # auth_endpoint: auth
+
+media_folder: "assets/images/uploads"
+public_folder: "/assets/images/uploads"
+
+publish_mode: editorial_workflow
+
+collections:
+  - name: "catalogo"
+    label: "Catalogo"
+    files:
+      - name: "colecciones"
+        label: "Colecciones"
+        file: "data/colecciones.json"
+        format: "json"
+        fields:
+          - label: "Colecciones"
+            name: "collections"
+            widget: "list"
+            summary: "{{fields.label}}"
+            fields:
+              - { label: "ID", name: "id", widget: "string", hint: "Usa un valor corto sin espacios, por ejemplo: momentos" }
+              - label: "Estilo"
+                name: "style"
+                widget: "select"
+                options:
+                  - { label: "Normal", value: "default" }
+                  - { label: "Alterna", value: "alt" }
+              - { label: "Etiqueta superior", name: "label", widget: "string" }
+              - { label: "Titulo", name: "title", widget: "string", hint: "Puedes usar <em>...</em> para resaltar una palabra." }
+              - { label: "Descripcion", name: "description", widget: "text" }
+              - { label: "Etiqueta de nota", name: "note_label", widget: "string" }
+              - { label: "Texto de nota", name: "note_text", widget: "text" }
+              - { label: "Badge", name: "badge", widget: "string" }
+              - { label: "Texto de apoyo", name: "meta_text", widget: "text" }
+              - { label: "Es destacado", name: "featured", widget: "boolean", required: false, default: false }
+              - label: "Productos"
+                name: "products"
+                widget: "list"
+                summary: "{{fields.name}}"
+                fields:
+                  - { label: "Nombre", name: "name", widget: "string" }
+                  - { label: "Imagen", name: "image", widget: "image" }
+                  - { label: "Texto alternativo", name: "alt", widget: "string", required: false }
+                  - { label: "Descripcion", name: "description", widget: "text" }

@@ -1,0 +1,180 @@
+{
+  "collections": [
+    {
+      "id": "momentos",
+      "style": "default",
+      "label": "Momentos para Compartir",
+      "title": "Sets que invitan a <em>quedarse mas tiempo</em>",
+      "description": "Esta coleccion esta pensada para patios y terrazas donde siempre pasa algo: una visita, un cafe, una conversacion larga o una tarde en familia.",
+      "note_label": "Perfecto para",
+      "note_text": "Terrazas sociales, patios amplios y espacios para recibir.",
+      "badge": "7 referencias",
+      "meta_text": "Si ves uno que te guste, escribenos por WhatsApp y te ayudamos a cotizarlo.",
+      "featured": false,
+      "products": [
+        {
+          "name": "Oasis Set",
+          "image": "assets/images/oasis-set.jpg",
+          "alt": "Oasis Set",
+          "description": "Un set amplio y elegante para terrazas donde quieres recibir con estilo y comodidad."
+        },
+        {
+          "name": "Candor Clasico",
+          "image": "assets/images/candor-clasico.jpg",
+          "alt": "Candor Clasico",
+          "description": "Un clasico bien logrado: comodo, sobrio y facil de combinar con distintos ambientes."
+        },
+        {
+          "name": "Candor L",
+          "image": "assets/images/candor-l.jpg",
+          "alt": "Candor en L",
+          "description": "Ideal para aprovechar esquinas y crear un ambiente social mas amplio y funcional."
+        },
+        {
+          "name": "Media Luna",
+          "image": "assets/images/media-luna.jpg",
+          "alt": "Set Media Luna",
+          "description": "Una opcion llamativa para quien quiere un punto focal diferente y con mucha personalidad."
+        },
+        {
+          "name": "Tar Set",
+          "image": "assets/images/tarset.jpeg",
+          "alt": "Tar Set",
+          "description": "Ligero a la vista, practico y muy bueno para terrazas modernas de estilo limpio."
+        },
+        {
+          "name": "Butacas Clasicas",
+          "image": "assets/images/set-butacas-clasicas.jpeg",
+          "alt": "Butacas Clasicas",
+          "description": "El rincon perfecto para conversar, relajarte y disfrutar la vista."
+        },
+        {
+          "name": "Area Set",
+          "image": "assets/images/areaset.jpeg",
+          "alt": "Area Set",
+          "description": "Una propuesta versatil para hogares y proyectos que buscan verse bien sin recargar el espacio."
+        }
+      ]
+    },
+    {
+      "id": "cenas",
+      "style": "alt",
+      "label": "Cenas bajo el Cielo",
+      "title": "Comer afuera tambien puede sentirse <em>especial</em>",
+      "description": "Mesas y sillas pensadas para compartir en balcones, terrazas y comedores exteriores con una imagen cuidada y funcional.",
+      "note_label": "Perfecto para",
+      "note_text": "Balcones, rooftops y areas de comedor al aire libre.",
+      "badge": "5 referencias",
+      "meta_text": "Te mostramos opciones reales para que visualices mejor como se veria tu espacio.",
+      "featured": false,
+      "products": [
+        {
+          "name": "Oculus Mare",
+          "image": "assets/images/oculus-mare-dining.jpg",
+          "alt": "Oculus Mare Dining",
+          "description": "Una mesa con presencia moderna para quienes quieren un comedor exterior con caracter."
+        },
+        {
+          "name": "Rombois Set",
+          "image": "assets/images/rombois-set.jpg",
+          "alt": "Rombois Set",
+          "description": "Calido, elegante y muy acogedor para cenas en familia o reuniones entre amigos."
+        },
+        {
+          "name": "Candor Combinado",
+          "image": "assets/images/candor-combinado.jpg",
+          "alt": "Candor Combinado",
+          "description": "Una opcion flexible para espacios donde quieres comer, conversar y relajarte en un mismo ambiente."
+        },
+        {
+          "name": "Candor Collection",
+          "image": "assets/images/candor-collection.jpeg",
+          "alt": "Candor Collection",
+          "description": "Convierte tu balcon en un espacio de lujo. Comedor de exterior elegante y comodo para disfrutar cada momento."
+        },
+        {
+          "name": "Oculus Compacto",
+          "image": "assets/images/oculus-mare-compacto.jpg",
+          "alt": "Oculus Mare Compacto",
+          "description": "Ideal para espacios mas pequenos sin perder estilo ni una buena presencia visual."
+        }
+      ]
+    },
+    {
+      "id": "oasis",
+      "style": "default",
+      "label": "Tu Oasis Privado",
+      "title": "Una zona de descanso que de verdad se sienta <em>exclusiva</em>",
+      "description": "Aqui encuentras piezas para crear un rincon de paz en tu casa, junto a la piscina o en un jardin pensado para desconectar.",
+      "note_label": "Perfecto para",
+      "note_text": "Piscinas, jardines, villas y espacios de descanso exterior.",
+      "badge": "7 referencias",
+      "meta_text": "Si buscas un look tipo resort en casa, esta es la coleccion por donde empezar.",
+      "featured": false,
+      "products": [
+        {
+          "name": "Balinesa Trap",
+          "image": "assets/images/cama-balinesa-trap.jpg",
+          "alt": "Cama Balinesa Trap",
+          "description": "Una cama balinesa que transforma cualquier area de piscina en un espacio de descanso premium."
+        },
+        {
+          "name": "Balinesa Candor",
+          "image": "assets/images/cama-balinesa-candor.jpg",
+          "alt": "Cama Balinesa Candor",
+          "description": "Elegante, limpia y acogedora para quienes quieren un espacio relajado y bien montado."
+        },
+        {
+          "name": "Chaise Candor",
+          "image": "assets/images/chaise-candor.jpg",
+          "alt": "Chaise Candor",
+          "description": "Una chaise comoda y bonita para tomar sol, leer o simplemente descansar mejor."
+        },
+        {
+          "name": "Cama Balinesa",
+          "image": "assets/images/cama-balinesa.jpeg",
+          "alt": "Cama Balinesa",
+          "description": "Tu propio rincon de descanso, estilo resort."
+        },
+        {
+          "name": "Set de cama Trap",
+          "image": "assets/images/set-cama-trap.jpeg",
+          "alt": "Set de cama Trap",
+          "description": "Descansar con estilo nunca fue tan sencillo."
+        },
+        {
+          "name": "Oculus Chaise",
+          "image": "assets/images/oculus-chaise.jpg",
+          "alt": "Oculus Chaise",
+          "description": "Diseno con mucha presencia para un ambiente exterior que quiera verse diferente y mas exclusivo."
+        },
+        {
+          "name": "Oculus Descanso",
+          "image": "assets/images/oculusmaredinasty.jpeg",
+          "alt": "Oculus Descanso",
+          "description": "Una pieza pensada para relajarte con comodidad y darle valor visual a tu area exterior."
+        }
+      ]
+    },
+    {
+      "id": "destacado",
+      "style": "default",
+      "label": "Destacado",
+      "title": "Una coleccion que lo tiene <em>todo</em>",
+      "description": "Este set combina comodidad, diseno y presencia en un solo espacio. Ideal para terrazas donde quieres que todo se vea bien sin complicarte.",
+      "note_label": "Recomendado para",
+      "note_text": "Terrazas modernas, patios amplios y espacios de alto nivel.",
+      "badge": "Producto destacado",
+      "meta_text": "Si te interesa este set, escribenos y te ayudamos a cotizarlo segun tu espacio.",
+      "featured": true,
+      "products": [
+        {
+          "name": "Candor Mix Collection",
+          "image": "assets/images/candor-mix-collection.jpeg",
+          "alt": "Candor Mix Collection",
+          "description": "Un set completo que equilibra confort, elegancia y materiales de calidad para crear un ambiente exterior que invita a quedarse."
+        }
+      ]
+    }
+  ]
+}
