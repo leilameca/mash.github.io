@@ -51,3 +51,4 @@ Para que el login funcione en produccion con GitHub Pages, hace falta un servido
 
 - `local_backend: true` ya esta activado.
 - Para pruebas locales del CMS necesitas correr un backend local de Decap y servir el sitio en local.
+gracias
