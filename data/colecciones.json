@@ -1,22 +1,13 @@
 {
   "collections": [
     {
-      "id": "momentos",
-      "style": "default",
-      "label": "Momentos para Compartir",
-      "title": "Sets que invitan a <em>quedarse mas tiempo</em>",
-      "description": "Esta coleccion esta pensada para patios y terrazas donde siempre pasa algo: una visita, un cafe, una conversacion larga o una tarde en familia.",
-      "note_label": "Perfecto para",
-      "note_text": "Terrazas sociales, patios amplios y espacios para recibir.",
       "badge": "7 referencias",
-      "meta_text": "Si ves uno que te guste, escribenos por WhatsApp y te ayudamos a cotizarlo.",
-      "featured": false,
       "products": [
         {
           "name": "Oasis Set",
           "image": "assets/images/oasis-set.jpg",
           "alt": "Oasis Set",
-          "description": "Un set amplio y elegante para terrazas donde quieres recibir con estilo y comodidad."
+          "description": "Un set amplio y elegante para terrazas donde quieres recibir con estilo y comodidad.."
         },
         {
           "name": "Candor Clasico",
@@ -54,19 +45,19 @@
           "alt": "Area Set",
           "description": "Una propuesta versatil para hogares y proyectos que buscan verse bien sin recargar el espacio."
         }
-      ]
+      ],
+      "note_label": "Perfecto para",
+      "meta_text": "Si ves uno que te guste, escribenos por WhatsApp y te ayudamos a cotizarlo.",
+      "featured": false,
+      "style": "default",
+      "label": "Momentos para Compartir",
+      "title": "Sets que invitan a <em>quedarse mas tiempo</em>",
+      "note_text": "Terrazas sociales, patios amplios y espacios para recibir.",
+      "id": "momentos",
+      "description": "Esta coleccion esta pensada para patios y terrazas donde siempre pasa algo: una visita, un cafe, una conversacion larga o una tarde en familia."
     },
     {
-      "id": "cenas",
-      "style": "alt",
-      "label": "Cenas bajo el Cielo",
-      "title": "Comer afuera tambien puede sentirse <em>especial</em>",
-      "description": "Mesas y sillas pensadas para compartir en balcones, terrazas y comedores exteriores con una imagen cuidada y funcional.",
-      "note_label": "Perfecto para",
-      "note_text": "Balcones, rooftops y areas de comedor al aire libre.",
       "badge": "5 referencias",
-      "meta_text": "Te mostramos opciones reales para que visualices mejor como se veria tu espacio.",
-      "featured": false,
       "products": [
         {
           "name": "Oculus Mare",
@@ -98,19 +89,19 @@
           "alt": "Oculus Mare Compacto",
           "description": "Ideal para espacios mas pequenos sin perder estilo ni una buena presencia visual."
         }
-      ]
+      ],
+      "note_label": "Perfecto para",
+      "meta_text": "Te mostramos opciones reales para que visualices mejor como se veria tu espacio.",
+      "featured": false,
+      "style": "alt",
+      "label": "Cenas bajo el Cielo",
+      "title": "Comer afuera tambien puede sentirse <em>especial</em>",
+      "note_text": "Balcones, rooftops y areas de comedor al aire libre.",
+      "id": "cenas",
+      "description": "Mesas y sillas pensadas para compartir en balcones, terrazas y comedores exteriores con una imagen cuidada y funcional."
     },
     {
-      "id": "oasis",
-      "style": "default",
-      "label": "Tu Oasis Privado",
-      "title": "Una zona de descanso que de verdad se sienta <em>exclusiva</em>",
-      "description": "Aqui encuentras piezas para crear un rincon de paz en tu casa, junto a la piscina o en un jardin pensado para desconectar.",
-      "note_label": "Perfecto para",
-      "note_text": "Piscinas, jardines, villas y espacios de descanso exterior.",
       "badge": "7 referencias",
-      "meta_text": "Si buscas un look tipo resort en casa, esta es la coleccion por donde empezar.",
-      "featured": false,
       "products": [
         {
           "name": "Balinesa Trap",
@@ -154,19 +145,19 @@
           "alt": "Oculus Descanso",
           "description": "Una pieza pensada para relajarte con comodidad y darle valor visual a tu area exterior."
         }
-      ]
+      ],
+      "note_label": "Perfecto para",
+      "meta_text": "Si buscas un look tipo resort en casa, esta es la coleccion por donde empezar.",
+      "featured": false,
+      "style": "default",
+      "label": "Tu Oasis Privado",
+      "title": "Una zona de descanso que de verdad se sienta <em>exclusiva</em>",
+      "note_text": "Piscinas, jardines, villas y espacios de descanso exterior.",
+      "id": "oasis",
+      "description": "Aqui encuentras piezas para crear un rincon de paz en tu casa, junto a la piscina o en un jardin pensado para desconectar."
     },
     {
-      "id": "destacado",
-      "style": "default",
-      "label": "Destacado",
-      "title": "Una coleccion que lo tiene <em>todo</em>",
-      "description": "Este set combina comodidad, diseno y presencia en un solo espacio. Ideal para terrazas donde quieres que todo se vea bien sin complicarte.",
-      "note_label": "Recomendado para",
-      "note_text": "Terrazas modernas, patios amplios y espacios de alto nivel.",
       "badge": "Producto destacado",
-      "meta_text": "Si te interesa este set, escribenos y te ayudamos a cotizarlo segun tu espacio.",
-      "featured": true,
       "products": [
         {
           "name": "Candor Mix Collection",
@@ -174,7 +165,16 @@
           "alt": "Candor Mix Collection",
           "description": "Un set completo que equilibra confort, elegancia y materiales de calidad para crear un ambiente exterior que invita a quedarse."
         }
-      ]
+      ],
+      "note_label": "Recomendado para",
+      "meta_text": "Si te interesa este set, escribenos y te ayudamos a cotizarlo segun tu espacio.",
+      "featured": true,
+      "style": "default",
+      "label": "Destacado",
+      "title": "Una coleccion que lo tiene <em>todo</em>",
+      "note_text": "Terrazas modernas, patios amplios y espacios de alto nivel.",
+      "id": "destacado",
+      "description": "Este set combina comodidad, diseno y presencia en un solo espacio. Ideal para terrazas donde quieres que todo se vea bien sin complicarte."
     }
   ]
 }
