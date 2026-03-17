@@ -1,293 +1,400 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="assets/images/logo.png">
-<title>MASH — Martinez Star Home</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MASH, mobiliario exterior de lujo con colecciones elegantes, materiales premium y asesoría de diseño personalizada.">
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <title>MASH - Martinez Star Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- NAV -->
 <header class="nav" id="nav">
   <div class="nav-inner">
- 
-
-    <a href="#" class="logo">M<span>A</span>SH</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Menú">
+    <a href="#top" class="logo" aria-label="MASH inicio">M<span>A</span>SH</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menu">
       <span></span><span></span><span></span>
     </button>
-    <nav class="nav-links" id="navLinks">
+    <nav class="nav-links" id="navLinks" aria-label="Principal">
+      <a href="#catalogo">Catalogo</a>
       <a href="#momentos">Colecciones</a>
-      <a href="#cenas">Dining</a>
-      <a href="#oasis">Oasis</a>
       <a href="#materiales">Materiales</a>
-      <a href="#yascari">Diseñadora</a>
+      <a href="#yascari">Disenadora</a>
       <a href="#contacto" class="nav-cta">Contacto</a>
     </nav>
   </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-media">
-    <img src="assets/images/oasis-hero.jpg" class="hero-img" alt="Oasis Collection">
-    <div class="hero-overlay"></div>
-  </div>
-  <div class="hero-content">
-    <p class="hero-eyebrow"><span class="line"></span>Colección 2025</p>
-    <h1 class="hero-title">Designing experiences<br><em>of luxury &amp; comfort</em></h1>
-    <p class="hero-sub">Más que muebles — diseñamos escenarios de exclusividad al aire libre</p>
-    <a href="#momentos" class="btn-hero">Explorar Colecciones <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-  </div>
-  <div class="hero-badge">
-    <span>Oasis</span>
-    <span>Collection</span>
-  </div>
-  <div class="scroll-hint">
-    <div class="scroll-line"></div>
-    <span>Scroll</span>
-  </div>
-</section>
-
-<!-- MOMENTOS PARA COMPARTIR -->
-<section id="momentos reveal" class="section">
-  <div class="section-intro">
-    <div class="section-label"><span></span>Momentos para Compartir</div>
-    <h2 class="section-title">Espacios que <em>reúnen</em></h2>
-    <p class="section-desc">Sets de sofás diseñados para convertir cada reunión en una experiencia memorable. Confort y estética al servicio de los vínculos.</p>
-  </div>
-  <div class="carousel" id="car1">
-    <div class="carousel-track" id="track1">
-      <div class="slide"><img src="assets/images/oasis-set.jpg" alt="Oasis Set"><div class="slide-caption"><span>Oasis Set</span></div></div>
-      <div class="slide"><img src="assets/images/candor-clasico.jpg" alt="Cander Clásico"><div class="slide-caption"><span>Cander Clásico</span></div></div>
-      <div class="slide"><img src="assets/images/candor-l.jpg" alt="Cander L"><div class="slide-caption"><span>Cander L</span></div></div>
-      <div class="slide"><img src="assets/images/media-luna.jpg" alt="Media Luna"><div class="slide-caption"><span>Media Luna</span></div></div>
-      <div class="slide"><img src="assets/images/tarset.jpeg" alt="Oculus Chaise"><div class="slide-caption"><span>tar set</span></div></div>
-      <div class="slide"><img src="assets/images/areaset.jpeg" alt="Oculus Chaise"><div class="slide-caption"><span>tar set</span></div></div>
-
-      <!-- duplicados loop -->
-      <div class="slide"><img src="assets/images/oasis-set.jpg" alt="Oasis Set"><div class="slide-caption"><span>Oasis Set</span></div></div>
-      <div class="slide"><img src="assets/images/candor-clasico.jpg" alt="Cander Clásico"><div class="slide-caption"><span>Cander Clásico</span></div></div>
-      <div class="slide"><img src="assets/images/candor-l.jpg" alt="Cander L"><div class="slide-caption"><span>Cander L</span></div></div>
-      <div class="slide"><img src="assets/images/media-luna.jpg" alt="Media Luna"><div class="slide-caption"><span>Media Luna</span></div></div>
-      <div class="slide"><img src="assets/images/tarset.jpeg" alt="Oculus Chaise"><div class="slide-caption"><span>tar set</span></div></div>
-      <div class="slide"><img src="assets/images/areaset.jpeg" alt="Oculus Chaise"><div class="slide-caption"><span>tar set</span></div></div>
-
-    <div class="carousel-controls">
-      <button class="car-btn prev" data-track="track1">&#8592;</button>
-      <button class="car-btn next" data-track="track1">&#8594;</button>
+<main id="top">
+  <section class="hero">
+    <div class="hero-media">
+      <img src="assets/images/oasis-hero.jpg" class="hero-img" alt="Coleccion exterior de lujo MASH">
+      <div class="hero-overlay"></div>
     </div>
-  </div>
-</section>
-
-<!-- DIVISOR -->
-<div class="divider-ornament"><span>◆</span></div>
-
-<!-- CENAS BAJO EL CIELO -->
-<section id="cenas" class="section section-alt">
-  <div class="section-intro">
-    <div class="section-label"><span></span>Cenas bajo el Cielo</div>
-    <h2 class="section-title">Dining <em>al aire libre</em></h2>
-    <p class="section-desc">Mesas y sillas que elevan cada velada. Donde la gastronomía encuentra el escenario perfecto: la noche abierta.</p>
-  </div>
-  <div class="carousel" id="car2">
-    <div class="carousel-track" id="track2" style="--dur:35s">
-      <div class="slide"><img src="assets/images/oculus-mare-dining.jpg" alt="Oculus Mare Dining"><div class="slide-caption"><span>Oculus Mare</span></div></div>
-      <div class="slide"><img src="assets/images/rombois-set.jpg" alt="Rombois Set"><div class="slide-caption"><span>Rombois Set</span></div></div>
-      <div class="slide"><img src="assets/images/candor-combinado.jpg" alt="Cander Combinado"><div class="slide-caption"><span>Cander Combinado</span></div></div>
-      <!-- duplicados -->
-      <div class="slide"><img src="assets/images/oculus-mare-dining.jpg" alt="Oculus Mare Dining"><div class="slide-caption"><span>Oculus Mare</span></div></div>
-      <div class="slide"><img src="assets/images/rombois-set.jpg" alt="Rombois Set"><div class="slide-caption"><span>Rombois Set</span></div></div>
-      <div class="slide"><img src="assets/images/candor-combinado.jpg" alt="Cander Combinado"><div class="slide-caption"><span>Cander Combinado</span></div></div>
-    </div>
-    <div class="carousel-controls">
-      <button class="car-btn prev" data-track="track2">&#8592;</button>
-      <button class="car-btn next" data-track="track2">&#8594;</button>
-    </div>
-  </div>
-</section>
-
-<!-- DIVISOR -->
-<div class="divider-ornament"><span>◆</span></div>
-
-<!-- TU OASIS PRIVADO -->
-<section id="oasis" class="section">
-  <div class="section-intro">
-    <div class="section-label"><span></span>Tu Oasis Privado</div>
-    <h2 class="section-title">Descanso <em>absoluto</em></h2>
-    <p class="section-desc">Camas balinesas y chaise loungues que transforman cada rincón en un destino de lujo. Para quienes saben que el lujo es silencio.</p>
-  </div>
-  <div class="carousel" id="car3">
-    <div class="carousel-track" id="track3" style="--dur:50s">
-      <div class="slide"><img src="assets/images/cama-balinesa-trap.jpg" alt="Cama Balinesa Trap"><div class="slide-caption"><span>Balinesa Trap</span></div></div>
-      <div class="slide"><img src="assets/images/cama-balinesa-candor.jpg" alt="Cama Balinesa Cander"><div class="slide-caption"><span>Balinesa Cander</span></div></div>
-      <div class="slide"><img src="assets/images/chaise-candor.jpg" alt="Chaise Cander"><div class="slide-caption"><span>Chaise Cander</span></div></div>
-      <div class="slide"><img src="assets/images/oculus-chaise.jpg" alt="Oculus Chaise"><div class="slide-caption"><span>Oculus Chaise</span></div></div>
-      <div class="slide"><img src="assets/images/oculusmaredinasty.jpeg" alt="Oculus Chaise"><div class="slide-caption"><span>Oculus descanso</span></div></div>
-      <!-- duplicados -->
-      <div class="slide"><img src="assets/images/cama-balinesa-trap.jpg" alt="Cama Balinesa Trap"><div class="slide-caption"><span>Balinesa Trap</span></div></div>
-      <div class="slide"><img src="assets/images/cama-balinesa-candor.jpg" alt="Cama Balinesa Cander"><div class="slide-caption"><span>Balinesa Cander</span></div></div>
-      <div class="slide"><img src="assets/images/chaise-candor.jpg" alt="Chaise Cander"><div class="slide-caption"><span>Chaise Cander</span></div></div>
-      <div class="slide"><img src="assets/images/oculus-chaise.jpg" alt="Oculus Chaise"><div class="slide-caption"><span>Oculus Chaise</span></div></div>
-      <div class="slide"><img src="assets/images/oculusmaredinasty.jpeg" alt="Oculus Chaise"><div class="slide-caption"><span>Oculus descanso</span></div></div>
-
-    </div>
-    <div class="carousel-controls">
-      <button class="car-btn prev" data-track="track3">&#8592;</button>
-      <button class="car-btn next" data-track="track3">&#8594;</button>
-    </div>
-  </div>
-</section>
-
-<!-- MATERIALES -->
-<section id="materiales" class="section section-dark">
-  <div class="section-intro light">
-    <div class="section-label light"><span></span>Nobleza de Materiales</div>
-    <h2 class="section-title">Construido para <em>la eternidad</em></h2>
-    <p class="section-desc">Materiales que desafían el tiempo, los elementos y la tendencia.</p>
-  </div>
-  <div class="material-grid">
-    <div class="material-card">
-      <div class="material-img-wrap">
-        <img src="assets/images/textura-ratan.jpg" alt="Ratán PE Sintético">
-        <div class="material-tag">Tejido</div>
+    <div class="hero-shell">
+      <div class="hero-copy reveal">
+        <p class="hero-eyebrow"><span class="line"></span>Coleccion exterior 2026</p>
+        <h1 class="hero-title">Muebles que convierten tu terraza en un destino.</h1>
+        <p class="hero-sub">Diseno contemporaneo, materiales premium y una experiencia de catalogo mas clara para descubrir cada pieza con comodidad en celular y en PC.</p>
+        <div class="hero-actions">
+          <a href="#catalogo" class="btn btn-primary">Ver catalogo</a>
+          <a href="#contacto" class="btn btn-secondary">Hablar con asesoria</a>
+        </div>
       </div>
-      <div class="material-body">
-        <h3>Ratán PE Sintético</h3>
-        <p class="material-claim"><em>"La sensación natural, la durabilidad del futuro"</em></p>
-        <ul>
-          <li>Resistente a rayos UV — no decolora</li>
-          <li>Libre de toxinas — certificado familiar</li>
-          <li>Resistente al salitre marino</li>
-          <li>Limpieza sin esfuerzo</li>
-        </ul>
+      <aside class="hero-panel reveal">
+        <div class="hero-panel-label">Seleccion editorial</div>
+        <h2>Oasis Collection</h2>
+        <p>Lineas suaves, proporciones generosas y una presencia sobria pensada para jardines, terrazas y areas de piscina.</p>
+        <div class="hero-stats">
+          <div>
+            <strong>3</strong>
+            <span>Ambientes</span>
+          </div>
+          <div>
+            <strong>100%</strong>
+            <span>Exterior</span>
+          </div>
+          <div>
+            <strong>Premium</strong>
+            <span>Materiales</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+    <div class="scroll-hint" aria-hidden="true">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <section class="catalog-overview" id="catalogo">
+    <div class="overview-head reveal">
+      <div class="section-label"><span></span>Catalogo</div>
+      <h2 class="section-title">Explora por <em>ambiente</em></h2>
+      <p class="section-desc">Reorganizamos el catalogo para que sea mas facil comparar estilos, recorrer fotos y encontrar rapidamente la categoria ideal.</p>
+    </div>
+    <div class="overview-grid">
+      <a href="#momentos" class="overview-card reveal">
+        <span class="overview-kicker">Social</span>
+        <strong>Sets para compartir</strong>
+        <p>Sofas modulares y composiciones amplias para recibir.</p>
+      </a>
+      <a href="#cenas" class="overview-card reveal">
+        <span class="overview-kicker">Dining</span>
+        <strong>Mesas y sillas</strong>
+        <p>Piezas para cenas al aire libre con imagen refinada.</p>
+      </a>
+      <a href="#oasis" class="overview-card reveal">
+        <span class="overview-kicker">Relax</span>
+        <strong>Descanso absoluto</strong>
+        <p>Chaise lounges y camas balinesas para una experiencia resort.</p>
+      </a>
+    </div>
+    <div class="catalog-shortcuts reveal">
+      <a href="#momentos">Sofas</a>
+      <a href="#cenas">Dining</a>
+      <a href="#oasis">Loungers</a>
+      <a href="#materiales">Materiales</a>
+      <a href="#cuidados">Cuidados</a>
+    </div>
+  </section>
+
+  <section id="momentos" class="section">
+    <div class="section-top reveal">
+      <div class="section-intro">
+        <div class="section-label"><span></span>Momentos para Compartir</div>
+        <h2 class="section-title">Espacios que <em>reunen</em></h2>
+        <p class="section-desc">Una seleccion de sets que prioriza amplitud, comodidad y presencia visual. Cada composicion busca sentirse serena, acogedora y lista para recibir.</p>
+      </div>
+      <div class="section-note">
+        <span>Ideal para</span>
+        <strong>Terrazas sociales, patios amplios y areas lounge.</strong>
       </div>
     </div>
-    <div class="material-card">
-      <div class="material-img-wrap">
-        <img src="assets/images/estructura-acero.jpg" alt="Acero Galvanizado">
-        <div class="material-tag">Estructura</div>
+    <div class="gallery-shell reveal">
+      <div class="gallery-header">
+        <div class="gallery-meta">
+          <span class="gallery-badge">6 referencias</span>
+          <p>Desliza con el dedo en celular o usa las flechas en desktop.</p>
+        </div>
+        <div class="gallery-controls">
+          <button class="gallery-btn prev" type="button" data-track="track-momentos" aria-label="Anterior">&#8592;</button>
+          <button class="gallery-btn next" type="button" data-track="track-momentos" aria-label="Siguiente">&#8594;</button>
+        </div>
       </div>
-      <div class="material-body">
-        <h3>Acero Galvanizado</h3>
-        <p class="material-claim"><em>"Eterno contra la corrosión, noble en su presencia"</em></p>
-        <ul>
-          <li>Alta resistencia estructural</li>
-          <li>Anticorrosión de alto desempeño</li>
-          <li>Apto para ambientes costeros</li>
-          <li>Garantía de integridad duradera</li>
-        </ul>
+      <div class="gallery-track" id="track-momentos">
+        <article class="product-card">
+          <img src="assets/images/oasis-set.jpg" alt="Oasis Set">
+          <div class="product-copy"><h3>Oasis Set</h3><p>Silueta envolvente y look sereno para exteriores elegantes.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/candor-clasico.jpg" alt="Candor Clasico">
+          <div class="product-copy"><h3>Candor Clasico</h3><p>Composicion equilibrada con un aire atemporal y sofisticado.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/candor-l.jpg" alt="Candor en L">
+          <div class="product-copy"><h3>Candor L</h3><p>Formato ideal para reuniones largas y distribuciones abiertas.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/media-luna.jpg" alt="Set Media Luna">
+          <div class="product-copy"><h3>Media Luna</h3><p>Una pieza de gran impacto visual para espacios protagonistas.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/tarset.jpeg" alt="Tar Set">
+          <div class="product-copy"><h3>Tar Set</h3><p>Perfil contemporaneo con lectura ligera y muy versatil.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/areaset.jpeg" alt="Area Set">
+          <div class="product-copy"><h3>Area Set</h3><p>Un lenguaje limpio para terrazas residenciales o proyectos boutique.</p></div>
+        </article>
       </div>
     </div>
-  </div>
-  <div class="materials-quote">
-    <blockquote>"El verdadero lujo no se ve en el precio, sino en los materiales que permanecen contigo por décadas."</blockquote>
-    <cite>— Yascari Martínez, Directora de Diseño</cite>
-  </div>
-</section>
+  </section>
 
-<!-- CUIDADOS -->
-<section id="cuidados" class="section section-alt">
-  <div class="section-intro">
-    <div class="section-label"><span></span>Cuidados</div>
-    <h2 class="section-title">Preserve su <em>inversión</em></h2>
-  </div>
-  <div class="care-grid">
-    <div class="care-card">
-      <div class="care-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      <h4>Estructura de Acero</h4>
-      <p>Limpiar con paño húmedo. En caso de suciedad profunda, utilizar agua con jabón neutro.</p>
-    </div>
-    <div class="care-card">
-      <div class="care-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M8 12s1 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-      </div>
-      <h4>Ratán Sintético PE</h4>
-      <p>Cepillar suavemente con agua y shampoo. No usar detergentes en polvo para evitar que la fibra pierda brillo.</p>
-    </div>
-    <div class="care-card">
-      <div class="care-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      </div>
-      <h4>Cojines Impermeables</h4>
-      <p>No lavar la colcha. Si se mojan, secar al aire libre. El forro debe lavarse en ciclo suave o ropa delicada. No usar secadora, cloro ni productos abrasivos.</p>
-    </div>
-  </div>
-</section>
+  <div class="divider-ornament"><span>◆</span></div>
 
-<!-- YASCARI -->
-<section id="yascari" class="section section-yascari">
-  <div class="yascari-layout">
-    <div class="yascari-portrait">
-      <img src="assets/images/yascari.jpeg" alt="Yascari Martínez">
-      <div class="yascari-img-overlay"></div>
-    </div>
-    <div class="yascari-content">
-      <div class="section-label"><span></span>El Alma del Diseño</div>
-      <h2 class="section-title">Conoce a <em>Yascari</em></h2>
-      <p class="yascari-quote">"Ayudamos a que tu espacio hable el lenguaje de la exclusividad."</p>
-      <p class="yascari-body">Detrás de cada colección MASH existe una visión: crear espacios exteriores que cuenten historias. Yascari fusiona estrategia de diseño, sensibilidad artística y conocimiento técnico para producir piezas que trascienden la función y se convierten en el corazón de tu hogar.</p>
-      <div class="yascari-stats">
-        <div><strong>+8</strong><span>Años de experiencia</span></div>
-        <div><strong>3</strong><span>Colecciones exclusivas</span></div>
-        <div><strong>100%</strong><span>Materiales premium</span></div>
+  <section id="cenas" class="section section-alt">
+    <div class="section-top reveal">
+      <div class="section-intro">
+        <div class="section-label"><span></span>Cenas bajo el Cielo</div>
+        <h2 class="section-title">Dining <em>al aire libre</em></h2>
+        <p class="section-desc">Mesas, sillas y sets pensados para veladas memorables. Una mezcla de practicidad, textura y sofisticacion para comer afuera con mas estilo.</p>
       </div>
-      <a href="#contacto" class="btn-outline">Iniciar mi Proyecto <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <div class="section-note">
+        <span>Ideal para</span>
+        <strong>Balcones premium, rooftops y comedores exteriores.</strong>
+      </div>
     </div>
-  </div>
-</section>
+    <div class="gallery-shell reveal">
+      <div class="gallery-header">
+        <div class="gallery-meta">
+          <span class="gallery-badge">4 referencias</span>
+          <p>Tarjetas amplias para que cada foto respire mejor en pantallas pequenas.</p>
+        </div>
+        <div class="gallery-controls">
+          <button class="gallery-btn prev" type="button" data-track="track-cenas" aria-label="Anterior">&#8592;</button>
+          <button class="gallery-btn next" type="button" data-track="track-cenas" aria-label="Siguiente">&#8594;</button>
+        </div>
+      </div>
+      <div class="gallery-track" id="track-cenas">
+        <article class="product-card">
+          <img src="assets/images/oculus-mare-dining.jpg" alt="Oculus Mare Dining">
+          <div class="product-copy"><h3>Oculus Mare</h3><p>Dining refinado con personalidad arquitectonica.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/rombois-set.jpg" alt="Rombois Set">
+          <div class="product-copy"><h3>Rombois Set</h3><p>Una lectura calida y distinguida para cenas exteriores.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/candor-combinado.jpg" alt="Candor Combinado">
+          <div class="product-copy"><h3>Candor Combinado</h3><p>Versatilidad para espacios que mezclan lounge y dining.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/oculus-mare-compacto.jpg" alt="Oculus Mare Compacto">
+          <div class="product-copy"><h3>Oculus Compacto</h3><p>Formato contenido con la misma presencia premium de la linea.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
 
-<!-- FOOTER / CONTACTO -->
+  <div class="divider-ornament"><span>◆</span></div>
+
+  <section id="oasis" class="section">
+    <div class="section-top reveal">
+      <div class="section-intro">
+        <div class="section-label"><span></span>Tu Oasis Privado</div>
+        <h2 class="section-title">Descanso <em>absoluto</em></h2>
+        <p class="section-desc">Piezas creadas para bajar el ritmo: camas balinesas, chaise lounges y formatos de descanso que elevan la sensacion de hotel privado en casa.</p>
+      </div>
+      <div class="section-note">
+        <span>Ideal para</span>
+        <strong>Piscinas, jardines de descanso y zonas wellness.</strong>
+      </div>
+    </div>
+    <div class="gallery-shell reveal">
+      <div class="gallery-header">
+        <div class="gallery-meta">
+          <span class="gallery-badge">5 referencias</span>
+          <p>Exploracion horizontal con tarjetas grandes, comodas y faciles de comparar.</p>
+        </div>
+        <div class="gallery-controls">
+          <button class="gallery-btn prev" type="button" data-track="track-oasis" aria-label="Anterior">&#8592;</button>
+          <button class="gallery-btn next" type="button" data-track="track-oasis" aria-label="Siguiente">&#8594;</button>
+        </div>
+      </div>
+      <div class="gallery-track" id="track-oasis">
+        <article class="product-card">
+          <img src="assets/images/cama-balinesa-trap.jpg" alt="Cama Balinesa Trap">
+          <div class="product-copy"><h3>Balinesa Trap</h3><p>Estructura protagonista para un ambiente resort.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/cama-balinesa-candor.jpg" alt="Cama Balinesa Candor">
+          <div class="product-copy"><h3>Balinesa Candor</h3><p>Elegancia serena para areas de descanso premium.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/chaise-candor.jpg" alt="Chaise Candor">
+          <div class="product-copy"><h3>Chaise Candor</h3><p>Comodidad estilizada para una experiencia de relax mas limpia.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/oculus-chaise.jpg" alt="Oculus Chaise">
+          <div class="product-copy"><h3>Oculus Chaise</h3><p>Una pieza escultorica para exteriores de alto impacto.</p></div>
+        </article>
+        <article class="product-card">
+          <img src="assets/images/oculusmaredinasty.jpeg" alt="Oculus Descanso">
+          <div class="product-copy"><h3>Oculus Descanso</h3><p>Volumen, textura y comodidad en una sola pieza.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="materiales" class="section section-dark">
+    <div class="section-intro light reveal">
+      <div class="section-label light"><span></span>Nobleza de Materiales</div>
+      <h2 class="section-title">Construido para <em>la eternidad</em></h2>
+      <p class="section-desc">Materiales pensados para resistir exterior, mantener presencia premium y acompanar el uso diario sin perder elegancia.</p>
+    </div>
+    <div class="material-grid">
+      <article class="material-card reveal">
+        <div class="material-img-wrap">
+          <img src="assets/images/textura-ratan.jpg" alt="Ratan PE sintetico">
+          <div class="material-tag">Tejido</div>
+        </div>
+        <div class="material-body">
+          <h3>Ratan PE Sintetico</h3>
+          <p class="material-claim"><em>La sensacion natural con resistencia pensada para exterior.</em></p>
+          <ul>
+            <li>Proteccion UV para conservar color y textura.</li>
+            <li>Buena respuesta frente a salitre y humedad.</li>
+            <li>Mantenimiento simple para uso residencial o comercial.</li>
+            <li>Acabado calido con apariencia refinada.</li>
+          </ul>
+        </div>
+      </article>
+      <article class="material-card reveal">
+        <div class="material-img-wrap">
+          <img src="assets/images/estructura-acero.jpg" alt="Acero galvanizado">
+          <div class="material-tag">Estructura</div>
+        </div>
+        <div class="material-body">
+          <h3>Acero Galvanizado</h3>
+          <p class="material-claim"><em>Base estructural firme para una vida util mas larga.</em></p>
+          <ul>
+            <li>Alta resistencia estructural y estabilidad.</li>
+            <li>Tratamiento anticorrosivo para exterior.</li>
+            <li>Apto para ambientes costeros exigentes.</li>
+            <li>Soporte confiable para piezas de uso intensivo.</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+    <div class="materials-quote reveal">
+      <blockquote>"El verdadero lujo no depende solo de como se ve una pieza, sino de como envejece contigo."</blockquote>
+      <cite>Yascari Martinez, Direccion de Diseno</cite>
+    </div>
+  </section>
+
+  <section id="cuidados" class="section section-alt">
+    <div class="section-intro reveal">
+      <div class="section-label"><span></span>Cuidados</div>
+      <h2 class="section-title">Preserva tu <em>inversion</em></h2>
+      <p class="section-desc">Recomendaciones simples para que el mobiliario conserve su textura, comodidad y presencia por mas tiempo.</p>
+    </div>
+    <div class="care-grid">
+      <article class="care-card reveal">
+        <div class="care-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Estructura</h3>
+        <p>Usa pano humedo y jabon neutro cuando sea necesario. Evita productos abrasivos para conservar el acabado.</p>
+      </article>
+      <article class="care-card reveal">
+        <div class="care-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M8 12s1 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </div>
+        <h3>Tejido PE</h3>
+        <p>Limpia con cepillo suave, agua y shampoo delicado. No uses detergente en polvo para proteger el brillo.</p>
+      </article>
+      <article class="care-card reveal">
+        <div class="care-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3>Cojineria</h3>
+        <p>Seca al aire si se humedece. Lava solo el forro en ciclo delicado y evita secadora, cloro o quimicos agresivos.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="yascari" class="section section-yascari">
+    <div class="yascari-layout">
+      <div class="yascari-portrait reveal">
+        <img src="assets/images/yascari.jpeg" alt="Yascari Martinez">
+        <div class="yascari-img-overlay"></div>
+      </div>
+      <div class="yascari-content reveal">
+        <div class="section-label"><span></span>Direccion Creativa</div>
+        <h2 class="section-title">Conoce a <em>Yascari</em></h2>
+        <p class="yascari-quote">"Ayudamos a que tu espacio hable el lenguaje de la exclusividad sin dejar de sentirse vivido y acogedor."</p>
+        <p class="yascari-body">Detras de MASH hay una vision clara: crear muebles exteriores que se sientan sofisticados, funcionales y emocionalmente memorables. Cada seleccion busca equilibrio entre diseno, durabilidad y estilo de vida.</p>
+        <div class="yascari-stats">
+          <div><strong>+8</strong><span>Anos de experiencia</span></div>
+          <div><strong>3</strong><span>Universos de coleccion</span></div>
+          <div><strong>1:1</strong><span>Acompanamiento personalizado</span></div>
+        </div>
+        <a href="#contacto" class="btn btn-text">Iniciar mi proyecto</a>
+      </div>
+    </div>
+  </section>
+</main>
+
 <footer id="contacto" class="footer">
   <div class="footer-top">
-    <div class="footer-brand">
+    <div class="footer-brand reveal">
       <div class="footer-logo">M<span>A</span>SH</div>
       <p class="footer-tagline">Martinez Star Home<br><em>Outdoor Designer Furniture</em></p>
+      <p class="footer-copy">Asesoria para terrazas, jardines, balcones y proyectos exteriores con una seleccion cuidada de mobiliario premium.</p>
     </div>
-    <div class="footer-col">
-      <h5>Colecciones</h5>
+    <div class="footer-col reveal">
+      <h3>Colecciones</h3>
       <ul>
-        <li><a href="#momentos">Oasis Collection</a></li>
-        <li><a href="#momentos">Condor Collection</a></li>
-        <li><a href="#oasis">Poolside Luxury</a></li>
-        <li><a href="#cenas">Oculus Dining</a></li>
+        <li><a href="#momentos">Sets para compartir</a></li>
+        <li><a href="#cenas">Dining exterior</a></li>
+        <li><a href="#oasis">Descanso premium</a></li>
+        <li><a href="#materiales">Materiales</a></li>
       </ul>
     </div>
-    <div class="footer-col">
-      <h5>Contacto</h5>
+    <div class="footer-col reveal">
+      <h3>Contacto</h3>
       <ul>
         <li><a href="tel:+18093272139">+1 (809) 327-2139</a></li>
         <li><a href="mailto:martinezstarhome@gmail.com">martinezstarhome@gmail.com</a></li>
-        <li><a href="https://instagram.com/martinez_star_home" target="_blank">@martinez_star_home</a></li>
+        <li><a href="https://instagram.com/martinez_star_home" target="_blank" rel="noreferrer">@martinez_star_home</a></li>
+        <li>Santo Domingo, Republica Dominicana</li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
     <p>© 2026 Martinez Star Home. Todos los derechos reservados.</p>
     <div class="footer-social">
-      <a href="https://wa.me/18093272139" target="_blank" aria-label="WhatsApp">
+      <a href="https://wa.me/18093272139" target="_blank" rel="noreferrer" aria-label="WhatsApp">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       </a>
-      <a href="https://instagram.com/martinez_star_home" target="_blank" aria-label="Instagram">
+      <a href="https://instagram.com/martinez_star_home" target="_blank" rel="noreferrer" aria-label="Instagram">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
       </a>
     </div>
   </div>
 </footer>
 
-<!-- FLOATING BUTTONS -->
 <div class="float-btns">
-  <a href="https://wa.me/18093272139" class="float-btn float-wa" target="_blank" aria-label="WhatsApp">
+  <a href="https://wa.me/18093272139" class="float-btn float-wa" target="_blank" rel="noreferrer" aria-label="WhatsApp">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     <span>WhatsApp</span>
   </a>
-  <a href="https://instagram.com/martinez_star_home" class="float-btn float-ig" target="_blank" aria-label="Instagram">
+  <a href="https://instagram.com/martinez_star_home" class="float-btn float-ig" target="_blank" rel="noreferrer" aria-label="Instagram">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
     <span>Instagram</span>
   </a>
@@ -295,5 +402,4 @@
 
 <script src="js/main.js"></script>
 </body>
-
 </html>

@@ -1,125 +1,81 @@
-// ============================================
-// MASH — Martinez Star Home | main.js
-// ============================================
-
 document.addEventListener("DOMContentLoaded", () => {
-
-  /* ───────── NAV SCROLL ───────── */
   const nav = document.getElementById("nav");
-
-  window.addEventListener("scroll", () => {
-    nav.classList.toggle("scrolled", window.scrollY > 40);
-  }, { passive: true });
-
-
-
-  /* ───────── NAV MOBILE ───────── */
   const navToggle = document.getElementById("navToggle");
   const navLinks = document.getElementById("navLinks");
 
-  navToggle.addEventListener("click", () => {
+  const syncNavState = () => {
+    nav.classList.toggle("scrolled", window.scrollY > 24);
+  };
 
-    const isOpen = navLinks.classList.toggle("is-open");
+  const closeMenu = () => {
+    navLinks.classList.remove("is-open");
+    navToggle.classList.remove("is-open");
+    navToggle.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  };
 
-    navToggle.classList.toggle("is-open", isOpen);
+  const openMenu = () => {
+    navLinks.classList.add("is-open");
+    navToggle.classList.add("is-open");
+    navToggle.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  };
 
-    document.body.style.overflow = isOpen ? "hidden" : "";
+  syncNavState();
+  window.addEventListener("scroll", syncNavState, { passive: true });
 
+  navToggle?.addEventListener("click", () => {
+    const isOpen = navLinks.classList.contains("is-open");
+    if (isOpen) {
+      closeMenu();
+      return;
+    }
+    openMenu();
   });
 
-  navLinks.querySelectorAll("a").forEach(a => {
-    a.addEventListener("click", () => {
-      navLinks.classList.remove("is-open");
-      navToggle.classList.remove("is-open");
-      document.body.style.overflow = "";
-    });
+  navLinks?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeMenu);
   });
 
-  navLinks.addEventListener("click", (e) => {
-    if (e.target === navLinks) {
-      navLinks.classList.remove("is-open");
-      navToggle.classList.remove("is-open");
-      document.body.style.overflow = "";
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 820) {
+      closeMenu();
     }
   });
 
-
-
-  /* ───────── CAROUSEL BUTTONS ───────── */
-
-  const buttons = document.querySelectorAll(".car-btn");
-
-  buttons.forEach(button => {
-
-    const trackId = button.dataset.track;
-    const track = document.getElementById(trackId);
-
-    if (!track) return;
-
+  document.querySelectorAll(".gallery-btn").forEach((button) => {
     button.addEventListener("click", () => {
+      const track = document.getElementById(button.dataset.track);
+      if (!track) return;
 
-      const slide = track.querySelector(".slide");
+      const firstCard = track.querySelector(".product-card");
+      const gap = 18;
+      const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : track.clientWidth * 0.8;
+      const direction = button.classList.contains("next") ? 1 : -1;
+      const amount = direction * (cardWidth + gap);
 
-      if (!slide) return;
-
-      const slideWidth = slide.offsetWidth + 20;
-
-      const direction = button.classList.contains("next") ? -1 : 1;
-
-      const currentTransform = getComputedStyle(track).transform;
-
-      const matrix = new DOMMatrix(currentTransform);
-
-      let newX = matrix.m41 + (direction * slideWidth);
-
-      const limit = track.scrollWidth / 2;
-
-      if (newX < -limit) newX = 0;
-
-      if (newX > 0) newX = -limit + slideWidth;
-
-      track.style.animationPlayState = "paused";
-
-      track.style.transform = `translateX(${newX}px)`;
-
-      clearTimeout(track._resume);
-
-      track._resume = setTimeout(() => {
-
-        track.style.transform = "";
-
-        track.style.animationPlayState = "running";
-
-      }, 3500);
-
+      track.scrollBy({
+        left: amount,
+        behavior: "smooth"
+      });
     });
-
   });
 
+  const revealElements = document.querySelectorAll(".reveal");
 
-
-  /* ───────── SCROLL REVEAL ───────── */
-
-  const revealElements = document.querySelectorAll(
-    ".section-intro, .material-card, .care-card, .yascari-content, .yascari-portrait, .materials-quote"
-  );
-
-  revealElements.forEach(el => el.classList.add("reveal"));
-
-  const observer = new IntersectionObserver(entries => {
-
-    entries.forEach(entry => {
-
-      if (entry.isIntersecting) {
-
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries, currentObserver) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
         entry.target.classList.add("visible");
-
-      }
-
+        currentObserver.unobserve(entry.target);
+      });
+    }, {
+      threshold: 0.16
     });
 
-  }, { threshold: 0.12 });
-
-  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
-
+    revealElements.forEach((element) => observer.observe(element));
+  } else {
+    revealElements.forEach((element) => element.classList.add("visible"));
+  }
 });
