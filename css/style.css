@@ -1148,6 +1148,7 @@ ul {
 @media (max-width: 820px) {
   :root {
     --nav-h: 68px;
+    --pad: 18px;
   }
 
   .nav-toggle {
@@ -1198,11 +1199,24 @@ ul {
 
   .hero {
     min-height: auto;
-    padding-bottom: 26px;
+    padding-bottom: 20px;
   }
 
   .hero-title {
     max-width: 12ch;
+  }
+
+  .hero-shell {
+    gap: 18px;
+  }
+
+  .hero-panel {
+    max-width: none;
+    padding: 22px;
+  }
+
+  .hero-stats {
+    gap: 10px;
   }
 
   .scroll-hint,
@@ -1227,23 +1241,38 @@ ul {
 
   .gallery-track {
     grid-auto-columns: minmax(280px, 82%);
+    scroll-padding-left: 6px;
+  }
+
+  .catalog-shortcuts {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .catalog-shortcuts::-webkit-scrollbar {
+    display: none;
+  }
+
+  .catalog-shortcuts a {
+    flex: 0 0 auto;
   }
 }
 
 @media (max-width: 560px) {
   .hero {
     padding-top: calc(var(--nav-h) + 22px);
+    padding-bottom: 12px;
   }
 
-  .hero-copy,
-  .hero-panel,
-  .gallery-shell,
-  .care-card,
-  .overview-card,
-  .material-body,
-  .yascari-content {
-    padding-left: 20px;
-    padding-right: 20px;
+  .nav-inner,
+  .hero-shell,
+  .catalog-overview,
+  .section,
+  .footer-top,
+  .footer-bottom {
+    width: min(calc(100% - 28px), var(--max));
   }
 
   .hero-panel,
@@ -1259,23 +1288,134 @@ ul {
     font-size: clamp(2.5rem, 13vw, 3.5rem);
   }
 
+  .hero-sub {
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .hero-panel {
+    padding: 18px;
+  }
+
+  .hero-panel h2 {
+    font-size: 1.85rem;
+  }
+
+  .hero-panel p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hero-stats strong {
+    font-size: 1.05rem;
+  }
+
+  .hero-stats span {
+    font-size: 0.74rem;
+    line-height: 1.45;
   }
 
   .btn {
     width: 100%;
   }
 
-  .gallery-track {
-    grid-auto-columns: 88%;
+  .catalog-overview,
+  .section {
+    padding: 68px 0;
+  }
+
+  .overview-grid {
     gap: 14px;
+    margin-top: 26px;
+  }
+
+  .overview-card,
+  .care-card,
+  .material-body,
+  .yascari-content {
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 11vw, 2.6rem);
+  }
+
+  .section-desc,
+  .gallery-meta p,
+  .product-copy p,
+  .care-card p,
+  .yascari-body,
+  .footer-copy {
+    font-size: 0.95rem;
+    line-height: 1.72;
+  }
+
+  .gallery-shell {
+    padding: 16px;
+  }
+
+  .gallery-header {
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .gallery-controls {
+    display: none;
+  }
+
+  .gallery-track {
+    grid-auto-columns: 92%;
+    gap: 14px;
+    scroll-padding-left: 2px;
   }
 
   .product-card img {
     aspect-ratio: 4 / 4;
     padding: 14px 14px 0;
+  }
+
+  .product-copy {
+    padding: 16px;
+  }
+
+  .product-copy h3 {
+    font-size: 1.35rem;
+  }
+
+  .material-grid,
+  .care-grid {
+    gap: 16px;
+  }
+
+  .material-body h3,
+  .care-card h3 {
+    font-size: 1.6rem;
+  }
+
+  .yascari-layout {
+    border-radius: 22px;
+  }
+
+  .yascari-portrait {
+    min-height: 360px;
+  }
+
+  .yascari-quote {
+    font-size: 1.85rem;
+  }
+
+  .footer-top {
+    padding-top: 58px;
+    gap: 20px;
   }
 
   .float-btn span {
