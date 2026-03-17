@@ -4,10 +4,8 @@ backend:
   name: github
   repo: leilameca/mash.github.io
   branch: main
-  # GitHub Pages necesita un servidor OAuth intermedio para completar el login.
-  # Cuando lo tengas publicado, agrega:
-  # base_url: https://TU-AUTH-SERVER.ejemplo.com
-  # auth_endpoint: auth
+  base_url: https://mash-admin-proxy.leilanycristaldedios.workers.dev
+  auth_endpoint: auth
 
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"
