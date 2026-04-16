@@ -6,55 +6,55 @@
         {
           "name": "Oasis Set",
           "image": "assets/images/oasis-set.jpg",
-          "alt": "Oasis Set",
-          "description": "Un set amplio y elegante para terrazas donde quieres recibir con estilo y comodidad."
+          "alt": "Juego de terraza Oasis para patio amplio en Santiago",
+          "description": "Un juego de sala exterior amplio y elegante para terrazas donde quieres recibir con estilo, comodidad y una presencia impecable."
         },
         {
           "name": "Candor Clasico",
           "image": "assets/images/candor-clasico.jpg",
-          "alt": "Candor Clasico",
-          "description": "Un clasico bien logrado: comodo, sobrio y facil de combinar con distintos ambientes."
+          "alt": "Muebles para patio Candor Clasico en Republica Dominicana",
+          "description": "Un set sobrio y facil de combinar para patios, balcones amplios o terrazas que necesitan un look limpio y acogedor."
         },
         {
           "name": "Candor L",
           "image": "assets/images/candor-l.jpg",
-          "alt": "Candor en L",
-          "description": "Ideal para aprovechar esquinas y crear un ambiente social mas amplio y funcional."
+          "alt": "Set en L para terraza exterior en Santiago de los Caballeros",
+          "description": "Ideal para aprovechar esquinas y crear una terraza social mas amplia, funcional y comoda."
         },
         {
           "name": "Media Luna",
           "image": "assets/images/media-luna.jpg",
-          "alt": "Set Media Luna",
-          "description": "Una opcion llamativa para quien quiere un punto focal diferente y con mucha personalidad."
+          "alt": "Set Media Luna para terraza moderna y area social exterior",
+          "description": "Una opcion con personalidad para proyectos que quieren un punto focal diferente y elegante en exterior."
         },
         {
           "name": "Tar Set",
-          "image": "assets/images/tarset.jpeg",
-          "alt": "Tar Set",
-          "description": "Ligero a la vista, practico y muy bueno para terrazas modernas de estilo limpio."
+          "image": "assets/images/tar-set-terraza-moderna-santiago.jpeg",
+          "alt": "Tar Set de exterior para muebles de terraza modernos en Santiago",
+          "description": "Ligero a la vista, practico y muy funcional para terrazas modernas de estilo limpio."
         },
         {
           "name": "Butacas Clasicas",
           "image": "assets/images/set-butacas-clasicas.jpeg",
-          "alt": "Butacas Clasicas",
-          "description": "El rincon perfecto para conversar, relajarte y disfrutar la vista."
+          "alt": "Butacas clasicas para balcon y terraza exterior en RD",
+          "description": "El rincon ideal para conversar, relajarte y elevar balcones o patios con una composicion mas intima."
         },
         {
           "name": "Area Set",
-          "image": "assets/images/areaset.jpeg",
-          "alt": "Area Set",
-          "description": "Una propuesta versatil para hogares y proyectos que buscan verse bien sin recargar el espacio."
+          "image": "assets/images/area-set-patio-terraza-santiago.jpeg",
+          "alt": "Area Set para patio y terraza de proyecto residencial o comercial",
+          "description": "Una propuesta versatil para hogares y proyectos que buscan muebles duraderos para intemperie sin recargar el ambiente."
         }
       ],
       "note_label": "Perfecto para",
-      "meta_text": "Si ves uno que te guste, escribenos por WhatsApp y te ayudamos a cotizarlo.",
+      "meta_text": "Si ves uno que encaja con tu espacio, escribenos por WhatsApp y te ayudamos a cotizar medidas, estilo y disponibilidad.",
       "featured": false,
       "style": "default",
-      "label": "Momentos para Compartir",
-      "title": "Sets que invitan a <em>quedarse mas tiempo</em>",
-      "note_text": "Terrazas sociales, patios amplios y espacios para recibir.",
+      "label": "Terrazas y patios",
+      "title": "Juegos de terraza y sets de exterior para recibir con <em>comodidad</em>",
+      "note_text": "Terrazas sociales, patios amplios, villas y areas de reunion al aire libre.",
       "id": "momentos",
-      "description": "Esta coleccion esta pensada para patios y terrazas donde siempre pasa algo: una visita, un cafe, una conversacion larga o una tarde en familia."
+      "description": "Esta coleccion esta pensada para quienes buscan muebles para patio en Santiago, muebles de terraza modernos y sets de exterior que ayuden a crear un ambiente social comodo, elegante y facil de disfrutar todos los dias."
     },
     {
       "badge": "5 referencias",
@@ -62,43 +62,43 @@
         {
           "name": "Oculus Mare",
           "image": "assets/images/oculus-mare-dining.jpg",
-          "alt": "Oculus Mare Dining",
-          "description": "Una mesa con presencia moderna para quienes quieren un comedor exterior con caracter."
+          "alt": "Comedor exterior Oculus Mare para terraza en Republica Dominicana",
+          "description": "Una mesa con presencia moderna para quienes quieren un comedor exterior con caracter y gran valor visual."
         },
         {
           "name": "Rombois Set",
           "image": "assets/images/rombois-set.jpg",
-          "alt": "Rombois Set",
-          "description": "Calido, elegante y muy acogedor para cenas en familia o reuniones entre amigos."
+          "alt": "Rombois Set para restaurante, balcon o comedor exterior",
+          "description": "Calido, elegante y muy acogedor para cenas en familia o reuniones en ambientes de hospitalidad."
         },
         {
           "name": "Candor Combinado",
           "image": "assets/images/candor-combinado.jpg",
-          "alt": "Candor Combinado",
+          "alt": "Candor Combinado para comedor y sala exterior en Santiago",
           "description": "Una opcion flexible para espacios donde quieres comer, conversar y relajarte en un mismo ambiente."
         },
         {
           "name": "Candor Collection",
           "image": "assets/images/candor-collection.jpeg",
-          "alt": "Candor Collection",
-          "description": "Convierte tu balcon en un espacio de lujo. Comedor de exterior elegante y comodo para disfrutar cada momento."
+          "alt": "Candor Collection para balcon exterior elegante en Santiago",
+          "description": "Convierte tu balcon en un espacio de lujo con un comedor de exterior elegante, comodo y facil de integrar."
         },
         {
           "name": "Oculus Compacto",
           "image": "assets/images/oculus-mare-compacto.jpg",
-          "alt": "Oculus Mare Compacto",
-          "description": "Ideal para espacios mas pequenos sin perder estilo ni una buena presencia visual."
+          "alt": "Oculus Compacto para balcon pequeno o terraza funcional",
+          "description": "Ideal para espacios mas pequenos sin perder estilo, funcionalidad ni una presencia bien lograda."
         }
       ],
       "note_label": "Perfecto para",
-      "meta_text": "Te mostramos opciones reales para que visualices mejor como se veria tu espacio.",
+      "meta_text": "Te mostramos opciones reales para que visualices mejor un comedor exterior moderno en tu hogar o negocio.",
       "featured": false,
       "style": "alt",
-      "label": "Cenas bajo el Cielo",
-      "title": "Comer afuera tambien puede sentirse <em>especial</em>",
-      "note_text": "Balcones, rooftops y areas de comedor al aire libre.",
+      "label": "Balcones y dining",
+      "title": "Muebles para balcon y comedor exterior que hacen cada comida <em>mejor</em>",
+      "note_text": "Balcones, terrazas, restaurantes, hoteles y comedores al aire libre.",
       "id": "cenas",
-      "description": "Mesas y sillas pensadas para compartir en balcones, terrazas y comedores exteriores con una imagen cuidada y funcional."
+      "description": "Aqui encuentras muebles para balcon en Santiago, comedores para terraza y opciones funcionales para restaurantes, rooftops y areas sociales donde la imagen del espacio importa tanto como la comodidad."
     },
     {
       "badge": "7 referencias",
@@ -106,55 +106,55 @@
         {
           "name": "Balinesa Trap",
           "image": "assets/images/cama-balinesa-trap.jpg",
-          "alt": "Cama Balinesa Trap",
+          "alt": "Cama balinesa para piscina y villa en Republica Dominicana",
           "description": "Una cama balinesa que transforma cualquier area de piscina en un espacio de descanso premium."
         },
         {
           "name": "Balinesa Candor",
           "image": "assets/images/cama-balinesa-candor.jpg",
-          "alt": "Cama Balinesa Candor",
+          "alt": "Cama balinesa Candor para terraza o jardin exterior",
           "description": "Elegante, limpia y acogedora para quienes quieren un espacio relajado y bien montado."
         },
         {
           "name": "Chaise Candor",
           "image": "assets/images/chaise-candor.jpg",
-          "alt": "Chaise Candor",
+          "alt": "Chaise exterior resistente al sol para piscina en Santiago",
           "description": "Una chaise comoda y bonita para tomar sol, leer o simplemente descansar mejor."
         },
         {
           "name": "Cama Balinesa",
           "image": "assets/images/cama-balinesa.jpeg",
-          "alt": "Cama Balinesa",
-          "description": "Tu propio rincon de descanso, estilo resort."
+          "alt": "Cama balinesa de exterior para zona de descanso y piscina",
+          "description": "Tu propio rincon de descanso con estilo resort, pensado para exterior y para disfrutar mas tiempo."
         },
         {
           "name": "Set de cama Trap",
           "image": "assets/images/set-cama-trap.jpeg",
-          "alt": "Set de cama Trap",
-          "description": "Descansar con estilo nunca fue tan sencillo."
+          "alt": "Set premium de exterior para villa o area de piscina",
+          "description": "Una propuesta comoda y visualmente impactante para zonas de descanso exteriores de alto nivel."
         },
         {
           "name": "Oculus Chaise",
           "image": "assets/images/oculus-chaise.jpg",
-          "alt": "Oculus Chaise",
-          "description": "Diseno con mucha presencia para un ambiente exterior que quiera verse diferente y mas exclusivo."
+          "alt": "Oculus Chaise para terraza y piscina en Republica Dominicana",
+          "description": "Diseno con mucha presencia para un ambiente exterior que quiere verse diferente y mas exclusivo."
         },
         {
           "name": "Oculus Descanso",
-          "image": "assets/images/oculusmaredinasty.jpeg",
-          "alt": "Oculus Descanso",
+          "image": "assets/images/oculus-descanso-piscina-villa-rd.jpeg",
+          "alt": "Mueble de descanso exterior para jardin o villa en RD",
           "description": "Una pieza pensada para relajarte con comodidad y darle valor visual a tu area exterior."
         }
       ],
       "note_label": "Perfecto para",
-      "meta_text": "Si buscas un look tipo resort en casa, esta es la coleccion por donde empezar.",
+      "meta_text": "Si buscas un look tipo resort en casa o en un proyecto, esta es la coleccion por donde empezar.",
       "featured": false,
       "style": "default",
-      "label": "Tu Oasis Privado",
-      "title": "Una zona de descanso que de verdad se sienta <em>exclusiva</em>",
-      "note_text": "Piscinas, jardines, villas y espacios de descanso exterior.",
+      "label": "Piscina y relax",
+      "title": "Muebles para piscina, villas y areas de descanso que se sienten <em>exclusivos</em>",
+      "note_text": "Piscinas, jardines, villas, hoteles y espacios de descanso exterior.",
       "id": "oasis",
-      "description": "Aqui encuentras piezas para crear un rincon de paz en tu casa, junto a la piscina o en un jardin pensado para desconectar."
+      "description": "Seleccionamos piezas para crear un rincon de calma junto a la piscina, en un jardin o en una villa, con muebles resistentes a lluvia y sol que mantienen una imagen premium en exterior."
     },
     {
       "badge": "Producto destacado",
@@ -162,19 +162,19 @@
         {
           "name": "Candor Mix Collection",
           "image": "assets/images/candor-mix-collection.jpeg",
-          "alt": "Candor Mix Collection",
+          "alt": "Candor Mix Collection para terraza premium en Santiago",
           "description": "Un set completo que equilibra confort, elegancia y materiales de calidad para crear un ambiente exterior que invita a quedarse."
         }
       ],
       "note_label": "Recomendado para",
-      "meta_text": "Si te interesa este set, escribenos y te ayudamos a cotizarlo segun tu espacio.",
+      "meta_text": "Si te interesa este set, escribenos y te ayudamos a cotizarlo segun el espacio donde lo quieres instalar.",
       "featured": true,
       "style": "default",
       "label": "Destacado",
-      "title": "Una coleccion que lo tiene <em>todo</em>",
-      "note_text": "Terrazas modernas, patios amplios y espacios de alto nivel.",
+      "title": "Una coleccion completa para terrazas de alto impacto <em>visual</em>",
+      "note_text": "Terrazas modernas, patios amplios, villas y proyectos premium.",
       "id": "destacado",
-      "description": "Este set combina comodidad, diseno y presencia en un solo espacio. Ideal para terrazas donde quieres que todo se vea bien sin complicarte."
+      "description": "Este set combina comodidad, diseno y presencia en una sola propuesta. Es ideal si quieres muebles de terraza modernos con materiales duraderos y una composicion elegante desde el primer vistazo."
     }
   ]
 }

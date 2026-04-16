@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const createProductCard = (product, featured) => `
     <article class="product-card${featured ? " product-card-full" : ""}">
-      <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.alt || product.name)}">
+      <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.alt || product.name)}" loading="lazy" decoding="async">
       <div class="product-copy">
         <h3>${escapeHtml(product.name)}</h3>
         <p>${escapeHtml(product.description)}</p>
@@ -75,20 +75,20 @@ document.addEventListener("DOMContentLoaded", () => {
       <section id="${escapeHtml(collection.id)}" class="${sectionClasses.join(" ")}">
         <div class="section-top reveal">
           <div class="section-intro">
-            <div class="section-label"><span></span>${collection.label}</div>
+            <div class="section-label"><span></span>${escapeHtml(collection.label)}</div>
             <h2 class="section-title">${collection.title}</h2>
-            <p class="section-desc">${collection.description}</p>
+            <p class="section-desc">${escapeHtml(collection.description)}</p>
           </div>
           <div class="section-note">
-            <span>${collection.note_label}</span>
-            <strong>${collection.note_text}</strong>
+            <span>${escapeHtml(collection.note_label)}</span>
+            <strong>${escapeHtml(collection.note_text)}</strong>
           </div>
         </div>
         <div class="gallery-shell reveal">
           <div class="gallery-header">
             <div class="gallery-meta">
-              <span class="gallery-badge">${collection.badge}</span>
-              <p>${collection.meta_text}</p>
+              <span class="gallery-badge">${escapeHtml(collection.badge)}</span>
+              <p>${escapeHtml(collection.meta_text)}</p>
             </div>
             ${controls}
           </div>
