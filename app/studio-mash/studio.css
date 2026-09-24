@@ -1,0 +1,499 @@
+.admin-login,
+.studio {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(129, 103, 69, 0.18), transparent 34rem),
+    linear-gradient(135deg, #f7f2ea 0%, #eee6d8 52%, #d8c8b1 100%);
+  color: #181612;
+  font-family: var(--font-sans), Arial, sans-serif;
+}
+
+.admin-login {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(25rem, 0.95fr);
+}
+
+.admin-login__visual {
+  background:
+    linear-gradient(90deg, rgba(16, 28, 19, 0.52), rgba(16, 28, 19, 0.06)),
+    url("/assets/images/oasis-hero.jpg") center / cover;
+}
+
+.admin-login__content {
+  display: grid;
+  place-items: center;
+  padding: clamp(2rem, 6vw, 5rem);
+}
+
+.admin-login__panel,
+.studio-card,
+.studio-table-card,
+.studio-stat,
+.studio-collection-card {
+  background: rgba(255, 252, 246, 0.88);
+  border: 1px solid rgba(38, 33, 25, 0.12);
+  box-shadow: 0 1.5rem 4rem rgba(49, 39, 23, 0.12);
+}
+
+.admin-login__panel {
+  width: min(100%, 29rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border-radius: 0.75rem;
+}
+
+.admin-brand,
+.studio-logo {
+  display: grid;
+  gap: 0.1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.admin-brand span,
+.studio-logo span {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 2.1rem;
+  line-height: 0.9;
+}
+
+.admin-brand small,
+.studio-logo small,
+.studio-kicker,
+.studio-heading p,
+.studio-hero p,
+.studio-topbar p {
+  color: #766b5d;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.admin-login h1,
+.studio h1,
+.studio h2 {
+  font-family: var(--font-serif), Georgia, serif;
+  letter-spacing: 0;
+  margin: 0;
+}
+
+.admin-login h1 {
+  font-size: clamp(2.35rem, 5vw, 3.5rem);
+  line-height: 0.95;
+  margin-top: 2rem;
+}
+
+.admin-login p,
+.studio-card p,
+.studio-row p,
+.studio-collection-card p {
+  color: #5f564b;
+  line-height: 1.6;
+}
+
+.admin-form,
+.studio-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.admin-form label,
+.studio-form label {
+  color: #302a22;
+  display: grid;
+  font-size: 0.86rem;
+  font-weight: 700;
+  gap: 0.45rem;
+}
+
+.admin-form input,
+.studio-form input,
+.studio-form select,
+.studio-form textarea,
+.studio-row__actions select {
+  background: #fffdf8;
+  border: 1px solid rgba(34, 29, 22, 0.16);
+  border-radius: 0.45rem;
+  color: #181612;
+  font: inherit;
+  padding: 0.85rem 0.95rem;
+}
+
+.studio-form textarea {
+  resize: vertical;
+}
+
+.admin-button,
+.studio-row__actions button,
+.studio-edit-link,
+.studio-public-link,
+.studio-logout {
+  align-items: center;
+  border-radius: 0.45rem;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  justify-content: center;
+  letter-spacing: 0.02em;
+  min-height: 2.8rem;
+  padding: 0.75rem 1.1rem;
+  text-decoration: none;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.admin-button,
+.studio-row__actions button {
+  background: #113221;
+  color: #fffdf6;
+}
+
+.admin-button:hover,
+.studio-row__actions button:hover {
+  background: #1c4a32;
+  transform: translateY(-1px);
+}
+
+.admin-button:disabled {
+  cursor: wait;
+  opacity: 0.64;
+}
+
+.admin-error {
+  color: #9a2f1f;
+  font-size: 0.86rem;
+  margin: 0;
+}
+
+.admin-success {
+  color: #113221;
+  font-size: 0.86rem;
+  margin: 0;
+}
+
+.admin-setup-list,
+.studio-checklist {
+  display: grid;
+  gap: 0.7rem;
+  margin: 1.5rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.studio {
+  display: grid;
+  grid-template-columns: 17rem minmax(0, 1fr);
+}
+
+.studio-sidebar {
+  background: #151614;
+  color: #fffaf0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-height: 100dvh;
+  padding: 1.35rem;
+  position: sticky;
+  top: 0;
+}
+
+.studio-nav {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.studio-nav a,
+.studio-logout {
+  background: transparent;
+  border: 1px solid transparent;
+  color: rgba(255, 250, 240, 0.78);
+  justify-content: flex-start;
+  text-decoration: none;
+}
+
+.studio-nav a {
+  border-radius: 0.45rem;
+  padding: 0.75rem 0.85rem;
+}
+
+.studio-nav a:hover,
+.studio-logout:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fffaf0;
+}
+
+.studio-logout {
+  margin-top: auto;
+  width: 100%;
+}
+
+.studio-main {
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.studio-topbar,
+.studio-heading,
+.studio-hero {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.studio-topbar {
+  margin-bottom: 2rem;
+}
+
+.studio-public-link,
+.studio-edit-link {
+  border: 1px solid rgba(34, 29, 22, 0.16);
+  color: #181612;
+}
+
+.studio-heading,
+.studio-hero {
+  margin-bottom: 1.35rem;
+}
+
+.studio-hero {
+  background:
+    linear-gradient(90deg, rgba(17, 50, 33, 0.9), rgba(17, 50, 33, 0.42)),
+    url("/assets/images/candor-mix-collection.jpeg") center / cover;
+  border-radius: 0.75rem;
+  color: #fffaf0;
+  min-height: 18rem;
+  padding: clamp(1.4rem, 4vw, 2.5rem);
+}
+
+.studio-hero p {
+  color: rgba(255, 250, 240, 0.72);
+}
+
+.studio-hero h1 {
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  line-height: 0.95;
+  max-width: 11ch;
+}
+
+.studio-stats,
+.studio-grid-cards,
+.studio-folder-grid,
+.studio-form__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.studio-stat,
+.studio-card,
+.studio-table-card,
+.studio-collection-card {
+  border-radius: 0.7rem;
+  padding: 1.25rem;
+}
+
+.studio-stat {
+  color: inherit;
+  display: grid;
+  gap: 1rem;
+  text-decoration: none;
+}
+
+.studio-stat span {
+  color: #665d51;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.studio-stat strong {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.studio-card,
+.studio-table-card {
+  margin-top: 1rem;
+}
+
+.studio-table {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.studio-row {
+  align-items: center;
+  border-bottom: 1px solid rgba(34, 29, 22, 0.1);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 4.5rem minmax(12rem, 1fr) auto auto auto;
+  padding: 0.75rem 0;
+}
+
+.studio-row:last-child {
+  border-bottom: 0;
+}
+
+.studio-row__image,
+.studio-collection-card__image {
+  background: #ded2c3;
+  border-radius: 0.45rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.studio-row__image {
+  aspect-ratio: 1;
+}
+
+.studio-row__image img,
+.studio-collection-card__image img {
+  object-fit: cover;
+}
+
+.studio-row h2,
+.studio-collection-card h2,
+.studio-card h2 {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.studio-status {
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.42rem 0.65rem;
+  text-transform: uppercase;
+}
+
+.studio-status--published {
+  background: #dbe9dd;
+  color: #113221;
+}
+
+.studio-status--draft {
+  background: #efe2c7;
+  color: #654815;
+}
+
+.studio-status--hidden,
+.studio-status--archived {
+  background: #eadbd6;
+  color: #7b3225;
+}
+
+.studio-row__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.studio-empty {
+  padding: 2rem 0;
+}
+
+.studio-form__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.studio-form label span {
+  color: #9a2f1f;
+  font-size: 0.78rem;
+}
+
+.studio-checkbox {
+  align-content: center;
+  grid-template-columns: auto 1fr;
+}
+
+.studio-checkbox input {
+  inline-size: 1.05rem;
+}
+
+.studio-language-note {
+  background: #f2eadf;
+  border-left: 4px solid #113221;
+  border-radius: 0.45rem;
+  padding: 1rem;
+}
+
+.studio-language-note p {
+  margin: 0.25rem 0 0;
+}
+
+.studio-grid-cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.studio-collection-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.studio-collection-card__image {
+  aspect-ratio: 4 / 3;
+}
+
+.studio-folder-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.studio-folder-grid code {
+  background: #151614;
+  border-radius: 0.45rem;
+  color: #fffaf0;
+  padding: 0.9rem;
+}
+
+@media (max-width: 980px) {
+  .admin-login,
+  .studio {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-login__visual {
+    min-height: 35dvh;
+  }
+
+  .studio-sidebar {
+    min-height: auto;
+    position: static;
+  }
+
+  .studio-stats,
+  .studio-grid-cards,
+  .studio-folder-grid,
+  .studio-form__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .studio-row {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+
+  .studio-row__actions,
+  .studio-status,
+  .studio-edit-link {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .studio-stats,
+  .studio-grid-cards,
+  .studio-folder-grid,
+  .studio-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-heading,
+  .studio-hero,
+  .studio-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
