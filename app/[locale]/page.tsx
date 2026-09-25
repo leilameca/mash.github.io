@@ -6,6 +6,7 @@ import { QuoteLink } from "@/components/QuoteLink";
 import { dictionary, projects, site } from "@/lib/content";
 import { isLocale, localizedPath, type Locale } from "@/lib/i18n";
 import { getCatalogCollections, getCatalogProducts } from "@/lib/supabase/catalog";
+import { getHomeHeroContent } from "@/lib/supabase/site-content";
 import { notFound } from "next/navigation";
 
 function splitWords(text: string) {
@@ -21,12 +22,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
   const t = dictionary[locale].common;
-  const [collections, catalogProducts] = await Promise.all([getCatalogCollections(), getCatalogProducts(locale)]);
+  const [collections, catalogProducts, heroContent] = await Promise.all([
+    getCatalogCollections(),
+    getCatalogProducts(locale),
+    getHomeHeroContent(locale)
+  ]);
   const featuredProducts = catalogProducts.filter((product) => product.featured).slice(0, 6);
-  const heroCopy =
-    locale === "es"
-      ? "En MASH encuentras muebles resistentes para terrazas, patios, balcones y piscinas, con asesoría para elegir piezas que funcionen en tu espacio y respondan al exterior."
-      : "At MASH, you will find outdoor-ready furniture for terraces, patios, balconies and pools, with guidance to choose pieces that work for your space.";
   const philosophy =
     locale === "es"
       ? "Más que muebles, creamos espacios que se viven."
@@ -57,7 +58,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="hero-section">
         <div className="hero-media" data-image-motion>
           <Image
-            src="/assets/images/oasis-hero-v2.jpg"
+            src={heroContent.image}
             alt={locale === "es" ? "Muebles de exterior para terraza y piscina" : "Outdoor furniture for terrace and pool"}
             className="hero-media__image"
             fill
@@ -68,8 +69,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="hero-content section-shell">
           <div className="hero-copy" data-reveal>
             <p className="eyebrow">MASH | {site.fullName}</p>
-            <h1>{locale === "es" ? "Diseñamos espacios para disfrutarlos afuera." : "We design spaces made to be enjoyed outside."}</h1>
-            <p>{heroCopy}</p>
+            <h1>{heroContent.title}</h1>
+            <p>{heroContent.description}</p>
             <div className="hero-actions">
               <Link href={localizedPath(locale, "/colecciones")} className="button button--gold">
                 {t.viewCollections}

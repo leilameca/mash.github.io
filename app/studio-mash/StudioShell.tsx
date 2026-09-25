@@ -6,6 +6,7 @@ const nav = [
   { href: "/studio-mash", label: "Resumen" },
   { href: "/studio-mash/productos", label: "Productos" },
   { href: "/studio-mash/colecciones", label: "Colecciones" },
+  { href: "/studio-mash/contenido", label: "Contenido" },
   { href: "/studio-mash/proyectos", label: "Proyectos" },
   { href: "/studio-mash/multimedia", label: "Multimedia" }
 ];

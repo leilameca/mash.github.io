@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { StudioShell } from "../StudioShell";
@@ -8,7 +9,7 @@ export default async function StudioCollectionsPage() {
   const admin = createSupabaseAdminClient();
   const { data: collections } = await admin
     .from("collections")
-    .select("id,slug,status,cover_image_path,collection_translations(locale,name,description)")
+    .select("id,slug,status,featured,sort_order,cover_image_path,collection_translations(locale,name,description)")
     .order("sort_order", { ascending: true });
 
   return (
@@ -18,6 +19,9 @@ export default async function StudioCollectionsPage() {
           <p>Catalogo</p>
           <h1>Colecciones</h1>
         </div>
+        <Link href="/studio-mash/colecciones/nueva" className="admin-button">
+          Nueva coleccion
+        </Link>
       </section>
       <section className="studio-grid-cards">
         {(collections ?? []).map((collection: any) => {
@@ -31,18 +35,14 @@ export default async function StudioCollectionsPage() {
                 <span className={`studio-status studio-status--${collection.status}`}>{collection.status}</span>
                 <h2>{es?.name ?? collection.slug}</h2>
                 <p>{es?.description ?? "Descripcion pendiente"}</p>
+                <p>Orden {collection.sort_order}</p>
+                <Link href={`/studio-mash/colecciones/${collection.id}`} className="studio-edit-link">
+                  Editar
+                </Link>
               </div>
             </article>
           );
         })}
-      </section>
-      <section className="studio-card">
-        <p className="studio-kicker">Nota de fase</p>
-        <h2>Edicion ampliada pendiente</h2>
-        <p>
-          La base de datos ya soporta colecciones bilingues, estado, orden e imagen. Para esta fase inicial se mantiene la
-          edicion completa de colecciones en migraciones o SQL controlado para evitar cambios accidentales en la arquitectura del catalogo.
-        </p>
       </section>
     </StudioShell>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useActionState } from "react";
 import { upsertProduct, type ActionState } from "../actions";
 
@@ -78,8 +79,15 @@ export function ProductForm({ collections, product }: { collections: CollectionO
       </label>
       <label>
         Imagen principal
-        <input name="hero_image_path" defaultValue={product?.hero_image_path} placeholder="/assets/images/oasis-set.jpg o URL del bucket" required />
-        {state.errors?.hero_image_path && <span>{state.errors.hero_image_path}</span>}
+        {product?.hero_image_path && (
+          <span className="studio-image-preview">
+            <Image src={product.hero_image_path} alt="Imagen principal actual" fill sizes="240px" />
+          </span>
+        )}
+        <input type="hidden" name="existing_image_path" value={product?.hero_image_path ?? ""} />
+        <input name="hero_image" type="file" accept="image/jpeg,image/png,image/webp,image/avif" required={!product?.hero_image_path} />
+        <small>JPG, PNG, WebP o AVIF. Maximo 6 MB. Al elegir otra imagen se reemplaza la principal.</small>
+        {state.errors?.hero_image && <span>{state.errors.hero_image}</span>}
       </label>
 
       <div className="studio-form__grid">

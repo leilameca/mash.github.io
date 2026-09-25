@@ -1,54 +1,59 @@
-# MASH
+# MASH | Martinez Star Home
 
-La pagina ahora carga sus colecciones desde `data/colecciones.json` y ya incluye una base de panel admin en `admin/config.yml`.
+Sitio bilingue de catalogo para MASH, construido con Next.js y un panel privado conectado a Supabase.
 
-## Como funciona
+## Desarrollo local
 
-- La portada renderiza automaticamente las colecciones usando `js/main.js`.
-- Las imagenes nuevas del admin se guardan en `assets/images/uploads/`.
-- El cliente podra editar colecciones y productos desde `/admin` sin tocar HTML.
+```bash
+npm install
+npm run dev
+```
 
-## Acceso al admin
+El sitio queda disponible en `http://localhost:3000/es` y el panel en `http://localhost:3000/studio-mash`.
 
-- URL del panel: `/admin`
-- Tipo de acceso: inicio de sesion con GitHub
-- Usuario admin: la cuenta de GitHub autorizada como editora del repositorio
-- Contrasena: la de esa cuenta de GitHub
+## Variables de entorno
 
-No se debe guardar la contrasena en este README ni en ningun archivo del proyecto. Lo seguro es entregarla por un medio privado o, mejor aun, crear una cuenta de GitHub exclusiva para el cliente y activar 2FA.
+Crea un archivo `.env.local` sin subirlo al repositorio:
 
-## GitHub Pages
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_ENABLE_SUPABASE_CATALOG=true
+```
 
-Para que el login funcione en produccion con GitHub Pages, hace falta un servidor OAuth para Decap CMS. El flujo recomendado es este:
+La clave `SUPABASE_SERVICE_ROLE_KEY` solo se utiliza en acciones del servidor protegidas por la sesion administrativa. Nunca debe exponerse en el navegador ni guardarse en Git.
 
-1. Crear una GitHub OAuth App.
-2. Publicar un auth server para Decap CMS.
-3. Poner la URL de ese auth server en `admin/config.yml` con `base_url` y `auth_endpoint`.
-4. Autorizar como editor a la cuenta de GitHub que usara el cliente.
+## Supabase
 
-### Datos que debes usar en la GitHub OAuth App
+Las migraciones de `supabase/migrations/` crean:
 
-- Application name: `MASH Admin`
-- Homepage URL: la URL publica del sitio en GitHub Pages
-- Authorization callback URL: la URL publica de tu auth server seguida de `/callback`
+- administradores autorizados y acceso por codigo OTP de 8 digitos;
+- productos, colecciones, proyectos y traducciones en espanol e ingles;
+- bloques editables de contenido del sitio;
+- el bucket publico `mash-media`, con escritura limitada a administradores;
+- politicas RLS para separar lectura publica y gestion privada.
 
-### Variables del auth server
+Aplica las migraciones en orden y agrega el correo permitido a `public.admin_users` antes de iniciar sesion.
 
-- `GITHUB_CLIENT_ID`
-- `GITHUB_CLIENT_SECRET`
-- `ORIGIN`
-- `REPO`
-- `BRANCH`
+## Funciones actuales del panel
 
-### En este proyecto ya quedo listo
+- Crear y editar productos.
+- Cargar la imagen principal desde el dispositivo, sin pegar enlaces.
+- Crear y editar colecciones o categorias, incluyendo orden, estado, traducciones e imagen.
+- Subir y consultar archivos en la biblioteca multimedia.
+- Editar el titulo, la descripcion y la imagen del hero en espanol e ingles.
+- Publicar, ocultar, archivar o mantener contenido como borrador.
 
-- El panel visual con logo en `admin/index.html`
-- El estilo del panel en `admin/admin.css`
-- La configuracion editorial en `admin/config.yml`
-- El catalogo editable en `data/colecciones.json`
+Las imagenes admitidas son JPG, PNG, WebP y AVIF, con un maximo de 6 MB por archivo.
 
-## Pruebas locales
+## Alcance del CMS
 
-- `local_backend: true` ya esta activado.
-- Para pruebas locales del CMS necesitas correr un backend local de Decap y servir el sitio en local.
-gracias
+La tabla `site_content` funciona como base modular para trasladar progresivamente al panel las demas secciones: materiales, datos de contacto, navegacion, banners, proyectos y paginas adicionales. El panel ya cubre catalogo, categorias, medios y el bloque principal del inicio; un constructor visual completo con secciones reordenables, temas y plugins requiere una fase posterior, equivalente a desarrollar un page builder.
+
+## Verificacion
+
+```bash
+npm run typecheck
+npm run build
+```
