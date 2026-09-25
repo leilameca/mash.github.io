@@ -77,8 +77,7 @@ export const dictionary = {
       materials: "Materiales",
       dimensions: "Dimensiones",
       finishes: "Acabados",
-      care: "Cuidados",
-      legalNotice: "Contenido pendiente de confirmacion legal antes de produccion."
+      care: "Cuidados"
     },
     meta: {
       homeTitle: "Muebles de exterior en Santiago, Republica Dominicana",
@@ -110,8 +109,7 @@ export const dictionary = {
       materials: "Materials",
       dimensions: "Dimensions",
       finishes: "Finishes",
-      care: "Care",
-      legalNotice: "Content requires legal/business confirmation before production."
+      care: "Care"
     },
     meta: {
       homeTitle: "Outdoor furniture in Santiago, Dominican Republic",
