@@ -36,9 +36,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       type: "website",
       images: [
         {
-          url: "/assets/images/oasis-hero.jpg",
-          width: 853,
-          height: 1280,
+          url: "/assets/images/oasis-hero-v2.jpg",
+          width: 1672,
+          height: 941,
           alt: locale === "es" ? "Muebles de exterior MASH" : "MASH outdoor furniture"
         }
       ]

@@ -37,7 +37,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     "@type": "FurnitureStore",
     name: "MASH | Martinez Star Home",
     url: "https://mashoficial.com/",
-    image: "https://mashoficial.com/assets/images/oasis-hero.jpg",
+    image: "https://mashoficial.com/assets/images/oasis-hero-v2.jpg",
     logo: "https://mashoficial.com/assets/images/logo.png",
     telephone: "+1-809-327-2139",
     email: site.email,
@@ -57,8 +57,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="hero-section">
         <div className="hero-media" data-image-motion>
           <Image
-            src="/assets/images/oasis-hero.jpg"
+            src="/assets/images/oasis-hero-v2.jpg"
             alt={locale === "es" ? "Muebles de exterior para terraza y piscina" : "Outdoor furniture for terrace and pool"}
+            className="hero-media__image"
             fill
             priority
             sizes="100vw"
