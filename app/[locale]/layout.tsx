@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MotionEnhancer } from "@/components/MotionEnhancer";
+import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { dictionary } from "@/lib/content";
 import { isLocale, type Locale } from "@/lib/i18n";
 
@@ -66,6 +67,7 @@ export default async function LocaleLayout({
         {children}
       </main>
       <Footer locale={locale} />
+      <WhatsAppFloat locale={locale} />
       <MotionEnhancer />
     </>
   );

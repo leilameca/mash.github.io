@@ -10,7 +10,6 @@ export function ProductCard({ product, locale, priority = false }: { product: Pr
   return (
     <article className="product-card">
       <Link href={localizedPath(locale, `/productos/${product.slug}`)} className="product-card__image">
-        <span className="product-card__favorite" aria-hidden="true" />
         <Image
           src={product.image}
           alt={product.alt[locale]}

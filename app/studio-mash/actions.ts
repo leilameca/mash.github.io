@@ -137,7 +137,18 @@ export async function verifyAdminCode(_previous: ActionState, formData: FormData
   }
 
   if (!allowed.user_id) {
-    await admin.from("admin_users").update({ user_id: data.user.id }).eq("id", allowed.id).is("user_id", null);
+    const { data: linked, error: linkError } = await admin
+      .from("admin_users")
+      .update({ user_id: data.user.id })
+      .eq("id", allowed.id)
+      .is("user_id", null)
+      .select("user_id")
+      .maybeSingle();
+
+    if (linkError || !linked || linked.user_id !== data.user.id) {
+      await supabase.auth.signOut();
+      return { ok: false, message: "No pudimos completar el acceso administrativo." };
+    }
   }
 
   redirect(adminRoute);

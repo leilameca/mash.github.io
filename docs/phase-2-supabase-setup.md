@@ -50,6 +50,8 @@ Enable email OTP/code in Supabase Auth settings. The UI uses plain owner-facing 
 
 Unknown emails receive a generic response and are not granted admin access.
 
+Configure the email template to include `{{ .Token }}` so the administrator receives the six-digit code instead of a Magic Link. Supabase Auth enforces the OTP request rate limit; the application additionally checks the active `public.admin_users` allowlist before requesting a code and again after verification.
+
 ## Storage
 
 The `mash-media` bucket is public-read and admin-write only. Use folders:

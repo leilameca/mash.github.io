@@ -167,6 +167,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <Image
             src="/assets/images/yascari.jpeg"
             alt={locale === "es" ? "Asesoria de seleccion de muebles de exterior" : "Outdoor furniture selection guidance"}
+            className="editorial-split__portrait"
             fill
             sizes="(max-width: 900px) 92vw, 42vw"
           />
@@ -207,7 +208,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="materials-section">
         <div className="section-shell materials-layout">
           <div className="materials-visual" data-image-motion>
-            <Image src="/assets/images/textura-ratan.jpg" alt={locale === "es" ? "Detalle de fibra sintetica" : "Synthetic fiber detail"} fill sizes="(max-width: 920px) 92vw, 34vw" />
+            <Image src="/assets/images/textura-fibra-sintetica-v2.webp" alt={locale === "es" ? "Detalle de fibra sintetica" : "Synthetic fiber detail"} fill sizes="(max-width: 920px) 92vw, 34vw" />
             <div>
               <Image src="/assets/images/estructura-acero.jpg" alt={locale === "es" ? "Detalle de estructura galvanizada" : "Galvanized structure detail"} fill sizes="12rem" />
             </div>

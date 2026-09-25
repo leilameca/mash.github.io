@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
-import { alternateLocale, localizedPath, type Locale } from "@/lib/i18n";
+import { localizedPath, type Locale } from "@/lib/i18n";
 import { dictionary, site } from "@/lib/content";
 
 const navItems = [
@@ -21,8 +21,7 @@ export function Header({ locale }: { locale: Locale }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const t = dictionary[locale].nav;
-  const nextLocale = alternateLocale(locale);
-  const switchPath = pathname?.replace(/^\/(es|en)/, `/${nextLocale}`) ?? localizedPath(nextLocale);
+  const localePath = pathname?.replace(/^\/(es|en)/, "") ?? "";
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 24);
@@ -66,12 +65,13 @@ export function Header({ locale }: { locale: Locale }) {
               </Link>
             );
           })}
-          <button className="nav-search" type="button" aria-label={locale === "es" ? "Buscar" : "Search"}>
-            <span />
-          </button>
           <div className="language-switch" aria-label="Language">
-            <span aria-current={locale === "es" ? "true" : undefined}>ES</span>
-            <Link href={switchPath}>EN</Link>
+            <Link href={localizedPath("es", localePath)} aria-current={locale === "es" ? "page" : undefined}>
+              ES
+            </Link>
+            <Link href={localizedPath("en", localePath)} aria-current={locale === "en" ? "page" : undefined}>
+              EN
+            </Link>
           </div>
           <a className="nav-quote" href={site.whatsapp} target="_blank" rel="noreferrer">
             {t.quote}

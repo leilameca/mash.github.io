@@ -7,7 +7,6 @@ export type AdminProfile = {
   id: string;
   email: string;
   user_id: string | null;
-  role: string;
 };
 
 export async function getCurrentAdmin() {
@@ -25,7 +24,7 @@ export async function getCurrentAdmin() {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("admin_users")
-    .select("id,email,user_id,role")
+    .select("id,email,user_id")
     .eq("email", user.email)
     .eq("is_active", true)
     .maybeSingle();
@@ -33,8 +32,16 @@ export async function getCurrentAdmin() {
   if (error || !data) return null;
 
   if (!data.user_id) {
-    await admin.from("admin_users").update({ user_id: user.id }).eq("id", data.id).is("user_id", null);
-    return { ...data, user_id: user.id } as AdminProfile;
+    const { data: linked, error: linkError } = await admin
+      .from("admin_users")
+      .update({ user_id: user.id })
+      .eq("id", data.id)
+      .is("user_id", null)
+      .select("id,email,user_id")
+      .maybeSingle();
+
+    if (linkError || !linked || linked.user_id !== user.id) return null;
+    return linked as AdminProfile;
   }
 
   if (data.user_id !== user.id) return null;
