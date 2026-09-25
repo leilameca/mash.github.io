@@ -40,8 +40,16 @@ export function LoginForm() {
         <form action={verifyAction} className="admin-form admin-form--code">
           <input type="hidden" name="email" value={email} />
           <label>
-            Codigo de 6 digitos
-            <input name="token" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} required />
+            Codigo de 8 digitos
+            <input
+              name="token"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              pattern="[0-9]{8}"
+              minLength={8}
+              maxLength={8}
+              required
+            />
           </label>
           {verifyState.errors?.token && <p className="admin-error">{verifyState.errors.token}</p>}
           {verifyState.message && <p className="admin-error">{verifyState.message}</p>}

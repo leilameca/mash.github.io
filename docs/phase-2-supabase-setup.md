@@ -50,7 +50,7 @@ Enable email OTP/code in Supabase Auth settings. The UI uses plain owner-facing 
 
 Unknown emails receive a generic response and are not granted admin access.
 
-Configure the email template to include `{{ .Token }}` so the administrator receives the six-digit code instead of a Magic Link. Supabase Auth enforces the OTP request rate limit; the application additionally checks the active `public.admin_users` allowlist before requesting a code and again after verification.
+Configure the email OTP length as exactly 8 digits (`auth.email.otp_length = 8` in local/self-hosted configuration, or the corresponding hosted Auth setting). Configure the email template to include `{{ .Token }}` so the administrator receives the eight-digit code instead of a Magic Link. Supabase Auth enforces the OTP request rate limit; the application additionally checks the active `public.admin_users` allowlist before requesting a code and again after verification.
 
 ## Storage
 

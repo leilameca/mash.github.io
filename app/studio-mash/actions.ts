@@ -19,7 +19,7 @@ const emailSchema = z.object({
 });
 
 const codeSchema = emailSchema.extend({
-  token: z.string().trim().regex(/^\d{6}$/, "El codigo debe tener 6 digitos.")
+  token: z.string().trim().regex(/^\d{8}$/, "El codigo debe tener 8 digitos.")
 });
 
 const productSchema = z.object({
