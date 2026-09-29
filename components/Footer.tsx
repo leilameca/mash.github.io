@@ -1,54 +1,46 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/BrandMark";
-import { dictionary, site } from "@/lib/content";
 import { localizedPath, type Locale } from "@/lib/i18n";
+import type { SiteChromeContent } from "@/lib/supabase/site-content";
 
-export function Footer({ locale }: { locale: Locale }) {
-  const t = dictionary[locale].nav;
-
+export function Footer({ locale, content }: { locale: Locale; content: SiteChromeContent }) {
   return (
     <footer className="site-footer" id="contacto">
       <div className="footer-cta section-shell">
-        <p>{locale === "es" ? "¿Tienes un proyecto en mente?" : "Have a project in mind?"}</p>
-        <a href={site.whatsapp} target="_blank" rel="noreferrer" className="button button--gold">
-          {dictionary[locale].common.requestQuote}
+        <p>{content.footerCta}</p>
+        <a href={content.whatsapp} target="_blank" rel="noreferrer" className="button button--gold">
+          {content.requestQuoteLabel}
         </a>
       </div>
       <div className="footer-main section-shell">
         <div className="footer-brand">
           <BrandMark locale={locale} />
-          <p>
-            {locale === "es"
-              ? "Muebles de exterior para terrazas, patios, balcones, piscinas, hoteles, restaurantes, villas y proyectos comerciales."
-              : "Outdoor furniture for terraces, patios, balconies, pools, hotels, restaurants, villas and commercial projects."}
-          </p>
+          <p>{content.footerDescription}</p>
         </div>
         <nav aria-label="Footer">
-          <h2>{locale === "es" ? "Navegacion" : "Navigation"}</h2>
-          <Link href={localizedPath(locale, "/colecciones")}>{t.collections}</Link>
-          <Link href={localizedPath(locale, "/productos")}>{t.products}</Link>
-          <Link href={localizedPath(locale, "/proyectos")}>{t.projects}</Link>
-          <Link href={localizedPath(locale, "/nosotros")}>{t.about}</Link>
-          <Link href={localizedPath(locale, "/contacto")}>{t.contact}</Link>
+          <h2>{content.footerNavigationTitle}</h2>
+          {content.navigation.filter((item) => item.href).map((item) => (
+            <Link href={localizedPath(locale, item.href)} key={item.id}>{item.label}</Link>
+          ))}
         </nav>
         <address>
-          <h2>{t.contact}</h2>
-          <a href={site.phoneHref}>{site.phone}</a>
-          <a href={site.emailHref}>{site.email}</a>
-          <a href={site.instagram} target="_blank" rel="noreferrer">
-            {site.instagramHandle}
+          <h2>{content.navigation.find((item) => item.id === "contact")?.label ?? (locale === "es" ? "Contacto" : "Contact")}</h2>
+          <a href={content.phoneHref}>{content.phone}</a>
+          <a href={content.emailHref}>{content.email}</a>
+          <a href={content.instagram} target="_blank" rel="noreferrer">
+            {content.instagramHandle}
           </a>
-          <span>{site.location[locale]}</span>
+          <span>{content.location}</span>
         </address>
         <nav aria-label="Legal">
-          <h2>Legal</h2>
+          <h2>{content.footerLegalTitle}</h2>
           <Link href={localizedPath(locale, "/privacidad")}>{locale === "es" ? "Privacidad" : "Privacy"}</Link>
           <Link href={localizedPath(locale, "/cookies")}>Cookies</Link>
           <Link href={localizedPath(locale, "/terminos")}>{locale === "es" ? "Terminos" : "Terms"}</Link>
         </nav>
       </div>
       <div className="footer-bottom section-shell">
-        <p>&copy; 2026 {site.fullName}. {locale === "es" ? "Todos los derechos reservados." : "All rights reserved."}</p>
+        <p>{content.copyright}</p>
       </div>
     </footer>
   );

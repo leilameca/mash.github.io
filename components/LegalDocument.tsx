@@ -1,9 +1,10 @@
-import { site } from "@/lib/content";
 import { getLegalDocument, type LegalDocumentKey } from "@/lib/legal";
 import type { Locale } from "@/lib/i18n";
+import { getSiteChromeContent } from "@/lib/supabase/site-content";
 
-export function LegalDocument({ locale, document }: { locale: Locale; document: LegalDocumentKey }) {
+export async function LegalDocument({ locale, document }: { locale: Locale; document: LegalDocumentKey }) {
   const copy = getLegalDocument(locale, document);
+  const site = await getSiteChromeContent(locale);
 
   return (
     <section className="section-shell legal-page">

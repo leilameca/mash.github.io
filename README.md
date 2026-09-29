@@ -39,13 +39,29 @@ Aplica las migraciones en orden y agrega el correo permitido a `public.admin_use
 ## Funciones actuales del panel
 
 - Crear y editar productos.
-- Cargar la imagen principal desde el dispositivo, sin pegar enlaces.
+- Cargar varias imágenes por producto desde el dispositivo y elegir cuál es la principal.
 - Crear y editar colecciones o categorias, incluyendo orden, estado, traducciones e imagen.
 - Subir y consultar archivos en la biblioteca multimedia.
 - Editar el titulo, la descripcion y la imagen del hero en espanol e ingles.
 - Publicar, ocultar, archivar o mantener contenido como borrador.
+- Editar proyectos existentes desde `Contenido > Proyectos`, incluyendo estado, orden, textos e imagen de portada.
 
 Las imagenes admitidas son JPG, PNG, WebP y AVIF, con un maximo de 6 MB por archivo.
+
+## Publicación en Vercel
+
+Importa el repositorio en Vercel con framework `Next.js`, deja los comandos por defecto y agrega estas variables en Project Settings → Environment Variables:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_ENABLE_SUPABASE_CATALOG=true
+NEXT_PUBLIC_SITE_URL=https://tu-dominio.com
+MASH_ADMIN_ROUTE=studio-mash
+```
+
+Después de publicar, aplica las migraciones de Supabase, confirma que el bucket `mash-media` sea público para lectura y agrega el correo de la clienta a `public.admin_users`. No agregues `SUPABASE_SERVICE_ROLE_KEY` a variables expuestas al cliente.
 
 ## Alcance del CMS
 

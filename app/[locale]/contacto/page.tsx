@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { QuoteLink } from "@/components/QuoteLink";
-import { dictionary, site } from "@/lib/content";
+import { dictionary } from "@/lib/content";
 import { isLocale, type Locale } from "@/lib/i18n";
+import { getMarketingPageContent, getSiteChromeContent } from "@/lib/supabase/site-content";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -16,17 +17,14 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
+  const [site, content] = await Promise.all([getSiteChromeContent(locale), getMarketingPageContent("contact", locale)]);
 
   return (
     <section className="section-shell contact-page">
       <div>
-        <p className="eyebrow">{dictionary[locale].nav.contact}</p>
-        <h1>{locale === "es" ? "Cuéntanos qué espacio quieres transformar." : "Tell us what space you want to transform."}</h1>
-        <p>
-          {locale === "es"
-            ? "El canal principal de cotizacion se mantiene por WhatsApp para responder con asesoria, disponibilidad y siguientes pasos."
-            : "The main quotation channel remains WhatsApp so we can reply with guidance, availability and next steps."}
-        </p>
+        <p className="eyebrow">{content.eyebrow}</p>
+        <h1>{content.title}</h1>
+        <p>{content.description}</p>
         <QuoteLink className="button button--gold">{dictionary[locale].common.requestQuote}</QuoteLink>
       </div>
       <address className="contact-card">
@@ -35,7 +33,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
         <a href={site.instagram} target="_blank" rel="noreferrer">
           {site.instagramHandle}
         </a>
-        <span>{site.location[locale]}</span>
+        <span>{site.location}</span>
       </address>
     </section>
   );

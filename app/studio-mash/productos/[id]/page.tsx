@@ -51,6 +51,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
             hero_image_path:
               (product as any).product_images?.find((image: any) => image.is_primary)?.storage_path ??
               (product as any).product_images?.[0]?.storage_path,
+            image_paths: [...((product as any).product_images ?? [])].sort((a: any, b: any) => (a.sort_order ?? 0) - (b.sort_order ?? 0)).map((image: any) => image.storage_path),
             name_es: es?.name,
             description_es: es?.description,
             materials_es: es?.materials,

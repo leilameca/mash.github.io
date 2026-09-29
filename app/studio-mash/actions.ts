@@ -32,6 +32,8 @@ const productSchema = z.object({
   description_es: z.string().trim().min(10, "Agrega una descripcion en espanol."),
   description_en: z.string().trim().optional(),
   existing_image_path: z.string().trim().optional(),
+  existing_image_paths: z.string().optional(),
+  primary_image_path: z.string().trim().optional(),
   materials_es: z.string().trim().optional(),
   dimensions_es: z.string().trim().optional(),
   finishes_es: z.string().trim().optional(),
@@ -53,12 +55,122 @@ const collectionSchema = z.object({
   sort_order: z.coerce.number().int().min(0).max(9999)
 });
 
+const projectSchema = z.object({
+  id: z.string().optional(),
+  slug: z.string().trim().min(2, "El slug es requerido.").regex(/^[a-z0-9-]+$/, "Usa minusculas, numeros y guiones."),
+  title_es: z.string().trim().min(2, "El titulo en espanol es requerido."),
+  title_en: z.string().trim().optional(),
+  description_es: z.string().trim().min(10, "Agrega una descripcion en espanol."),
+  description_en: z.string().trim().optional(),
+  location: z.string().trim().min(2, "Agrega una ubicacion."),
+  existing_image_path: z.string().trim().optional(),
+  status: z.enum(["draft", "published", "hidden", "archived"]),
+  featured: z.boolean().optional(),
+  sort_order: z.coerce.number().int().min(0).max(9999)
+});
+
 const homeContentSchema = z.object({
   title_es: z.string().trim().min(10, "Agrega el titulo principal en espanol."),
   description_es: z.string().trim().min(20, "Agrega la descripcion principal en espanol."),
   title_en: z.string().trim().min(10, "Agrega el titulo principal en ingles."),
   description_en: z.string().trim().min(20, "Agrega la descripcion principal en ingles."),
   existing_image_path: z.string().trim().optional()
+});
+
+const siteSettingsSchema = z.object({
+  full_name: z.string().trim().min(2, "Agrega el nombre completo."),
+  phone: z.string().trim().min(7, "Agrega un telefono valido."),
+  whatsapp: z.string().url("Agrega una URL valida de WhatsApp."),
+  instagram: z.string().url("Agrega una URL valida de Instagram."),
+  instagram_handle: z.string().trim().min(2, "Agrega el usuario de Instagram."),
+  email: z.string().trim().email("Agrega un correo valido."),
+  location_es: z.string().trim().min(2, "Agrega la ubicacion en espanol."),
+  location_en: z.string().trim().min(2, "Agrega la ubicacion en ingles."),
+  footer_cta_es: z.string().trim().min(5),
+  footer_cta_en: z.string().trim().min(5),
+  footer_description_es: z.string().trim().min(10),
+  footer_description_en: z.string().trim().min(10),
+  footer_navigation_title_es: z.string().trim().min(2),
+  footer_navigation_title_en: z.string().trim().min(2),
+  footer_legal_title_es: z.string().trim().min(2),
+  footer_legal_title_en: z.string().trim().min(2),
+  copyright_es: z.string().trim().min(5),
+  copyright_en: z.string().trim().min(5)
+});
+
+const navigationItemSchema = z.object({
+  id: z.string().trim().min(1).max(64).regex(/^[a-z0-9-]+$/),
+  href: z.string().trim().refine((value) => value === "" || /^\/[a-z0-9/_-]*$/.test(value), "Usa una ruta interna valida."),
+  label_es: z.string().trim().min(1, "Agrega la etiqueta en espanol."),
+  label_en: z.string().trim().min(1, "Agrega la etiqueta en ingles."),
+  visible: z.boolean()
+});
+
+const navigationSchema = z.object({
+  items: z.array(navigationItemSchema).min(1, "Agrega al menos un enlace.").max(12),
+  quote_label_es: z.string().trim().min(1),
+  quote_label_en: z.string().trim().min(1),
+  request_quote_label_es: z.string().trim().min(1),
+  request_quote_label_en: z.string().trim().min(1),
+  menu_label_es: z.string().trim().min(1),
+  menu_label_en: z.string().trim().min(1),
+  close_label_es: z.string().trim().min(1),
+  close_label_en: z.string().trim().min(1)
+});
+
+const marketingPagesSchema = z.object({
+  about_eyebrow_es: z.string().trim().min(2),
+  about_eyebrow_en: z.string().trim().min(2),
+  about_title_es: z.string().trim().min(5),
+  about_title_en: z.string().trim().min(5),
+  about_description_es: z.string().trim().min(20),
+  about_description_en: z.string().trim().min(20),
+  about_existing_image: z.string().trim().optional(),
+  contact_eyebrow_es: z.string().trim().min(2),
+  contact_eyebrow_en: z.string().trim().min(2),
+  contact_title_es: z.string().trim().min(5),
+  contact_title_en: z.string().trim().min(5),
+  contact_description_es: z.string().trim().min(20),
+  contact_description_en: z.string().trim().min(20),
+  projects_eyebrow_es: z.string().trim().min(2),
+  projects_eyebrow_en: z.string().trim().min(2),
+  projects_title_es: z.string().trim().min(5),
+  projects_title_en: z.string().trim().min(5),
+  projects_description_es: z.string().trim().min(10),
+  projects_description_en: z.string().trim().min(10)
+});
+
+const homeSectionsSchema = z.object({
+  introEyebrow_es: z.string().trim().min(2), introEyebrow_en: z.string().trim().min(2),
+  introTitle_es: z.string().trim().min(5), introTitle_en: z.string().trim().min(5),
+  collectionsEyebrow_es: z.string().trim().min(2), collectionsEyebrow_en: z.string().trim().min(2),
+  collectionsTitle_es: z.string().trim().min(5), collectionsTitle_en: z.string().trim().min(5),
+  collectionsDescription_es: z.string().trim().min(10), collectionsDescription_en: z.string().trim().min(10),
+  featuredEyebrow_es: z.string().trim().min(2), featuredEyebrow_en: z.string().trim().min(2),
+  featuredTitle_es: z.string().trim().min(5), featuredTitle_en: z.string().trim().min(5),
+  featuredDescription_es: z.string().trim().min(10), featuredDescription_en: z.string().trim().min(10),
+  lifestyleLabelOne_es: z.string().trim().min(2), lifestyleLabelOne_en: z.string().trim().min(2),
+  lifestyleLabelTwo_es: z.string().trim().min(2), lifestyleLabelTwo_en: z.string().trim().min(2),
+  lifestyleLabelThree_es: z.string().trim().min(2), lifestyleLabelThree_en: z.string().trim().min(2),
+  philosophyEyebrow_es: z.string().trim().min(2), philosophyEyebrow_en: z.string().trim().min(2),
+  philosophyTitle_es: z.string().trim().min(5), philosophyTitle_en: z.string().trim().min(5),
+  philosophyDescription_es: z.string().trim().min(10), philosophyDescription_en: z.string().trim().min(10),
+  projectsEyebrow_es: z.string().trim().min(2), projectsEyebrow_en: z.string().trim().min(2),
+  projectsTitle_es: z.string().trim().min(5), projectsTitle_en: z.string().trim().min(5),
+  projectsDescription_es: z.string().trim().min(10), projectsDescription_en: z.string().trim().min(10),
+  materialsEyebrow_es: z.string().trim().min(2), materialsEyebrow_en: z.string().trim().min(2),
+  materialsTitle_es: z.string().trim().min(5), materialsTitle_en: z.string().trim().min(5),
+  materialsLead_es: z.string().trim().min(10), materialsLead_en: z.string().trim().min(10),
+  materialOneTitle_es: z.string().trim().min(2), materialOneTitle_en: z.string().trim().min(2),
+  materialOneDescription_es: z.string().trim().min(10), materialOneDescription_en: z.string().trim().min(10),
+  materialTwoTitle_es: z.string().trim().min(2), materialTwoTitle_en: z.string().trim().min(2),
+  materialTwoDescription_es: z.string().trim().min(10), materialTwoDescription_en: z.string().trim().min(10)
+  ,benefitsEyebrow_es: z.string().trim().min(2), benefitsEyebrow_en: z.string().trim().min(2)
+  ,benefitsTitle_es: z.string().trim().min(5), benefitsTitle_en: z.string().trim().min(5)
+  ,benefitsDescription_es: z.string().trim().min(10), benefitsDescription_en: z.string().trim().min(10)
+  ,faqEyebrow_es: z.string().trim().min(2), faqEyebrow_en: z.string().trim().min(2)
+  ,faqTitle_es: z.string().trim().min(5), faqTitle_en: z.string().trim().min(5)
+  ,faqDescription_es: z.string().trim().min(10), faqDescription_en: z.string().trim().min(10)
 });
 
 function parseBoolean(value: FormDataEntryValue | null) {
@@ -193,6 +305,8 @@ export async function upsertProduct(_previous: ActionState, formData: FormData):
     description_es: formData.get("description_es"),
     description_en: formData.get("description_en")?.toString() || undefined,
     existing_image_path: formData.get("existing_image_path")?.toString() || undefined,
+    existing_image_paths: formData.get("existing_image_paths")?.toString() || undefined,
+    primary_image_path: formData.get("primary_image_path")?.toString() || undefined,
     materials_es: formData.get("materials_es")?.toString() || undefined,
     dimensions_es: formData.get("dimensions_es")?.toString() || undefined,
     finishes_es: formData.get("finishes_es")?.toString() || undefined,
@@ -204,17 +318,20 @@ export async function upsertProduct(_previous: ActionState, formData: FormData):
   if (!parsed.success) return { ok: false, errors: flattenErrors(parsed.error) };
 
   const admin = createSupabaseAdminClient();
-  const imageFile = getImageFile(formData, "hero_image");
-  const imageError = imageFile ? validateImage(imageFile) : null;
-  if (imageError) return { ok: false, errors: { hero_image: imageError } };
-  if (!imageFile && !parsed.data.existing_image_path) {
+  const imageFiles = formData.getAll("product_images").filter((value): value is File => value instanceof File && value.size > 0);
+  const imageErrors = imageFiles.map(validateImage).find(Boolean);
+  if (imageErrors) return { ok: false, errors: { hero_image: imageErrors } };
+  let existingPaths: string[] = [];
+  try { existingPaths = JSON.parse(parsed.data.existing_image_paths || "[]"); } catch { existingPaths = []; }
+  if (existingPaths.length === 0 && imageFiles.length === 0 && !parsed.data.existing_image_path) {
     return { ok: false, errors: { hero_image: "Selecciona una imagen principal." } };
   }
 
-  let uploaded: Awaited<ReturnType<typeof uploadImage>> | undefined;
+  const uploaded: Array<Awaited<ReturnType<typeof uploadImage>>> = [];
   try {
-    if (imageFile) uploaded = await uploadImage(admin, imageFile, "products");
+    for (const imageFile of imageFiles) uploaded.push(await uploadImage(admin, imageFile, "products"));
   } catch (error) {
+    await Promise.all(uploaded.map((item) => removeUploadedImage(admin, item.storagePath)));
     return { ok: false, errors: { hero_image: error instanceof Error ? error.message : "No pudimos subir la imagen." } };
   }
 
@@ -237,7 +354,7 @@ export async function upsertProduct(_previous: ActionState, formData: FormData):
         .single();
 
   if (productError || !product) {
-    await removeUploadedImage(admin, uploaded?.storagePath);
+    await Promise.all(uploaded.map((item) => removeUploadedImage(admin, item.storagePath)));
     return { ok: false, message: productError?.message ?? "No pudimos guardar el producto." };
   }
 
@@ -278,27 +395,23 @@ export async function upsertProduct(_previous: ActionState, formData: FormData):
   });
 
   if (translationError) {
-    await removeUploadedImage(admin, uploaded?.storagePath);
+    await Promise.all(uploaded.map((item) => removeUploadedImage(admin, item.storagePath)));
     return { ok: false, message: translationError.message };
   }
 
-  const imagePath = uploaded?.publicUrl ?? parsed.data.existing_image_path!;
+  const uploadedPaths = uploaded.map((item) => item.publicUrl);
+  const allPaths = [...existingPaths, ...(uploadedPaths.length ? uploadedPaths : parsed.data.existing_image_path ? [parsed.data.existing_image_path] : [])].filter(Boolean);
+  const primaryPath = parsed.data.primary_image_path && allPaths.includes(parsed.data.primary_image_path)
+    ? parsed.data.primary_image_path
+    : allPaths[0];
   await admin.from("product_images").update({ is_primary: false }).eq("product_id", product.id);
-  const { error: imageSaveError } = await admin
-    .from("product_images")
-    .upsert(
-      {
-        product_id: product.id,
-        storage_path: imagePath,
-        alt_es: parsed.data.name_es,
-        sort_order: 0,
-        is_primary: true
-      },
-      { onConflict: "product_id,storage_path" }
-    );
+  const { error: imageSaveError } = await admin.from("product_images").upsert(
+    allPaths.map((storagePath, index) => ({ product_id: product.id, storage_path: storagePath, alt_es: parsed.data.name_es, sort_order: index, is_primary: storagePath === primaryPath })),
+    { onConflict: "product_id,storage_path" }
+  );
 
   if (imageSaveError) {
-    await removeUploadedImage(admin, uploaded?.storagePath);
+    await Promise.all(uploaded.map((item) => removeUploadedImage(admin, item.storagePath)));
     return { ok: false, message: imageSaveError.message };
   }
 
@@ -319,6 +432,31 @@ export async function updateProductStatus(formData: FormData) {
   const admin = createSupabaseAdminClient();
   await admin.from("products").update({ status }).eq("id", id);
   revalidatePath(`${adminRoute}/productos`);
+}
+
+async function saveSiteContentBlock(
+  admin: ReturnType<typeof createSupabaseAdminClient>,
+  userId: string | null,
+  key: string,
+  value: Record<string, unknown>,
+  translations: Array<{ locale: "es" | "en"; value: Record<string, unknown> }>
+) {
+  const { data: existing } = await admin.from("site_content").select("id").eq("key", key).maybeSingle();
+  const { data: content, error } = existing
+    ? await admin.from("site_content").update({ value, is_public: true, updated_by: userId }).eq("id", existing.id).select("id").single()
+    : await admin
+        .from("site_content")
+        .insert({ key, value, is_public: true, created_by: userId, updated_by: userId })
+        .select("id")
+        .single();
+  if (error || !content) throw new Error(error?.message ?? `No pudimos guardar ${key}.`);
+
+  const { error: translationError } = await admin.from("site_content_translations").upsert(
+    translations.map((translation) => ({ ...translation, site_content_id: content.id })),
+    { onConflict: "site_content_id,locale" }
+  );
+  if (translationError) throw new Error(translationError.message);
+  return content.id;
 }
 
 export async function upsertCollection(_previous: ActionState, formData: FormData): Promise<ActionState> {
@@ -397,6 +535,115 @@ export async function upsertCollection(_previous: ActionState, formData: FormDat
   revalidatePath("/en");
   revalidatePath(`${adminRoute}/colecciones`);
   redirect(`${adminRoute}/colecciones`);
+}
+
+export async function upsertProject(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const currentAdmin = await requireAdmin();
+  const parsed = projectSchema.safeParse({
+    id: formData.get("id")?.toString() || undefined,
+    slug: formData.get("slug"),
+    title_es: formData.get("title_es"),
+    title_en: formData.get("title_en")?.toString() || undefined,
+    description_es: formData.get("description_es"),
+    description_en: formData.get("description_en")?.toString() || undefined,
+    location: formData.get("location"),
+    existing_image_path: formData.get("existing_image_path")?.toString() || undefined,
+    status: formData.get("status"),
+    featured: parseBoolean(formData.get("featured")),
+    sort_order: formData.get("sort_order") ?? "0"
+  });
+  if (!parsed.success) return { ok: false, errors: flattenErrors(parsed.error) };
+
+  const admin = createSupabaseAdminClient();
+  const imageFile = getImageFile(formData, "cover_image");
+  const imageError = imageFile ? validateImage(imageFile) : null;
+  if (imageError) return { ok: false, errors: { cover_image: imageError } };
+  if (!imageFile && !parsed.data.existing_image_path) {
+    return { ok: false, errors: { cover_image: "Selecciona una imagen de portada." } };
+  }
+
+  let uploaded: Awaited<ReturnType<typeof uploadImage>> | undefined;
+  try {
+    if (imageFile) uploaded = await uploadImage(admin, imageFile, "projects");
+  } catch (error) {
+    return { ok: false, errors: { cover_image: error instanceof Error ? error.message : "No pudimos subir la imagen." } };
+  }
+
+  const imagePath = uploaded?.publicUrl ?? parsed.data.existing_image_path!;
+  const payload = {
+    slug: parsed.data.slug,
+    cover_image_path: imagePath,
+    location: parsed.data.location,
+    status: parsed.data.status,
+    featured: parsed.data.featured ?? false,
+    sort_order: parsed.data.sort_order,
+    updated_by: currentAdmin.user_id
+  };
+  const { data: project, error: projectError } = parsed.data.id
+    ? await admin.from("projects").update(payload).eq("id", parsed.data.id).select("id").single()
+    : await admin.from("projects").insert({ ...payload, created_by: currentAdmin.user_id }).select("id").single();
+  if (projectError || !project) {
+    await removeUploadedImage(admin, uploaded?.storagePath);
+    return { ok: false, message: projectError?.message ?? "No pudimos guardar el proyecto." };
+  }
+
+  const { error: translationError } = await admin.from("project_translations").upsert(
+    [
+      {
+        project_id: project.id,
+        locale: "es",
+        title: parsed.data.title_es,
+        description: parsed.data.description_es,
+        translation_status: "complete"
+      },
+      {
+        project_id: project.id,
+        locale: "en",
+        title: parsed.data.title_en || parsed.data.title_es,
+        description: parsed.data.description_en || parsed.data.description_es,
+        translation_status: parsed.data.title_en && parsed.data.description_en ? "complete" : "needs_review"
+      }
+    ],
+    { onConflict: "project_id,locale" }
+  );
+  if (translationError) {
+    await removeUploadedImage(admin, uploaded?.storagePath);
+    return { ok: false, message: translationError.message };
+  }
+
+  await admin.from("project_images").update({ is_cover: false }).eq("project_id", project.id);
+  const { error: imageSaveError } = await admin.from("project_images").upsert(
+    {
+      project_id: project.id,
+      storage_path: imagePath,
+      alt_es: parsed.data.title_es,
+      alt_en: parsed.data.title_en || parsed.data.title_es,
+      sort_order: 0,
+      is_cover: true
+    },
+    { onConflict: "project_id,storage_path" }
+  );
+  if (imageSaveError) {
+    await removeUploadedImage(admin, uploaded?.storagePath);
+    return { ok: false, message: imageSaveError.message };
+  }
+
+  revalidatePath("/es");
+  revalidatePath("/en");
+  revalidatePath(`${adminRoute}/proyectos`);
+  redirect(`${adminRoute}/proyectos`);
+}
+
+export async function updateProjectStatus(formData: FormData) {
+  await requireAdmin();
+  const id = formData.get("id")?.toString();
+  const status = formData.get("status")?.toString();
+  if (!id || !["draft", "published", "hidden", "archived"].includes(status ?? "")) return;
+  const admin = createSupabaseAdminClient();
+  await admin.from("projects").update({ status }).eq("id", id);
+  revalidatePath("/es");
+  revalidatePath("/en");
+  revalidatePath(`${adminRoute}/proyectos`);
 }
 
 export async function uploadMedia(_previous: ActionState, formData: FormData): Promise<ActionState> {
@@ -487,4 +734,280 @@ export async function upsertHomeContent(_previous: ActionState, formData: FormDa
   revalidatePath("/en");
   revalidatePath(`${adminRoute}/contenido`);
   return { ok: true, message: "Contenido del inicio actualizado." };
+}
+
+export async function upsertSiteSettings(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const currentAdmin = await requireAdmin();
+  const parsed = siteSettingsSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { ok: false, errors: flattenErrors(parsed.error), message: "Revisa los campos marcados." };
+
+  const admin = createSupabaseAdminClient();
+  try {
+    await saveSiteContentBlock(
+      admin,
+      currentAdmin.user_id,
+      "site.settings",
+      {
+        full_name: parsed.data.full_name,
+        phone: parsed.data.phone,
+        whatsapp: parsed.data.whatsapp,
+        instagram: parsed.data.instagram,
+        instagram_handle: parsed.data.instagram_handle,
+        email: parsed.data.email
+      },
+      [
+        { locale: "es", value: { location: parsed.data.location_es } },
+        { locale: "en", value: { location: parsed.data.location_en } }
+      ]
+    );
+    await saveSiteContentBlock(
+      admin,
+      currentAdmin.user_id,
+      "site.footer",
+      {},
+      [
+        {
+          locale: "es",
+          value: {
+            cta: parsed.data.footer_cta_es,
+            description: parsed.data.footer_description_es,
+            navigation_title: parsed.data.footer_navigation_title_es,
+            legal_title: parsed.data.footer_legal_title_es,
+            copyright: parsed.data.copyright_es
+          }
+        },
+        {
+          locale: "en",
+          value: {
+            cta: parsed.data.footer_cta_en,
+            description: parsed.data.footer_description_en,
+            navigation_title: parsed.data.footer_navigation_title_en,
+            legal_title: parsed.data.footer_legal_title_en,
+            copyright: parsed.data.copyright_en
+          }
+        }
+      ]
+    );
+  } catch (error) {
+    return { ok: false, message: error instanceof Error ? error.message : "No pudimos guardar la configuracion." };
+  }
+
+  revalidatePath("/es", "layout");
+  revalidatePath("/en", "layout");
+  revalidatePath(`${adminRoute}/contenido`);
+  return { ok: true, message: "Datos generales y footer actualizados." };
+}
+
+export async function upsertNavigation(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const currentAdmin = await requireAdmin();
+  let items: unknown = [];
+  try {
+    items = JSON.parse(formData.get("items_json")?.toString() ?? "[]");
+  } catch {
+    return { ok: false, message: "No pudimos leer los enlaces de navegacion." };
+  }
+
+  const parsed = navigationSchema.safeParse({
+    items,
+    quote_label_es: formData.get("quote_label_es"),
+    quote_label_en: formData.get("quote_label_en"),
+    request_quote_label_es: formData.get("request_quote_label_es"),
+    request_quote_label_en: formData.get("request_quote_label_en"),
+    menu_label_es: formData.get("menu_label_es"),
+    menu_label_en: formData.get("menu_label_en"),
+    close_label_es: formData.get("close_label_es"),
+    close_label_en: formData.get("close_label_en")
+  });
+  if (!parsed.success) return { ok: false, errors: flattenErrors(parsed.error), message: "Revisa los enlaces y etiquetas." };
+
+  const admin = createSupabaseAdminClient();
+  try {
+    await saveSiteContentBlock(
+      admin,
+      currentAdmin.user_id,
+      "site.navigation",
+      { items: parsed.data.items.map(({ id, href, visible }) => ({ id, href, visible })) },
+      [
+        {
+          locale: "es",
+          value: {
+            labels: Object.fromEntries(parsed.data.items.map((item) => [item.id, item.label_es])),
+            quote_label: parsed.data.quote_label_es,
+            request_quote_label: parsed.data.request_quote_label_es,
+            menu_label: parsed.data.menu_label_es,
+            close_label: parsed.data.close_label_es
+          }
+        },
+        {
+          locale: "en",
+          value: {
+            labels: Object.fromEntries(parsed.data.items.map((item) => [item.id, item.label_en])),
+            quote_label: parsed.data.quote_label_en,
+            request_quote_label: parsed.data.request_quote_label_en,
+            menu_label: parsed.data.menu_label_en,
+            close_label: parsed.data.close_label_en
+          }
+        }
+      ]
+    );
+  } catch (error) {
+    return { ok: false, message: error instanceof Error ? error.message : "No pudimos guardar la navegacion." };
+  }
+
+  revalidatePath("/es", "layout");
+  revalidatePath("/en", "layout");
+  revalidatePath(`${adminRoute}/contenido`);
+  return { ok: true, message: "Navegacion actualizada." };
+}
+
+export async function upsertMarketingPages(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const currentAdmin = await requireAdmin();
+  const parsed = marketingPagesSchema.safeParse({
+    ...Object.fromEntries(formData),
+    about_existing_image: formData.get("about_existing_image")?.toString() || undefined
+  });
+  if (!parsed.success) return { ok: false, errors: flattenErrors(parsed.error), message: "Revisa los textos de las paginas." };
+
+  const admin = createSupabaseAdminClient();
+  const imageFile = getImageFile(formData, "about_image");
+  const imageError = imageFile ? validateImage(imageFile) : null;
+  if (imageError) return { ok: false, errors: { about_image: imageError } };
+  let uploaded: Awaited<ReturnType<typeof uploadImage>> | undefined;
+  try {
+    if (imageFile) uploaded = await uploadImage(admin, imageFile, "site");
+    await saveSiteContentBlock(
+      admin,
+      currentAdmin.user_id,
+      "page.about",
+      { image_path: uploaded?.publicUrl ?? parsed.data.about_existing_image ?? "/assets/images/yascari.jpeg" },
+      [
+        {
+          locale: "es",
+          value: {
+            eyebrow: parsed.data.about_eyebrow_es,
+            title: parsed.data.about_title_es,
+            description: parsed.data.about_description_es
+          }
+        },
+        {
+          locale: "en",
+          value: {
+            eyebrow: parsed.data.about_eyebrow_en,
+            title: parsed.data.about_title_en,
+            description: parsed.data.about_description_en
+          }
+        }
+      ]
+    );
+    await saveSiteContentBlock(admin, currentAdmin.user_id, "page.contact", {}, [
+      {
+        locale: "es",
+        value: {
+          eyebrow: parsed.data.contact_eyebrow_es,
+          title: parsed.data.contact_title_es,
+          description: parsed.data.contact_description_es
+        }
+      },
+      {
+        locale: "en",
+        value: {
+          eyebrow: parsed.data.contact_eyebrow_en,
+          title: parsed.data.contact_title_en,
+          description: parsed.data.contact_description_en
+        }
+      }
+    ]);
+    await saveSiteContentBlock(admin, currentAdmin.user_id, "page.projects", {}, [
+      {
+        locale: "es",
+        value: {
+          eyebrow: parsed.data.projects_eyebrow_es,
+          title: parsed.data.projects_title_es,
+          description: parsed.data.projects_description_es
+        }
+      },
+      {
+        locale: "en",
+        value: {
+          eyebrow: parsed.data.projects_eyebrow_en,
+          title: parsed.data.projects_title_en,
+          description: parsed.data.projects_description_en
+        }
+      }
+    ]);
+  } catch (error) {
+    await removeUploadedImage(admin, uploaded?.storagePath);
+    return { ok: false, message: error instanceof Error ? error.message : "No pudimos guardar las paginas." };
+  }
+
+  revalidatePath("/es", "layout");
+  revalidatePath("/en", "layout");
+  revalidatePath(`${adminRoute}/contenido`);
+  return { ok: true, message: "Paginas institucionales actualizadas." };
+}
+
+export async function upsertHomeSections(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const currentAdmin = await requireAdmin();
+  const parsed = homeSectionsSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { ok: false, errors: flattenErrors(parsed.error), message: "Revisa los textos del inicio." };
+
+  const imageFields = [
+    ["introImage", "intro_image"],
+    ["philosophyImage", "philosophy_image"],
+    ["projectsImage", "projects_image"],
+    ["materialsPrimaryImage", "materials_primary_image"],
+    ["materialsSecondaryImage", "materials_secondary_image"]
+  ] as const;
+  const selectedImages = imageFields
+    .map(([key, field]) => ({ key, field, file: getImageFile(formData, field) }))
+    .filter((item): item is typeof item & { file: File } => Boolean(item.file));
+  if (selectedImages.length > 1) {
+    return { ok: false, message: "Para mantener una subida estable, cambia una imagen por guardado." };
+  }
+  if (selectedImages[0]) {
+    const error = validateImage(selectedImages[0].file);
+    if (error) return { ok: false, message: error };
+  }
+
+  const images: Record<string, string> = Object.fromEntries(
+    imageFields.map(([key]) => [key, formData.get(`existing_${key}`)?.toString() ?? ""])
+  );
+  const admin = createSupabaseAdminClient();
+  let uploaded: Awaited<ReturnType<typeof uploadImage>> | undefined;
+  try {
+    if (selectedImages[0]) {
+      uploaded = await uploadImage(admin, selectedImages[0].file, "site");
+      images[selectedImages[0].key] = uploaded.publicUrl;
+    }
+    const visible = Object.fromEntries(
+      ["intro", "collections", "featured", "lifestyle", "philosophy", "projects", "materials"].map((id) => [
+        id,
+        parseBoolean(formData.get(`visible_${id}`))
+      ])
+    );
+  const textKeys = [
+      "introEyebrow", "introTitle", "collectionsEyebrow", "collectionsTitle", "collectionsDescription",
+      "featuredEyebrow", "featuredTitle", "featuredDescription", "lifestyleLabelOne", "lifestyleLabelTwo",
+      "lifestyleLabelThree", "philosophyEyebrow", "philosophyTitle", "philosophyDescription", "projectsEyebrow",
+      "projectsTitle", "projectsDescription", "materialsEyebrow", "materialsTitle", "materialsLead", "materialOneTitle",
+      "materialOneDescription", "materialTwoTitle", "materialTwoDescription", "benefitsEyebrow", "benefitsTitle", "benefitsDescription", "faqEyebrow", "faqTitle", "faqDescription",
+      "benefit1Title", "benefit1Description", "benefit2Title", "benefit2Description", "benefit3Title", "benefit3Description", "benefit4Title", "benefit4Description",
+      "faq1Question", "faq1Answer", "faq2Question", "faq2Answer", "faq3Question", "faq3Answer", "faq4Question", "faq4Answer", "faq5Question", "faq5Answer", "faq6Question", "faq6Answer"
+    ];
+    const parsedValues = parsed.data as Record<string, string>;
+    const translated = (locale: "es" | "en") =>
+      Object.fromEntries(textKeys.map((key) => [key, parsedValues[`${key}_${locale}`]]));
+    await saveSiteContentBlock(admin, currentAdmin.user_id, "home.sections", { ...images, visible }, [
+      { locale: "es", value: translated("es") },
+      { locale: "en", value: translated("en") }
+    ]);
+  } catch (error) {
+    await removeUploadedImage(admin, uploaded?.storagePath);
+    return { ok: false, message: error instanceof Error ? error.message : "No pudimos guardar las secciones del inicio." };
+  }
+
+  revalidatePath("/es");
+  revalidatePath("/en");
+  revalidatePath(`${adminRoute}/contenido`);
+  return { ok: true, message: "Secciones del inicio actualizadas." };
 }

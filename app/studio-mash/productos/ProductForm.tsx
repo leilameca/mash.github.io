@@ -18,6 +18,7 @@ type ProductFormValue = {
   description_es?: string;
   description_en?: string;
   hero_image_path?: string;
+  image_paths?: string[];
   materials_es?: string;
   dimensions_es?: string;
   finishes_es?: string;
@@ -78,15 +79,19 @@ export function ProductForm({ collections, product }: { collections: CollectionO
         {state.errors?.description_es && <span>{state.errors.description_es}</span>}
       </label>
       <label>
-        Imagen principal
-        {product?.hero_image_path && (
-          <span className="studio-image-preview">
-            <Image src={product.hero_image_path} alt="Imagen principal actual" fill sizes="240px" />
-          </span>
-        )}
+        Galería de imágenes
+        <input type="hidden" name="existing_image_paths" value={JSON.stringify(product?.image_paths ?? (product?.hero_image_path ? [product.hero_image_path] : []))} />
         <input type="hidden" name="existing_image_path" value={product?.hero_image_path ?? ""} />
-        <input name="hero_image" type="file" accept="image/jpeg,image/png,image/webp,image/avif" required={!product?.hero_image_path} />
-        <small>JPG, PNG, WebP o AVIF. Maximo 6 MB. Al elegir otra imagen se reemplaza la principal.</small>
+        <div className="studio-product-gallery">
+          {(product?.image_paths ?? (product?.hero_image_path ? [product.hero_image_path] : [])).map((path, index) => (
+            <label className="studio-product-gallery__item" key={path}>
+              <span className="studio-image-preview"><Image src={path} alt={`Imagen ${index + 1}`} fill sizes="150px" /></span>
+              <span><input type="radio" name="primary_image_path" value={path} defaultChecked={path === product?.hero_image_path || (!product?.hero_image_path && index === 0)} /> Principal</span>
+            </label>
+          ))}
+        </div>
+        <input name="product_images" type="file" accept="image/jpeg,image/png,image/webp,image/avif" multiple required={!product?.hero_image_path} />
+        <small>Agrega varias imágenes. Marca una como principal. JPG, PNG, WebP o AVIF; máximo 6 MB cada una.</small>
         {state.errors?.hero_image && <span>{state.errors.hero_image}</span>}
       </label>
 

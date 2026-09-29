@@ -1,8 +1,9 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { projects } from "@/lib/content";
 import { isLocale, type Locale } from "@/lib/i18n";
+import { getCatalogProjects } from "@/lib/supabase/catalog";
+import { getMarketingPageContent } from "@/lib/supabase/site-content";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -19,16 +20,13 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
+  const [projects, content] = await Promise.all([getCatalogProjects(locale), getMarketingPageContent("projects", locale)]);
 
   return (
     <section className="section-shell page-hero">
-      <p className="eyebrow">{locale === "es" ? "Proyectos" : "Projects"}</p>
-      <h1>{locale === "es" ? "Instalaciones reales, preparadas para crecer." : "Real installations, ready to grow."}</h1>
-      <p>
-        {locale === "es"
-          ? "Esta seccion queda estructurada para galerias de proyectos completados. Por ahora usa imagenes existentes como base temporal."
-          : "This section is structured for completed project galleries. For now, existing images are used as temporary visual foundations."}
-      </p>
+      <p className="eyebrow">{content.eyebrow}</p>
+      <h1>{content.title}</h1>
+      <p>{content.description}</p>
       <div className="project-list">
         {projects.map((project) => (
           <article key={project.slug} className="project-feature">

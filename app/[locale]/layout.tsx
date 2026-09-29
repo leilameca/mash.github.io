@@ -4,8 +4,10 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MotionEnhancer } from "@/components/MotionEnhancer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { SiteSettingsProvider } from "@/components/SiteSettingsProvider";
 import { dictionary } from "@/lib/content";
 import { isLocale, type Locale } from "@/lib/i18n";
+import { getSiteChromeContent } from "@/lib/supabase/site-content";
 
 export function generateStaticParams() {
   return [{ locale: "es" }, { locale: "en" }];
@@ -56,19 +58,20 @@ export default async function LocaleLayout({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
+  const siteContent = await getSiteChromeContent(locale);
 
   return (
-    <>
+    <SiteSettingsProvider value={{ whatsapp: siteContent.whatsapp }}>
       <a href="#main-content" className="skip-link">
         {locale === "es" ? "Saltar al contenido" : "Skip to content"}
       </a>
-      <Header locale={locale} />
+      <Header locale={locale} content={siteContent} />
       <main id="main-content" className="page-shell">
         {children}
       </main>
-      <Footer locale={locale} />
-      <WhatsAppFloat locale={locale} />
+      <Footer locale={locale} content={siteContent} />
+      <WhatsAppFloat locale={locale} href={siteContent.whatsapp} label={siteContent.requestQuoteLabel} />
       <MotionEnhancer />
-    </>
+    </SiteSettingsProvider>
   );
 }

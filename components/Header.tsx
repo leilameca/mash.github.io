@@ -5,22 +5,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
 import { localizedPath, type Locale } from "@/lib/i18n";
-import { dictionary, site } from "@/lib/content";
+import type { SiteChromeContent } from "@/lib/supabase/site-content";
 
-const navItems = [
-  { key: "home", href: "" },
-  { key: "collections", href: "/colecciones" },
-  { key: "products", href: "/productos" },
-  { key: "projects", href: "/proyectos" },
-  { key: "about", href: "/nosotros" },
-  { key: "contact", href: "/contacto" }
-] as const;
-
-export function Header({ locale }: { locale: Locale }) {
+export function Header({ locale, content }: { locale: Locale; content: SiteChromeContent }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
-  const t = dictionary[locale].nav;
   const localePath = pathname?.replace(/^\/(es|en)/, "") ?? "";
 
   useEffect(() => {
@@ -46,7 +36,7 @@ export function Header({ locale }: { locale: Locale }) {
         <button
           className="menu-toggle"
           type="button"
-          aria-label={isOpen ? t.close : t.menu}
+          aria-label={isOpen ? content.closeLabel : content.menuLabel}
           aria-expanded={isOpen}
           aria-controls="primary-navigation"
           onClick={() => setIsOpen((value) => !value)}
@@ -56,12 +46,12 @@ export function Header({ locale }: { locale: Locale }) {
           <span />
         </button>
         <nav id="primary-navigation" className={`primary-nav${isOpen ? " is-open" : ""}`} aria-label="Principal">
-          {navItems.map((item) => {
+          {content.navigation.map((item) => {
             const href = localizedPath(locale, item.href);
             const active = href === localizedPath(locale) ? pathname === href : pathname?.startsWith(href);
             return (
-              <Link key={item.key} href={href} aria-current={active ? "page" : undefined}>
-                {t[item.key]}
+              <Link key={item.id} href={href} aria-current={active ? "page" : undefined}>
+                {item.label}
               </Link>
             );
           })}
@@ -73,8 +63,8 @@ export function Header({ locale }: { locale: Locale }) {
               EN
             </Link>
           </div>
-          <a className="nav-quote" href={site.whatsapp} target="_blank" rel="noreferrer">
-            {t.quote}
+          <a className="nav-quote" href={content.whatsapp} target="_blank" rel="noreferrer">
+            {content.quoteLabel}
           </a>
         </nav>
       </div>

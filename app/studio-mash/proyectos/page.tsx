@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { StudioShell } from "../StudioShell";
+import { updateProjectStatus } from "../actions";
 
 export default async function StudioProjectsPage() {
   const currentAdmin = await requireAdmin();
@@ -18,6 +20,7 @@ export default async function StudioProjectsPage() {
           <p>Contenido</p>
           <h1>Proyectos</h1>
         </div>
+        <Link href="/studio-mash/proyectos/nuevo" className="admin-button">Nuevo proyecto</Link>
       </section>
       <section className="studio-table-card">
         <div className="studio-table">
@@ -33,6 +36,16 @@ export default async function StudioProjectsPage() {
                   <p>{project.location ?? "Ubicacion pendiente"}</p>
                 </div>
                 <span className={`studio-status studio-status--${project.status}`}>{project.status}</span>
+                <div className="studio-row__actions">
+                  <form action={updateProjectStatus}>
+                    <input type="hidden" name="id" value={project.id} />
+                    <select name="status" defaultValue={project.status} aria-label={`Estado de ${es?.title ?? project.slug}`}>
+                      <option value="draft">Borrador</option><option value="published">Publicado</option><option value="hidden">Oculto</option><option value="archived">Archivado</option>
+                    </select>
+                    <button type="submit">Aplicar</button>
+                  </form>
+                  <Link href={`/studio-mash/proyectos/${project.id}`} className="studio-edit-link">Editar proyecto</Link>
+                </div>
               </article>
             );
           })}
@@ -43,11 +56,6 @@ export default async function StudioProjectsPage() {
             </div>
           )}
         </div>
-      </section>
-      <section className="studio-card">
-        <p className="studio-kicker">Regla editorial</p>
-        <h2>No inventar instalaciones</h2>
-        <p>Los proyectos deben cargarse solo con fotos, ubicaciones y descripciones confirmadas por el negocio.</p>
       </section>
     </StudioShell>
   );

@@ -20,11 +20,19 @@ type ProductRow = {
   product_images?: Array<{ storage_path: string; alt_es: string | null; alt_en: string | null; sort_order: number | null; is_primary: boolean | null }>;
 };
 
+type ProjectRow = {
+  slug: string;
+  location: string | null;
+  cover_image_path: string | null;
+  project_translations?: Array<{ locale: Locale; title: string; description: string | null }>;
+};
+
 function localizeProduct(row: ProductRow, locale: Locale): Product | null {
   const translation = row.product_translations?.find((item) => item.locale === locale) ?? row.product_translations?.[0];
   if (!translation) return null;
 
-  const gallery = row.product_images?.map((image) => image.storage_path).filter(Boolean) ?? [];
+  const sortedImages = [...(row.product_images ?? [])].sort((a, b) => Number(Boolean(b.is_primary)) - Number(Boolean(a.is_primary)) || (a.sort_order ?? 0) - (b.sort_order ?? 0));
+  const gallery = sortedImages.map((image) => image.storage_path).filter(Boolean);
   const image = gallery[0];
   if (!image) return null;
 
@@ -113,6 +121,31 @@ export async function getCatalogCollection(slug: string) {
   return collections.find((collection) => collection.slug === slug);
 }
 
-export async function getCatalogProjects(): Promise<Project[]> {
-  return fallbackProjects;
+export async function getCatalogProjects(locale: Locale): Promise<Project[]> {
+  if (!isSupabaseCatalogEnabled()) return fallbackProjects;
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return fallbackProjects;
+
+  const { data, error } = await supabase
+    .from("projects")
+    .select("slug,location,cover_image_path,project_translations(locale,title,description)")
+    .eq("status", "published")
+    .order("sort_order", { ascending: true });
+  if (error || !data) return fallbackProjects;
+
+  const mapped = (data as unknown as ProjectRow[])
+    .map((row): Project | null => {
+      const translation = row.project_translations?.find((item) => item.locale === locale) ?? row.project_translations?.[0];
+      if (!translation || !row.cover_image_path) return null;
+      return {
+        slug: row.slug,
+        title: { es: translation.title, en: translation.title },
+        location: { es: row.location ?? "", en: row.location ?? "" },
+        description: { es: translation.description ?? "", en: translation.description ?? "" },
+        image: row.cover_image_path,
+        alt: { es: translation.title, en: translation.title }
+      };
+    })
+    .filter((item): item is Project => Boolean(item));
+  return mapped.length ? mapped : fallbackProjects;
 }

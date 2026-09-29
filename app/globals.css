@@ -774,6 +774,25 @@ h3 {
   padding-top: clamp(2.5rem, 5vw, 5rem);
 }
 
+.benefits-section { padding-block: clamp(4rem, 8vw, 8rem); }
+.benefits-section__heading { max-width: 70rem; }
+.benefits-section__heading h2, .faq-section__heading h2 { max-width: 19ch; }
+.benefits-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.benefit-card { min-height: 15.5rem; padding: clamp(1.35rem, 2.2vw, 2rem); border: 1px solid rgba(74,53,40,.1); border-radius: var(--radius-md); background: rgba(255,253,249,.78); box-shadow: var(--shadow-soft); }
+.benefit-card__number { display: block; margin-bottom: 2.3rem; color: var(--gold); font-size: .72rem; font-weight: 700; letter-spacing: .18em; }
+.benefit-card h3 { max-width: 14ch; color: var(--charcoal); font-size: clamp(1.45rem, 2vw, 2rem); line-height: 1.08; }
+.benefit-card p { margin-top: .85rem; color: var(--muted); font-size: .92rem; line-height: 1.75; }
+.faq-section { padding-block: clamp(4rem, 8vw, 8rem); background: var(--bg-soft); border-block: 1px solid var(--line); }
+.faq-section__heading { max-width: 67rem; }
+.faq-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.faq-item { overflow: hidden; border: 1px solid rgba(74,53,40,.11); border-radius: var(--radius-md); background: var(--surface); box-shadow: 0 12px 28px rgba(27,17,12,.045); }
+.faq-item__trigger { display: flex; width: 100%; min-height: 4.7rem; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.15rem 1.25rem; color: var(--charcoal); text-align: left; background: transparent; }
+.faq-item__trigger span:first-child { max-width: 34ch; font-family: var(--font-serif), var(--font-serif-fallback); font-size: clamp(1.2rem, 1.8vw, 1.55rem); line-height: 1.15; }
+.faq-item__icon { flex: 0 0 auto; color: var(--gold); font-size: 1.35rem; font-weight: 400; }
+.faq-item__answer { border-top: 1px solid var(--line); padding: .95rem 1.25rem 1.2rem; }
+.faq-item__answer p { color: var(--muted); font-size: .92rem; line-height: 1.8; }
+.faq-item__trigger:hover, .faq-item__trigger:focus-visible { background: rgba(182,148,92,.08); }
+
 .project-strip {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1411,7 +1430,9 @@ html:not(.motion-ready) [data-reveal] {
   .editorial-split,
   .product-detail,
   .project-feature,
-  .contact-page {
+  .contact-page,
+  .benefits-grid,
+  .faq-grid {
     grid-template-columns: 1fr;
   }
 
