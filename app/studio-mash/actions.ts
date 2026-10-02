@@ -322,9 +322,27 @@ export async function upsertProduct(_previous: ActionState, formData: FormData):
   const imageErrors = imageFiles.map(validateImage).find(Boolean);
   if (imageErrors) return { ok: false, errors: { hero_image: imageErrors } };
   let existingPaths: string[] = [];
-  try { existingPaths = JSON.parse(parsed.data.existing_image_paths || "[]"); } catch { existingPaths = []; }
-  if (existingPaths.length === 0 && imageFiles.length === 0 && !parsed.data.existing_image_path) {
+  try {
+    const paths: unknown = JSON.parse(parsed.data.existing_image_paths ?? JSON.stringify(parsed.data.existing_image_path ? [parsed.data.existing_image_path] : []));
+    if (!Array.isArray(paths) || paths.some((path) => typeof path !== "string" || !path.trim())) throw new Error("Invalid gallery");
+    existingPaths = [...new Set(paths as string[])];
+  } catch {
+    return { ok: false, errors: { hero_image: "La galería no es válida. Recarga la página e intenta de nuevo." } };
+  }
+  const { data: savedImages, error: savedImagesError } = parsed.data.id
+    ? await admin.from("product_images").select("id,storage_path").eq("product_id", parsed.data.id)
+    : { data: [], error: null };
+  if (savedImagesError) return { ok: false, message: "No pudimos consultar las imágenes del producto. Intenta de nuevo." };
+  if (existingPaths.some((path) => !savedImages?.some((image) => image.storage_path === path))) {
+    return { ok: false, errors: { hero_image: "Las imágenes del producto cambiaron. Recarga la página e intenta de nuevo." } };
+  }
+  if (existingPaths.length === 0 && imageFiles.length === 0) {
     return { ok: false, errors: { hero_image: "Selecciona una imagen principal." } };
+  }
+  const newPrimaryValue = formData.get("primary_new_image_index");
+  const newPrimaryIndex = newPrimaryValue === null ? -1 : Number(newPrimaryValue);
+  if (newPrimaryValue !== null && (!Number.isInteger(newPrimaryIndex) || newPrimaryIndex < 0 || newPrimaryIndex >= imageFiles.length)) {
+    return { ok: false, errors: { hero_image: "Selecciona una imagen principal válida." } };
   }
 
   const uploaded: Array<Awaited<ReturnType<typeof uploadImage>>> = [];
@@ -400,11 +418,12 @@ export async function upsertProduct(_previous: ActionState, formData: FormData):
   }
 
   const uploadedPaths = uploaded.map((item) => item.publicUrl);
-  const allPaths = [...existingPaths, ...(uploadedPaths.length ? uploadedPaths : parsed.data.existing_image_path ? [parsed.data.existing_image_path] : [])].filter(Boolean);
-  const primaryPath = parsed.data.primary_image_path && allPaths.includes(parsed.data.primary_image_path)
-    ? parsed.data.primary_image_path
-    : allPaths[0];
-  await admin.from("product_images").update({ is_primary: false }).eq("product_id", product.id);
+  const allPaths = [...new Set([...existingPaths, ...uploadedPaths])];
+  const primaryPath = newPrimaryIndex >= 0
+    ? uploadedPaths[newPrimaryIndex]
+    : parsed.data.primary_image_path && allPaths.includes(parsed.data.primary_image_path)
+      ? parsed.data.primary_image_path
+      : allPaths[0];
   const { error: imageSaveError } = await admin.from("product_images").upsert(
     allPaths.map((storagePath, index) => ({ product_id: product.id, storage_path: storagePath, alt_es: parsed.data.name_es, sort_order: index, is_primary: storagePath === primaryPath })),
     { onConflict: "product_id,storage_path" }
@@ -413,6 +432,14 @@ export async function upsertProduct(_previous: ActionState, formData: FormData):
   if (imageSaveError) {
     await Promise.all(uploaded.map((item) => removeUploadedImage(admin, item.storagePath)));
     return { ok: false, message: imageSaveError.message };
+  }
+
+  const removedImageIds = (savedImages ?? []).filter((image) => !allPaths.includes(image.storage_path)).map((image) => image.id);
+  if (removedImageIds.length) {
+    const { error: imageDeleteError } = await admin.from("product_images").delete().eq("product_id", product.id).in("id", removedImageIds);
+    if (imageDeleteError) {
+      return { ok: false, message: "El producto se guardó, pero no pudimos eliminar algunas imágenes. Recarga la página e intenta de nuevo." };
+    }
   }
 
   revalidatePath("/");

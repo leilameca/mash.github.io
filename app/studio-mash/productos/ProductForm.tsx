@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { upsertProduct, type ActionState } from "../actions";
 
 type CollectionOption = {
@@ -30,7 +30,30 @@ type ProductFormValue = {
 const initialState: ActionState = {};
 
 export function ProductForm({ collections, product }: { collections: CollectionOption[]; product?: ProductFormValue }) {
-  const [state, action, pending] = useActionState(upsertProduct, initialState);
+  const [images, setImages] = useState(() => [...new Set(product?.image_paths ?? (product?.hero_image_path ? [product.hero_image_path] : []))]);
+  const [newImages, setNewImages] = useState<Array<{ file: File; url: string }>>([]);
+  const previewUrls = useRef(new Set<string>());
+  const [primaryImage, setPrimaryImage] = useState(product?.hero_image_path ?? images[0] ?? "");
+  const [state, action, pending] = useActionState(async (previous: ActionState, formData: FormData) => {
+    newImages.forEach(({ file }) => formData.append("product_images", file));
+    const newPrimaryIndex = newImages.findIndex(({ url }) => url === primaryImage);
+    if (newPrimaryIndex >= 0) formData.set("primary_new_image_index", String(newPrimaryIndex));
+    return upsertProduct(previous, formData);
+  }, initialState);
+
+  useEffect(() => {
+    const urls = previewUrls.current;
+    return () => urls.forEach((url) => URL.revokeObjectURL(url));
+  }, []);
+
+  function removeImage(path: string) {
+    const remainingImages = images.filter((image) => image !== path);
+    const remainingNewImages = newImages.filter(({ url }) => url !== path);
+    setImages(remainingImages);
+    setNewImages(remainingNewImages);
+    if (previewUrls.current.delete(path)) URL.revokeObjectURL(path);
+    if (primaryImage === path) setPrimaryImage(remainingImages[0] ?? remainingNewImages[0]?.url ?? "");
+  }
 
   return (
     <form action={action} className="studio-form">
@@ -78,22 +101,34 @@ export function ProductForm({ collections, product }: { collections: CollectionO
         <textarea name="description_es" defaultValue={product?.description_es} rows={5} required />
         {state.errors?.description_es && <span>{state.errors.description_es}</span>}
       </label>
-      <label>
+      <div className="studio-form__gallery">
         Galería de imágenes
-        <input type="hidden" name="existing_image_paths" value={JSON.stringify(product?.image_paths ?? (product?.hero_image_path ? [product.hero_image_path] : []))} />
-        <input type="hidden" name="existing_image_path" value={product?.hero_image_path ?? ""} />
+        <input type="hidden" name="existing_image_paths" value={JSON.stringify(images)} />
+        <input type="hidden" name="primary_image_path" value={images.includes(primaryImage) ? primaryImage : ""} />
         <div className="studio-product-gallery">
-          {(product?.image_paths ?? (product?.hero_image_path ? [product.hero_image_path] : [])).map((path, index) => (
-            <label className="studio-product-gallery__item" key={path}>
-              <span className="studio-image-preview"><Image src={path} alt={`Imagen ${index + 1}`} fill sizes="150px" /></span>
-              <span><input type="radio" name="primary_image_path" value={path} defaultChecked={path === product?.hero_image_path || (!product?.hero_image_path && index === 0)} /> Principal</span>
-            </label>
+          {[...images, ...newImages.map(({ url }) => url)].map((path, index) => (
+            <div className="studio-product-gallery__item" key={path}>
+              <label className="studio-product-gallery__primary">
+                <span className="studio-image-preview"><Image src={path} alt={`Imagen ${index + 1}`} fill sizes="150px" unoptimized={path.startsWith("blob:")} /></span>
+                <span><input type="radio" name="gallery_primary" value={path} checked={path === primaryImage} onChange={() => setPrimaryImage(path)} disabled={pending} /> Principal</span>
+              </label>
+              <button type="button" className="studio-product-gallery__remove" onClick={() => removeImage(path)} disabled={pending} aria-label={`Eliminar imagen ${index + 1}`}>Eliminar</button>
+            </div>
           ))}
         </div>
-        <input name="product_images" type="file" accept="image/jpeg,image/png,image/webp,image/avif" multiple required={!product?.hero_image_path} />
-        <small>Agrega varias imágenes. Marca una como principal. JPG, PNG, WebP o AVIF; máximo 6 MB cada una.</small>
+        <label>
+          Agregar imágenes
+          <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" multiple disabled={pending} onChange={(event) => {
+            const added = Array.from(event.target.files ?? []).map((file) => ({ file, url: URL.createObjectURL(file) }));
+            added.forEach(({ url }) => previewUrls.current.add(url));
+            setNewImages((current) => [...current, ...added]);
+            if (!primaryImage && added.length) setPrimaryImage(added[0].url);
+            event.target.value = "";
+          }} />
+        </label>
+        <small>Agrega varias imágenes. Marca una como principal. Los cambios y las eliminaciones se aplican al guardar. JPG, PNG, WebP o AVIF; máximo 6 MB cada una.</small>
         {state.errors?.hero_image && <span>{state.errors.hero_image}</span>}
-      </label>
+      </div>
 
       <div className="studio-form__grid">
         <label>

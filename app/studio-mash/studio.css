@@ -461,9 +461,40 @@
   background: #fffdf8;
 }
 
-.studio-product-gallery__item > span:last-child {
+.studio-form__gallery {
+  display: grid;
+  gap: .75rem;
+  font-size: .86rem;
+  font-weight: 700;
+}
+
+.studio-product-gallery__primary {
+  cursor: pointer;
+}
+
+.studio-product-gallery__primary > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
   color: #5f564b;
   font-size: .72rem;
+}
+
+.studio-product-gallery__primary input[type="radio"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  padding: 0;
+  accent-color: #113221;
+}
+
+.studio-product-gallery__remove {
+  border: 1px solid #cbb8ac;
+  border-radius: .4rem;
+  background: #fffdf8;
+  color: #8b3028;
+  padding: .5rem;
+  font: inherit;
+  cursor: pointer;
 }
 
 .studio-checkbox {
