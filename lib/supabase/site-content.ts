@@ -148,6 +148,14 @@ export type HomeHeroContent = {
   title: string;
   description: string;
   image: string;
+  showroomMainImage: string;
+  showroomSmallImage: string;
+};
+
+export const HOME_HERO_IMAGES = {
+  image_path: "/assets/images/oasis-hero-v2.jpg",
+  showroom_main_image_path: "/assets/images/candor-mix-collection.jpeg",
+  showroom_small_image_path: "/assets/images/oculus-mare-dining.jpg"
 };
 
 export type HomeSectionId = "intro" | "collections" | "featured" | "lifestyle" | "philosophy" | "projects" | "materials" | "benefits" | "faq";
@@ -413,13 +421,17 @@ const fallback: Record<Locale, HomeHeroContent> = {
     title: "Diseñamos espacios para disfrutarlos afuera.",
     description:
       "En MASH encuentras muebles resistentes para terrazas, patios, balcones y piscinas, con asesoría para elegir piezas que funcionen en tu espacio y respondan al exterior.",
-    image: "/assets/images/oasis-hero-v2.jpg"
+    image: HOME_HERO_IMAGES.image_path,
+    showroomMainImage: HOME_HERO_IMAGES.showroom_main_image_path,
+    showroomSmallImage: HOME_HERO_IMAGES.showroom_small_image_path
   },
   en: {
     title: "We design spaces made to be enjoyed outside.",
     description:
       "At MASH, you will find outdoor-ready furniture for terraces, patios, balconies and pools, with guidance to choose pieces that work for your space.",
-    image: "/assets/images/oasis-hero-v2.jpg"
+    image: HOME_HERO_IMAGES.image_path,
+    showroomMainImage: HOME_HERO_IMAGES.showroom_main_image_path,
+    showroomSmallImage: HOME_HERO_IMAGES.showroom_small_image_path
   }
 };
 
@@ -444,6 +456,8 @@ export async function getHomeHeroContent(locale: Locale): Promise<HomeHeroConten
     title: typeof localized.title === "string" && localized.title ? localized.title : fallback[locale].title,
     description:
       typeof localized.description === "string" && localized.description ? localized.description : fallback[locale].description,
-    image: typeof shared.image_path === "string" && shared.image_path ? shared.image_path : fallback[locale].image
+    image: typeof shared.image_path === "string" && shared.image_path ? shared.image_path : fallback[locale].image,
+    showroomMainImage: typeof shared.showroom_main_image_path === "string" && shared.showroom_main_image_path ? shared.showroom_main_image_path : fallback[locale].showroomMainImage,
+    showroomSmallImage: typeof shared.showroom_small_image_path === "string" && shared.showroom_small_image_path ? shared.showroom_small_image_path : fallback[locale].showroomSmallImage
   };
 }

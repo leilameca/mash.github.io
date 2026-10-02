@@ -80,10 +80,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
           <div className="hero-showroom" aria-hidden="true" data-reveal>
             <div className="hero-showroom__main">
-              <Image src="/assets/images/candor-mix-collection.jpeg" alt="" fill sizes="(max-width: 920px) 0px, 24vw" />
+              <Image src={heroContent.showroomMainImage} alt="" fill sizes="(max-width: 920px) 0px, 24vw" />
             </div>
             <div className="hero-showroom__small">
-              <Image src="/assets/images/oculus-mare-dining.jpg" alt="" fill sizes="(max-width: 920px) 0px, 14vw" />
+              <Image src={heroContent.showroomSmallImage} alt="" fill sizes="(max-width: 920px) 0px, 14vw" />
             </div>
             <p>{locale === "es" ? "Terrazas, balcones y piscinas con presencia de showroom." : "Terraces, balconies and pools with showroom presence."}</p>
           </div>

@@ -1,6 +1,6 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/supabase/auth";
-import { getFallbackMarketingPage, getFallbackSiteChrome, getHomeSectionsContent } from "@/lib/supabase/site-content";
+import { getFallbackMarketingPage, getFallbackSiteChrome, getHomeSectionsContent, HOME_HERO_IMAGES } from "@/lib/supabase/site-content";
 import { StudioShell } from "../StudioShell";
 import { GeneralSettingsForm } from "./GeneralSettingsForm";
 import { HomeContentForm } from "./HomeContentForm";
@@ -135,7 +135,9 @@ export default async function StudioContentPage() {
             description_es: heroEs.description ?? fallback.description_es,
             title_en: heroEn.title ?? fallback.title_en,
             description_en: heroEn.description ?? fallback.description_en,
-            image_path: heroRow?.value?.image_path ?? fallback.image_path
+            image_path: heroRow?.value?.image_path ?? fallback.image_path,
+            showroom_main_image_path: heroRow?.value?.showroom_main_image_path ?? HOME_HERO_IMAGES.showroom_main_image_path,
+            showroom_small_image_path: heroRow?.value?.showroom_small_image_path ?? HOME_HERO_IMAGES.showroom_small_image_path
           }}
         />
       </section>

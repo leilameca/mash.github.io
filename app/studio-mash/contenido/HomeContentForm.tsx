@@ -10,9 +10,17 @@ type HomeContent = {
   title_en: string;
   description_en: string;
   image_path: string;
+  showroom_main_image_path: string;
+  showroom_small_image_path: string;
 };
 
 const initialState: ActionState = {};
+
+const imageFields = [
+  ["image_path", "hero_image", "existing_image_path", "Imagen de fondo del hero"],
+  ["showroom_main_image_path", "hero_showroom_main_image", "existing_showroom_main_image_path", "Imagen de apoyo 1 (cuadro grande)"],
+  ["showroom_small_image_path", "hero_showroom_small_image", "existing_showroom_small_image_path", "Imagen de apoyo 2 (cuadro pequeño)"]
+] as const;
 
 export function HomeContentForm({ content }: { content: HomeContent }) {
   const [state, action, pending] = useActionState(upsertHomeContent, initialState);
@@ -21,7 +29,7 @@ export function HomeContentForm({ content }: { content: HomeContent }) {
     <form action={action} className="studio-form">
       <div className="studio-language-note">
         <strong>Portada del inicio</strong>
-        <p>Estos textos y la imagen se muestran en la primera pantalla del sitio publico.</p>
+        <p>Estos textos y las tres imágenes se muestran en la primera pantalla del sitio público.</p>
       </div>
       <label>
         Titulo en espanol
@@ -43,16 +51,23 @@ export function HomeContentForm({ content }: { content: HomeContent }) {
         <textarea name="description_en" defaultValue={content.description_en} rows={4} required />
         {state.errors?.description_en && <span>{state.errors.description_en}</span>}
       </label>
-      <label>
-        Imagen del hero
-        <span className="studio-image-preview studio-image-preview--hero">
-          <Image src={content.image_path} alt="Hero actual" fill sizes="480px" />
-        </span>
-        <input type="hidden" name="existing_image_path" value={content.image_path} />
-        <input name="hero_image" type="file" accept="image/jpeg,image/png,image/webp,image/avif" />
-        <small>Opcional. Si no eliges otra imagen, se conserva la actual. Maximo 6 MB.</small>
-        {state.errors?.hero_image && <span>{state.errors.hero_image}</span>}
-      </label>
+      <fieldset className="studio-fieldset">
+        <legend>Imágenes del hero</legend>
+        <div className="studio-media-editor-grid">
+          {imageFields.map(([key, field, existingField, label]) => (
+            <label key={key}>
+              {label}
+              <span className={`studio-image-preview ${key === "image_path" ? "studio-image-preview--hero" : "studio-image-preview--wide"}`}>
+                <Image src={content[key]} alt={label} fill sizes="480px" />
+              </span>
+              <input type="hidden" name={existingField} value={content[key]} />
+              <input name={field} type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={pending} />
+              <small>Opcional. Si no eliges otra imagen, se conserva la actual. Máximo 6 MB.</small>
+              {state.errors?.[field] && <span>{state.errors[field]}</span>}
+            </label>
+          ))}
+        </div>
+      </fieldset>
 
       {state.message && <p className={state.ok ? "admin-success" : "admin-error"}>{state.message}</p>}
       <button className="admin-button" type="submit" disabled={pending}>

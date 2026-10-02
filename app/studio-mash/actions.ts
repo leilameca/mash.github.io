@@ -8,6 +8,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { getImageFile, removeUploadedImage, uploadImage, validateImage, type MediaFolder } from "@/lib/supabase/media";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { HOME_HERO_IMAGES } from "@/lib/supabase/site-content";
 
 export type ActionState = {
   ok?: boolean;
@@ -74,7 +75,9 @@ const homeContentSchema = z.object({
   description_es: z.string().trim().min(20, "Agrega la descripcion principal en espanol."),
   title_en: z.string().trim().min(10, "Agrega el titulo principal en ingles."),
   description_en: z.string().trim().min(20, "Agrega la descripcion principal en ingles."),
-  existing_image_path: z.string().trim().optional()
+  existing_image_path: z.string().trim().optional(),
+  existing_showroom_main_image_path: z.string().trim().optional(),
+  existing_showroom_small_image_path: z.string().trim().optional()
 });
 
 const siteSettingsSchema = z.object({
@@ -702,28 +705,45 @@ export async function upsertHomeContent(_previous: ActionState, formData: FormDa
     description_es: formData.get("description_es"),
     title_en: formData.get("title_en"),
     description_en: formData.get("description_en"),
-    existing_image_path: formData.get("existing_image_path")?.toString() || undefined
+    existing_image_path: formData.get("existing_image_path")?.toString() || undefined,
+    existing_showroom_main_image_path: formData.get("existing_showroom_main_image_path")?.toString() || undefined,
+    existing_showroom_small_image_path: formData.get("existing_showroom_small_image_path")?.toString() || undefined
   });
   if (!parsed.success) return { ok: false, errors: flattenErrors(parsed.error) };
 
   const admin = createSupabaseAdminClient();
-  const imageFile = getImageFile(formData, "hero_image");
-  const imageError = imageFile ? validateImage(imageFile) : null;
-  if (imageError) return { ok: false, errors: { hero_image: imageError } };
-
-  let uploaded: Awaited<ReturnType<typeof uploadImage>> | undefined;
-  try {
-    if (imageFile) uploaded = await uploadImage(admin, imageFile, "site");
-  } catch (error) {
-    return { ok: false, errors: { hero_image: error instanceof Error ? error.message : "No pudimos subir la imagen." } };
+  const { data: existing, error: existingError } = await admin.from("site_content").select("id,value").eq("key", "home.hero").maybeSingle();
+  if (existingError) return { ok: false, message: "No pudimos consultar la portada actual. Intenta de nuevo." };
+  const imageFields = [
+    ["image_path", "hero_image", "existing_image_path"],
+    ["showroom_main_image_path", "hero_showroom_main_image", "existing_showroom_main_image_path"],
+    ["showroom_small_image_path", "hero_showroom_small_image", "existing_showroom_small_image_path"]
+  ] as const;
+  const imageErrors: Record<string, string> = {};
+  for (const [, field] of imageFields) {
+    const file = getImageFile(formData, field);
+    const error = file ? validateImage(file) : null;
+    if (error) imageErrors[field] = error;
   }
+  if (Object.keys(imageErrors).length) return { ok: false, errors: imageErrors };
 
-  const imagePath = uploaded?.publicUrl ?? parsed.data.existing_image_path ?? "/assets/images/oasis-hero-v2.jpg";
-  const { data: existing } = await admin.from("site_content").select("id").eq("key", "home.hero").maybeSingle();
+  const sharedValue = { ...(existing?.value ?? {}) };
+  const uploaded: Array<Awaited<ReturnType<typeof uploadImage>>> = [];
+  for (const [key, field, existingField] of imageFields) {
+    try {
+      const file = getImageFile(formData, field);
+      const image = file ? await uploadImage(admin, file, "site") : undefined;
+      if (image) uploaded.push(image);
+      sharedValue[key] = image?.publicUrl ?? sharedValue[key] ?? parsed.data[existingField] ?? HOME_HERO_IMAGES[key];
+    } catch (error) {
+      await Promise.all(uploaded.map((image) => removeUploadedImage(admin, image.storagePath)));
+      return { ok: false, errors: { [field]: error instanceof Error ? error.message : "No pudimos subir la imagen." } };
+    }
+  }
   const { data: content, error: contentError } = existing
     ? await admin
         .from("site_content")
-        .update({ value: { image_path: imagePath }, is_public: true, updated_by: currentAdmin.user_id })
+        .update({ value: sharedValue, is_public: true, updated_by: currentAdmin.user_id })
         .eq("id", existing.id)
         .select("id")
         .single()
@@ -731,7 +751,7 @@ export async function upsertHomeContent(_previous: ActionState, formData: FormDa
         .from("site_content")
         .insert({
           key: "home.hero",
-          value: { image_path: imagePath },
+          value: sharedValue,
           is_public: true,
           created_by: currentAdmin.user_id,
           updated_by: currentAdmin.user_id
@@ -740,7 +760,7 @@ export async function upsertHomeContent(_previous: ActionState, formData: FormDa
         .single();
 
   if (contentError || !content) {
-    await removeUploadedImage(admin, uploaded?.storagePath);
+    await Promise.all(uploaded.map((image) => removeUploadedImage(admin, image.storagePath)));
     return { ok: false, message: contentError?.message ?? "No pudimos guardar el contenido." };
   }
 
@@ -753,7 +773,6 @@ export async function upsertHomeContent(_previous: ActionState, formData: FormDa
   );
 
   if (translationError) {
-    await removeUploadedImage(admin, uploaded?.storagePath);
     return { ok: false, message: translationError.message };
   }
 

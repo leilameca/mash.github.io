@@ -11,7 +11,7 @@ const source = ts.transpileModule(
   { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }
 ).outputText;
 
-function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null) {
+function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroValue = {}) {
   const calls = [];
   const savedImages = savedPaths.map((storage_path, index) => ({ id: `image-${index}`, storage_path }));
   const admin = {
@@ -26,9 +26,10 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null) {
         upsert(rows, options) { operation = "upsert"; calls.push({ table, operation, rows, options }); return query; },
         delete() { operation = "delete"; return query; },
         single() { return query; },
+        maybeSingle() { return query; },
         then(resolve, reject) {
           return Promise.resolve({
-            data: table === "products" ? { id: "product-1" } : savedImages,
+            data: table === "products" ? { id: "product-1" } : table === "site_content" ? { id: "hero-1", value: heroValue } : savedImages,
             error: table === "product_images" && operation === "upsert" ? imageError : null
           }).then(resolve, reject);
         }
@@ -44,8 +45,16 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null) {
     "@/lib/supabase/admin": { createSupabaseAdminClient: () => admin },
     "@/lib/supabase/auth": { requireAdmin: async () => ({ user_id: "admin-1" }) },
     "@/lib/supabase/server": {},
+    "@/lib/supabase/site-content": {
+      HOME_HERO_IMAGES: {
+        image_path: "/assets/images/oasis-hero-v2.jpg",
+        showroom_main_image_path: "/assets/images/candor-mix-collection.jpeg",
+        showroom_small_image_path: "/assets/images/oculus-mare-dining.jpg"
+      }
+    },
     "@/lib/supabase/media": {
-      validateImage: () => null,
+      getImageFile: (data, field) => { const file = data.get(field); return file instanceof File && file.size ? file : null; },
+      validateImage: (file) => file.type === "image/jpeg" ? null : "Invalid image format",
       uploadImage: async (_admin, file) => ({ publicUrl: `/uploaded/${file.name}`, storagePath: file.name }),
       removeUploadedImage: async (_admin, storagePath) => calls.push({ operation: "cleanup", storagePath })
     }
@@ -53,7 +62,7 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null) {
   vm.runInNewContext(source, {
     module, exports: module.exports, require: (name) => mocks[name] ?? require(name), File, FormData
   });
-  return { save: module.exports.upsertProduct, calls };
+  return { save: module.exports.upsertProduct, saveHero: module.exports.upsertHomeContent, calls };
 }
 
 function form(paths = ["/one.jpg", "/two.jpg"], primary = "/two.jpg") {
@@ -125,4 +134,49 @@ test("a failed image save does not delete existing images or clear their primary
   const { save, calls } = fixture(undefined, { message: "Database unavailable" });
   assert.equal((await save({}, form(["/two.jpg"]))).message, "Database unavailable");
   assert.equal(calls.some((call) => call.table === "product_images" && ["delete", "update"].includes(call.operation)), false);
+});
+
+function heroForm() {
+  const data = new FormData();
+  for (const field of ["title_es", "description_es", "title_en", "description_en"]) {
+    data.set(field, "Outdoor furniture for family gatherings.");
+  }
+  return data;
+}
+
+test("hero support images can both be replaced while preserving the background", async () => {
+  const { saveHero, calls } = fixture(undefined, null, { image_path: "/background.jpg", extra: "keep" });
+  const data = heroForm();
+  data.append("hero_showroom_main_image", new File(["main"], "main.jpg", { type: "image/jpeg" }));
+  data.append("hero_showroom_small_image", new File(["small"], "small.jpg", { type: "image/jpeg" }));
+  assert.equal((await saveHero({}, data)).ok, true);
+  const value = calls.find((call) => call.table === "site_content" && call.operation === "update").rows.value;
+  assert.equal(value.image_path, "/background.jpg");
+  assert.equal(value.showroom_main_image_path, "/uploaded/main.jpg");
+  assert.equal(value.showroom_small_image_path, "/uploaded/small.jpg");
+  assert.equal(value.extra, "keep");
+});
+
+test("saving hero text preserves all three existing images", async () => {
+  const existing = { image_path: "/bg.jpg", showroom_main_image_path: "/main.jpg", showroom_small_image_path: "/small.jpg" };
+  const { saveHero, calls } = fixture(undefined, null, existing);
+  assert.equal((await saveHero({}, heroForm())).ok, true);
+  const value = calls.find((call) => call.table === "site_content" && call.operation === "update").rows.value;
+  assert.deepEqual(JSON.parse(JSON.stringify(value)), existing);
+});
+
+test("legacy hero content receives the original support images without a migration", async () => {
+  const { saveHero, calls } = fixture(undefined, null, { image_path: "/bg.jpg" });
+  assert.equal((await saveHero({}, heroForm())).ok, true);
+  const value = calls.find((call) => call.table === "site_content" && call.operation === "update").rows.value;
+  assert.equal(value.showroom_main_image_path, "/assets/images/candor-mix-collection.jpeg");
+  assert.equal(value.showroom_small_image_path, "/assets/images/oculus-mare-dining.jpg");
+});
+
+test("invalid hero support images report the corresponding field before any changes", async () => {
+  const { saveHero, calls } = fixture();
+  const data = heroForm();
+  data.append("hero_showroom_small_image", new File(["invalid"], "image.txt", { type: "text/plain" }));
+  assert.equal((await saveHero({}, data)).errors.hero_showroom_small_image, "Invalid image format");
+  assert.equal(calls.length, 0);
 });

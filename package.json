@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test:products": "node --test tests/product-save.test.cjs"
+    "test:products": "node --test tests/admin-content.test.cjs",
+    "test:admin": "node --test tests/admin-content.test.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
