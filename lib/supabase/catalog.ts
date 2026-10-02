@@ -9,6 +9,8 @@ type ProductRow = {
   slug: string;
   featured: boolean | null;
   status: string;
+  dimensions?: string | null;
+  finishes?: string[] | null;
   collections?: { slug: string } | null;
   product_translations?: Array<{
     locale: Locale;
@@ -45,8 +47,8 @@ function localizeProduct(row: ProductRow, locale: Locale): Product | null {
     alt: { es: translation.name, en: translation.name },
     description: { es: translation.description ?? "", en: translation.description ?? "" },
     materials: { es: translation.materials ?? "", en: translation.materials ?? "" },
-    dimensions: { es: "", en: "" },
-    finishes: { es: "", en: "" },
+    dimensions: { es: row.dimensions ?? "", en: row.dimensions ?? "" },
+    finishes: { es: row.finishes?.join(", ") ?? "", en: row.finishes?.join(", ") ?? "" },
     care: { es: translation.care ?? "", en: translation.care ?? "" },
     featured: Boolean(row.featured)
   };
@@ -61,7 +63,7 @@ export async function getCatalogProducts(locale: Locale) {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,slug,featured,status,collections(slug),product_translations(locale,name,description,materials,care),product_images(storage_path,alt_es,alt_en,sort_order,is_primary)"
+      "id,slug,featured,status,dimensions,finishes,collections(slug),product_translations(locale,name,description,materials,care),product_images(storage_path,alt_es,alt_en,sort_order,is_primary)"
     )
     .eq("status", "published")
     .order("sort_order", { ascending: true });
@@ -69,7 +71,7 @@ export async function getCatalogProducts(locale: Locale) {
   if (error || !data) return fallbackProducts;
 
   const mapped = (data as unknown as ProductRow[]).map((row) => localizeProduct(row, locale)).filter((item): item is Product => Boolean(item));
-  return mapped.length > 0 ? mapped : fallbackProducts;
+  return mapped;
 }
 
 export async function getCatalogProduct(locale: Locale, slug: string) {
@@ -113,7 +115,7 @@ export async function getCatalogCollections() {
     })
     .filter((item: Collection | null): item is Collection => Boolean(item));
 
-  return mapped.length > 0 ? mapped : fallbackCollections;
+  return mapped;
 }
 
 export async function getCatalogCollection(slug: string) {
@@ -147,5 +149,5 @@ export async function getCatalogProjects(locale: Locale): Promise<Project[]> {
       };
     })
     .filter((item): item is Project => Boolean(item));
-  return mapped.length ? mapped : fallbackProjects;
+  return mapped;
 }

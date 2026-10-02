@@ -4,6 +4,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { StudioShell } from "../StudioShell";
 import { updateProductStatus } from "../actions";
+import { StatusForm } from "../StatusForm";
 
 export default async function StudioProductsPage() {
   const currentAdmin = await requireAdmin();
@@ -40,16 +41,7 @@ export default async function StudioProductsPage() {
                   <p>{product.collections?.slug ?? "sin-coleccion"} · {product.slug}</p>
                 </div>
                 <span className={`studio-status studio-status--${product.status}`}>{product.status}</span>
-                <form action={updateProductStatus} className="studio-row__actions">
-                  <input type="hidden" name="id" value={product.id} />
-                  <select name="status" defaultValue={product.status} aria-label="Cambiar estado">
-                    <option value="draft">Borrador</option>
-                    <option value="published">Publicado</option>
-                    <option value="hidden">Oculto</option>
-                    <option value="archived">Archivado</option>
-                  </select>
-                  <button type="submit">Aplicar</button>
-                </form>
+                <StatusForm id={product.id} status={product.status} label={`Estado de ${translation?.name ?? product.slug}`} action={updateProductStatus} />
                 <Link href={`/studio-mash/productos/${product.id}`} className="studio-edit-link">
                   Editar
                 </Link>

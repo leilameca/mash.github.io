@@ -4,6 +4,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { StudioShell } from "../StudioShell";
 import { updateProjectStatus } from "../actions";
+import { StatusForm } from "../StatusForm";
 
 export default async function StudioProjectsPage() {
   const currentAdmin = await requireAdmin();
@@ -37,13 +38,7 @@ export default async function StudioProjectsPage() {
                 </div>
                 <span className={`studio-status studio-status--${project.status}`}>{project.status}</span>
                 <div className="studio-row__actions">
-                  <form action={updateProjectStatus}>
-                    <input type="hidden" name="id" value={project.id} />
-                    <select name="status" defaultValue={project.status} aria-label={`Estado de ${es?.title ?? project.slug}`}>
-                      <option value="draft">Borrador</option><option value="published">Publicado</option><option value="hidden">Oculto</option><option value="archived">Archivado</option>
-                    </select>
-                    <button type="submit">Aplicar</button>
-                  </form>
+                  <StatusForm id={project.id} status={project.status} label={`Estado de ${es?.title ?? project.slug}`} action={updateProjectStatus} />
                   <Link href={`/studio-mash/proyectos/${project.id}`} className="studio-edit-link">Editar proyecto</Link>
                 </div>
               </article>

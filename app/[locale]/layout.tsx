@@ -9,6 +9,8 @@ import { dictionary } from "@/lib/content";
 import { isLocale, type Locale } from "@/lib/i18n";
 import { getSiteChromeContent } from "@/lib/supabase/site-content";
 
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   return [{ locale: "es" }, { locale: "en" }];
 }

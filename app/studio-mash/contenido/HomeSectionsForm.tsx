@@ -36,8 +36,8 @@ function textValue(content: HomeSectionsContent, key: string) {
   if (key === "lifestyleLabelOne") return content.lifestyleLabels[0];
   if (key === "lifestyleLabelTwo") return content.lifestyleLabels[1];
   if (key === "lifestyleLabelThree") return content.lifestyleLabels[2];
-  if (key.startsWith("benefit") && key.endsWith("Title")) return content.benefits[Number(key.match(/\d+/)?.[0] ?? 1) - 1]?.title ?? "";
-  if (key.startsWith("benefit") && key.endsWith("Description")) return content.benefits[Number(key.match(/\d+/)?.[0] ?? 1) - 1]?.description ?? "";
+  if (/^benefit\d+Title$/.test(key)) return content.benefits[Number(key.match(/\d+/)?.[0] ?? 1) - 1]?.title ?? "";
+  if (/^benefit\d+Description$/.test(key)) return content.benefits[Number(key.match(/\d+/)?.[0] ?? 1) - 1]?.description ?? "";
   if (key.startsWith("faq") && key.endsWith("Question")) return content.faqs[Number(key.match(/\d+/)?.[0] ?? 1) - 1]?.question ?? "";
   if (key.startsWith("faq") && key.endsWith("Answer")) return content.faqs[Number(key.match(/\d+/)?.[0] ?? 1) - 1]?.answer ?? "";
   return String((content as unknown as Record<string, unknown>)[key] ?? "");

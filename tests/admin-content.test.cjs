@@ -11,8 +11,9 @@ const source = ts.transpileModule(
   { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }
 ).outputText;
 
-function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroValue = {}) {
+function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroValue = {}, failure = {}) {
   const calls = [];
+  const revalidated = [];
   const savedImages = savedPaths.map((storage_path, index) => ({ id: `image-${index}`, storage_path }));
   const admin = {
     from(table) {
@@ -20,6 +21,7 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroV
       const query = {
         select() { return query; },
         eq() { return query; },
+        neq() { return query; },
         in(column, values) { calls.push({ table, operation, column, values }); return query; },
         update(rows) { operation = "update"; calls.push({ table, operation, rows }); return query; },
         insert(rows) { operation = "insert"; calls.push({ table, operation, rows }); return query; },
@@ -29,8 +31,8 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroV
         maybeSingle() { return query; },
         then(resolve, reject) {
           return Promise.resolve({
-            data: table === "products" ? { id: "product-1" } : table === "site_content" ? { id: "hero-1", value: heroValue } : savedImages,
-            error: table === "product_images" && operation === "upsert" ? imageError : null
+            data: ["products", "projects", "collections"].includes(table) ? { id: "record-1" } : table === "site_content" ? { id: "hero-1", value: heroValue } : savedImages,
+            error: table === failure.table && operation === failure.operation ? { message: "Database unavailable" } : table === "product_images" && operation === "upsert" ? imageError : null
           }).then(resolve, reject);
         }
       };
@@ -39,7 +41,7 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroV
   };
   const module = { exports: {} };
   const mocks = {
-    "next/cache": { revalidatePath() {} },
+    "next/cache": { revalidatePath(...args) { revalidated.push(args); } },
     "next/navigation": { redirect(url) { throw new Error(`redirect:${url}`); } },
     "@/lib/supabase/env": { adminRoute: "/studio-mash" },
     "@/lib/supabase/admin": { createSupabaseAdminClient: () => admin },
@@ -62,7 +64,7 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroV
   vm.runInNewContext(source, {
     module, exports: module.exports, require: (name) => mocks[name] ?? require(name), File, FormData
   });
-  return { save: module.exports.upsertProduct, saveHero: module.exports.upsertHomeContent, calls };
+  return { save: module.exports.upsertProduct, saveHero: module.exports.upsertHomeContent, actions: module.exports, calls, revalidated };
 }
 
 function form(paths = ["/one.jpg", "/two.jpg"], primary = "/two.jpg") {
@@ -179,4 +181,99 @@ test("invalid hero support images report the corresponding field before any chan
   data.append("hero_showroom_small_image", new File(["invalid"], "image.txt", { type: "text/plain" }));
   assert.equal((await saveHero({}, data)).errors.hero_showroom_small_image, "Invalid image format");
   assert.equal(calls.length, 0);
+});
+
+test("status updates refresh all public pages in both languages", async () => {
+  for (const actionName of ["updateProductStatus", "updateProjectStatus"]) {
+    const { actions, revalidated } = fixture();
+    const data = new FormData();
+    data.set("id", "record-1");
+    data.set("status", "hidden");
+    assert.equal((await actions[actionName]({}, data)).ok, true);
+    assert.ok(revalidated.some(([url, scope]) => url === "/es" && scope === "layout"));
+    assert.ok(revalidated.some(([url, scope]) => url === "/en" && scope === "layout"));
+  }
+});
+
+test("failed status updates return an error without confirming success", async () => {
+  for (const [actionName, table] of [["updateProductStatus", "products"], ["updateProjectStatus", "projects"]]) {
+    const { actions, revalidated } = fixture(undefined, null, {}, { table, operation: "update" });
+    const data = new FormData();
+    data.set("id", "record-1");
+    data.set("status", "published");
+    assert.equal((await actions[actionName]({}, data)).ok, false);
+    assert.equal(revalidated.length, 0);
+  }
+});
+
+test("a translation failure preserves the already saved hero image and reports partial failure", async () => {
+  const { saveHero, calls, revalidated } = fixture(undefined, null, {}, { table: "site_content_translations", operation: "upsert" });
+  const data = heroForm();
+  data.append("hero_showroom_main_image", new File(["image"], "main.jpg", { type: "image/jpeg" }));
+  const result = await saveHero({}, data);
+  assert.equal(result.ok, false);
+  assert.match(result.message, /faltan los textos/);
+  assert.equal(calls.some((call) => call.operation === "cleanup"), false);
+  assert.ok(revalidated.some(([url, scope]) => url === "/es" && scope === "layout"));
+});
+
+function sectionsForm() {
+  const data = new FormData();
+  const keys = [
+    "introEyebrow", "introTitle", "collectionsEyebrow", "collectionsTitle", "collectionsDescription",
+    "featuredEyebrow", "featuredTitle", "featuredDescription", "lifestyleLabelOne", "lifestyleLabelTwo", "lifestyleLabelThree",
+    "philosophyEyebrow", "philosophyTitle", "philosophyDescription", "projectsEyebrow", "projectsTitle", "projectsDescription",
+    "materialsEyebrow", "materialsTitle", "materialsLead", "materialOneTitle", "materialOneDescription", "materialTwoTitle", "materialTwoDescription",
+    "benefitsEyebrow", "benefitsTitle", "benefitsDescription", "faqEyebrow", "faqTitle", "faqDescription",
+    ...Array.from({ length: 4 }, (_, index) => [`benefit${index + 1}Title`, `benefit${index + 1}Description`]).flat(),
+    ...Array.from({ length: 6 }, (_, index) => [`faq${index + 1}Question`, `faq${index + 1}Answer`]).flat()
+  ];
+  for (const key of keys) for (const locale of ["es", "en"]) data.set(`${key}_${locale}`, `Approved copy for ${key} ${locale}.`);
+  return data;
+}
+
+test("individual benefits, FAQ answers and section visibility survive saving", async () => {
+  const { actions, calls } = fixture();
+  const data = sectionsForm();
+  data.set("visible_benefits", "on");
+  const result = await actions.upsertHomeSections({}, data);
+  assert.equal(result.ok, true);
+  const content = calls.find((call) => call.table === "site_content" && call.operation === "update").rows.value;
+  assert.equal(content.visible.benefits, true);
+  assert.equal(content.visible.faq, false);
+  assert.equal(content.visible.intro, false);
+  const translations = calls.find((call) => call.table === "site_content_translations").rows;
+  assert.equal(translations[0].value.benefit4Description, data.get("benefit4Description_es"));
+  assert.equal(translations[1].value.faq6Answer, data.get("faq6Answer_en"));
+  assert.equal(translations[0].value.benefitsTitle, data.get("benefitsTitle_es"));
+});
+
+test("a failed section translation does not delete an image already linked to the homepage", async () => {
+  const { actions, calls } = fixture(undefined, null, {}, { table: "site_content_translations", operation: "upsert" });
+  const data = sectionsForm();
+  data.append("intro_image", new File(["image"], "intro.jpg", { type: "image/jpeg" }));
+  assert.equal((await actions.upsertHomeSections({}, data)).ok, false);
+  assert.equal(calls.some((call) => call.operation === "cleanup"), false);
+});
+
+test("uploads are cleaned up when the section record itself cannot be saved", async () => {
+  const { actions, calls } = fixture(undefined, null, {}, { table: "site_content", operation: "update" });
+  const data = sectionsForm();
+  data.append("intro_image", new File(["image"], "intro.jpg", { type: "image/jpeg" }));
+  assert.equal((await actions.upsertHomeSections({}, data)).ok, false);
+  assert.ok(calls.some((call) => call.operation === "cleanup" && call.storagePath === "intro.jpg"));
+});
+
+test("collection and project translation failures preserve their already saved cover images", async () => {
+  for (const [actionName, table] of [["upsertCollection", "collection_translations"], ["upsertProject", "project_translations"]]) {
+    const { actions, calls } = fixture(undefined, null, {}, { table, operation: "upsert" });
+    const data = form();
+    data.set("title_es", "Proyecto de terraza");
+    data.set("location", "Santiago");
+    data.append("cover_image", new File(["image"], "cover.jpg", { type: "image/jpeg" }));
+    const result = await actions[actionName]({}, data);
+    assert.equal(result.ok, false);
+    assert.match(result.message, /faltan los textos/);
+    assert.equal(calls.some((call) => call.operation === "cleanup"), false);
+  }
 });

@@ -9,6 +9,9 @@ export function createSupabaseAdminClient() {
   }
 
   return createClient(config.url, config.serviceRoleKey, {
+    global: {
+      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" })
+    },
     auth: {
       autoRefreshToken: false,
       persistSession: false

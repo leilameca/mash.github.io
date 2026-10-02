@@ -90,7 +90,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
       </section>
 
-      <section className="section-shell showroom-intro" data-scrub-copy>
+      {homeSections.visible.intro && <section className="section-shell showroom-intro" data-scrub-copy>
         <div className="showroom-intro__copy">
           <p className="eyebrow">{homeSections.introEyebrow}</p>
           <h2>{splitWords(homeSections.introTitle)}</h2>
@@ -98,9 +98,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="showroom-intro__media" data-image-motion>
           <Image src={homeSections.introImage} alt={homeSections.introTitle} fill sizes="(max-width: 920px) 92vw, 38vw" />
         </div>
-      </section>
+      </section>}
 
-      <section className="section-shell chapter">
+      {homeSections.visible.collections && <section className="section-shell chapter">
         <div className="section-heading section-heading--row" data-reveal>
           <div>
             <p className="eyebrow">{homeSections.collectionsEyebrow}</p>
@@ -123,9 +123,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </span>
           </Link>
         </div>
-      </section>
+      </section>}
 
-      <section className="showroom-band">
+      {homeSections.visible.featured && <section className="showroom-band">
         <div className="section-shell product-feature">
           <div className="section-heading section-heading--row" data-reveal>
             <div>
@@ -143,9 +143,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {t.viewAll}
           </Link>
         </div>
-      </section>
+      </section>}
 
-      <section className="lifestyle-band" aria-label={locale === "es" ? "Inspiracion exterior" : "Outdoor inspiration"}>
+      {homeSections.visible.lifestyle && <section className="lifestyle-band" aria-label={locale === "es" ? "Inspiracion exterior" : "Outdoor inspiration"}>
         <div className="lifestyle-band__track">
           <span>{homeSections.lifestyleLabels[0]}</span>
           <div><Image src="/assets/images/cama-balinesa-trap.jpg" alt="" fill sizes="15rem" /></div>
@@ -154,9 +154,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <span>{homeSections.lifestyleLabels[2]}</span>
           <div><Image src="/assets/images/oculus-chaise.jpg" alt="" fill sizes="15rem" /></div>
         </div>
-      </section>
+      </section>}
 
-      <section className="section-shell editorial-split">
+      {homeSections.visible.philosophy && <section className="section-shell editorial-split">
         <div className="editorial-split__image" data-image-motion>
           <Image
             src={homeSections.philosophyImage}
@@ -171,9 +171,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <h2>{homeSections.philosophyTitle}</h2>
           <p>{homeSections.philosophyDescription}</p>
         </div>
-      </section>
+      </section>}
 
-      <section className="section-shell projects-preview">
+      {homeSections.visible.projects && <section className="section-shell projects-preview">
         <div className="section-heading section-heading--row" data-reveal>
           <div>
             <p className="eyebrow">{homeSections.projectsEyebrow}</p>
@@ -189,7 +189,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </Link>
           ))}
         </div>
-      </section>
+      </section>}
 
       {homeSections.visible.benefits && <section className="section-shell benefits-section">
         <div className="section-heading benefits-section__heading" data-reveal>
@@ -211,7 +211,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
       </section>}
 
-      <section className="materials-section">
+      {homeSections.visible.materials && <section className="materials-section">
         <div className="section-shell materials-layout">
           <div className="materials-visual" data-image-motion>
             <Image src={homeSections.materialsPrimaryImage} alt={homeSections.materialOneTitle} fill sizes="(max-width: 920px) 92vw, 34vw" />
@@ -238,7 +238,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <QuoteLink className="button button--gold">{t.requestQuote}</QuoteLink>
           </div>
         </div>
-      </section>
+      </section>}
     </>
   );
 }
