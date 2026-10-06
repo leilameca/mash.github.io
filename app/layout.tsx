@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { PwaRegistration } from "@/components/PwaRegistration";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
 import "./globals.css";
 
@@ -17,6 +18,9 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  applicationName: "MASH",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: { capable: true, title: "MASH", statusBarStyle: "default" },
   metadataBase: new URL("https://mashoficial.com"),
   title: {
     default: "MASH | Martinez Star Home",
@@ -25,9 +29,12 @@ export const metadata: Metadata = {
   description:
     "Muebles de exterior en Santiago, Republica Dominicana para terrazas, patios, balcones, piscinas, hoteles y restaurantes.",
   icons: {
-    icon: "/assets/images/logo.png"
+    icon: "/assets/images/logo.png",
+    apple: "/pwa/apple-touch-icon.png"
   }
 };
+
+export const viewport: Viewport = { themeColor: "#113221" };
 
 export default function RootLayout({
   children
@@ -36,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${cormorant.variable} ${outfit.variable}`}>
-      <body>{children}</body>
+      <body>{children}<PwaRegistration /></body>
     </html>
   );
 }

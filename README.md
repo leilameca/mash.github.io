@@ -67,6 +67,24 @@ Después de publicar, aplica las migraciones de Supabase, confirma que el bucket
 
 La tabla `site_content` funciona como base modular para trasladar progresivamente al panel las demas secciones: materiales, datos de contacto, navegacion, banners, proyectos y paginas adicionales. El panel ya cubre catalogo, categorias, medios y el bloque principal del inicio; un constructor visual completo con secciones reordenables, temas y plugins requiere una fase posterior, equivalente a desarrollar un page builder.
 
+## App instalable (PWA)
+
+El sitio incluye un manifiesto, iconos para Android/iOS y un service worker que se activa en producción. En Android y computadoras compatibles aparece **Instalar MASH** en el footer. En iPhone/iPad, abre el sitio en Safari y usa **Compartir → Añadir a pantalla de inicio**.
+
+La instalación requiere HTTPS (localhost sirve para pruebas). Sin conexión se muestra un aviso en español o inglés. El catálogo, las páginas del admin y los envíos de formularios no se almacenan en la caché del service worker; los contenidos se consultan en línea para reflejar los cambios del admin.
+
+Los iconos de `public/pwa/` se derivan del logo existente. Al modificar los recursos sin conexión, incrementa la versión `CACHE_NAME` en `public/sw.js` para renovar la caché.
+
+## Verificación de la PWA
+
+```bash
+npm run test:pwa
+npm run build
+npm run test:pwa:browser
+```
+
+La prueba de navegador levanta temporalmente el servidor de producción y comprueba instalación, iconos, avisos sin conexión y recuperación. Usa Chrome en Windows y Chromium de Playwright en otros sistemas; `PWA_BROWSER_CHANNEL` permite cambiar el navegador utilizado.
+
 ## Verificacion
 
 ```bash

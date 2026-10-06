@@ -9,7 +9,9 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test:products": "node --test tests/admin-content.test.cjs",
-    "test:admin": "node --test tests/admin-content.test.cjs tests/catalog.test.cjs"
+    "test:admin": "node --test tests/admin-content.test.cjs tests/catalog.test.cjs",
+    "test:pwa": "node --test tests/pwa.test.cjs",
+    "test:pwa:browser": "node tests/pwa-browser.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

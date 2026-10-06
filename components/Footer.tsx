@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/BrandMark";
+import { PwaInstall } from "@/components/PwaInstall";
 import { localizedPath, type Locale } from "@/lib/i18n";
 import type { SiteChromeContent } from "@/lib/supabase/site-content";
 
@@ -41,6 +42,7 @@ export function Footer({ locale, content }: { locale: Locale; content: SiteChrom
       </div>
       <div className="footer-bottom section-shell">
         <p>{content.copyright}</p>
+        <PwaInstall locale={locale} />
       </div>
     </footer>
   );
