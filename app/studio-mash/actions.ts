@@ -16,6 +16,19 @@ export type ActionState = {
   errors?: Record<string, string>;
 };
 
+function revalidatePublicSite() {
+  for (const locale of ["es", "en"]) {
+    revalidatePath(`/${locale}`);
+    revalidatePath(`/${locale}/productos`);
+    revalidatePath(`/${locale}/productos/[slug]`, "page");
+    revalidatePath(`/${locale}/colecciones`);
+    revalidatePath(`/${locale}/colecciones/[slug]`, "page");
+    revalidatePath(`/${locale}/proyectos`);
+    revalidatePath(`/${locale}/nosotros`);
+    revalidatePath(`/${locale}/contacto`);
+  }
+}
+
 const emailSchema = z.object({
   email: z.string().trim().email("Escribe un correo valido.")
 });
@@ -450,8 +463,7 @@ export async function upsertProduct(_previous: ActionState, formData: FormData):
   }
 
   revalidatePath("/");
-  revalidatePath("/es", "layout");
-  revalidatePath("/en", "layout");
+  revalidatePublicSite();
   revalidatePath(adminRoute);
   revalidatePath(`${adminRoute}/productos`);
   redirect(`${adminRoute}/productos`);
@@ -466,8 +478,7 @@ export async function updateProductStatus(_previous: ActionState, formData: Form
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin.from("products").update({ status }).eq("id", id).select("id").single();
   if (error || !data) return { ok: false, message: "No pudimos guardar el estado. Intenta de nuevo." };
-  revalidatePath("/es", "layout");
-  revalidatePath("/en", "layout");
+  revalidatePublicSite();
   revalidatePath(`${adminRoute}/productos`);
   return { ok: true, message: "Estado guardado." };
 }
@@ -580,8 +591,7 @@ export async function upsertCollection(_previous: ActionState, formData: FormDat
     return { ok: false, message: "La colección y su imagen se guardaron, pero faltan los textos. Intenta guardar de nuevo." };
   }
 
-  revalidatePath("/es", "layout");
-  revalidatePath("/en", "layout");
+  revalidatePublicSite();
   revalidatePath(`${adminRoute}/colecciones`);
   redirect(`${adminRoute}/colecciones`);
 }
@@ -688,8 +698,7 @@ export async function upsertProject(_previous: ActionState, formData: FormData):
     return { ok: false, message: "La portada se guardó, pero no pudimos actualizar su galería. Intenta guardar de nuevo." };
   }
 
-  revalidatePath("/es", "layout");
-  revalidatePath("/en", "layout");
+  revalidatePublicSite();
   revalidatePath(`${adminRoute}/proyectos`);
   redirect(`${adminRoute}/proyectos`);
 }
@@ -702,8 +711,7 @@ export async function updateProjectStatus(_previous: ActionState, formData: Form
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin.from("projects").update({ status }).eq("id", id).select("id").single();
   if (error || !data) return { ok: false, message: "No pudimos guardar el estado. Intenta de nuevo." };
-  revalidatePath("/es", "layout");
-  revalidatePath("/en", "layout");
+  revalidatePublicSite();
   revalidatePath(`${adminRoute}/proyectos`);
   return { ok: true, message: "Estado guardado." };
 }
@@ -811,8 +819,7 @@ export async function upsertHomeContent(_previous: ActionState, formData: FormDa
     return { ok: false, message: "Las imágenes de la portada se guardaron, pero faltan los textos. Intenta guardar de nuevo." };
   }
 
-  revalidatePath("/es", "layout");
-  revalidatePath("/en", "layout");
+  revalidatePublicSite();
   revalidatePath(`${adminRoute}/contenido`);
   return { ok: true, message: "Contenido del inicio actualizado." };
 }
@@ -873,8 +880,7 @@ export async function upsertSiteSettings(_previous: ActionState, formData: FormD
     return { ok: false, message: error instanceof Error ? error.message : "No pudimos guardar la configuracion." };
   }
 
-  revalidatePath("/es", "layout");
-  revalidatePath("/en", "layout");
+  revalidatePublicSite();
   revalidatePath(`${adminRoute}/contenido`);
   return { ok: true, message: "Datos generales y footer actualizados." };
 }
@@ -935,8 +941,7 @@ export async function upsertNavigation(_previous: ActionState, formData: FormDat
     return { ok: false, message: error instanceof Error ? error.message : "No pudimos guardar la navegacion." };
   }
 
-  revalidatePath("/es", "layout");
-  revalidatePath("/en", "layout");
+  revalidatePublicSite();
   revalidatePath(`${adminRoute}/contenido`);
   return { ok: true, message: "Navegacion actualizada." };
 }
@@ -1026,8 +1031,7 @@ export async function upsertMarketingPages(_previous: ActionState, formData: For
     return { ok: false, message: error instanceof Error ? error.message : "No pudimos guardar las paginas." };
   }
 
-  revalidatePath("/es", "layout");
-  revalidatePath("/en", "layout");
+  revalidatePublicSite();
   revalidatePath(`${adminRoute}/contenido`);
   return { ok: true, message: "Paginas institucionales actualizadas." };
 }
@@ -1093,8 +1097,7 @@ export async function upsertHomeSections(_previous: ActionState, formData: FormD
     return { ok: false, message: error instanceof Error ? error.message : "No pudimos guardar las secciones del inicio." };
   }
 
-  revalidatePath("/es", "layout");
-  revalidatePath("/en", "layout");
+  revalidatePublicSite();
   revalidatePath(`${adminRoute}/contenido`);
   return { ok: true, message: "Secciones del inicio actualizadas." };
 }
