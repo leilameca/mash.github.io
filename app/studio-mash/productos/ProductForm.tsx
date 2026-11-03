@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
-import { upsertProduct, type ActionState } from "../actions";
+import { deleteProduct, upsertProduct, type ActionState } from "../actions";
 
 type CollectionOption = {
   id: string;
@@ -30,6 +31,7 @@ type ProductFormValue = {
 const initialState: ActionState = {};
 
 export function ProductForm({ collections, product }: { collections: CollectionOption[]; product?: ProductFormValue }) {
+  const router = useRouter();
   const [images, setImages] = useState(() => [...new Set(product?.image_paths ?? (product?.hero_image_path ? [product.hero_image_path] : []))]);
   const [newImages, setNewImages] = useState<Array<{ file: File; url: string }>>([]);
   const previewUrls = useRef(new Set<string>());
@@ -40,6 +42,11 @@ export function ProductForm({ collections, product }: { collections: CollectionO
     if (newPrimaryIndex >= 0) formData.set("primary_new_image_index", String(newPrimaryIndex));
     return upsertProduct(previous, formData);
   }, initialState);
+  const [deleteState, deleteAction, deleting] = useActionState(deleteProduct, initialState);
+
+  useEffect(() => {
+    if (deleteState.ok) router.replace("/studio-mash/productos");
+  }, [deleteState.ok, router]);
 
   useEffect(() => {
     const urls = previewUrls.current;
@@ -56,6 +63,7 @@ export function ProductForm({ collections, product }: { collections: CollectionO
   }
 
   return (
+    <>
     <form action={action} className="studio-form">
       {product?.id && <input type="hidden" name="id" value={product.id} />}
       <div className="studio-form__grid">
@@ -169,5 +177,21 @@ export function ProductForm({ collections, product }: { collections: CollectionO
         {pending ? "Guardando..." : "Guardar producto"}
       </button>
     </form>
+    {product?.id && (
+      <form
+        action={deleteAction}
+        onSubmit={(event) => {
+          if (!window.confirm("¿Eliminar este producto definitivamente? También se eliminarán sus imágenes y no se puede deshacer.")) event.preventDefault();
+        }}
+        className="studio-form"
+      >
+        <input type="hidden" name="id" value={product.id} />
+        {deleteState.message && <p className="admin-error">{deleteState.message}</p>}
+        <button className="admin-button" type="submit" disabled={deleting} style={{ background: "#7b2d26" }}>
+          {deleting ? "Eliminando..." : "Eliminar producto"}
+        </button>
+      </form>
+    )}
+    </>
   );
 }

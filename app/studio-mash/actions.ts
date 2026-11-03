@@ -6,7 +6,7 @@ import { z } from "zod";
 import { adminRoute, getSupabaseSetupIssues } from "@/lib/supabase/env";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/supabase/auth";
-import { getImageFile, removeUploadedImage, uploadImage, validateImage, type MediaFolder } from "@/lib/supabase/media";
+import { getImageFile, MEDIA_BUCKET, removeUploadedImage, uploadImage, validateImage, type MediaFolder } from "@/lib/supabase/media";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { HOME_HERO_IMAGES } from "@/lib/supabase/site-content";
 
@@ -481,6 +481,38 @@ export async function updateProductStatus(_previous: ActionState, formData: Form
   revalidatePublicSite();
   revalidatePath(`${adminRoute}/productos`);
   return { ok: true, message: "Estado guardado." };
+}
+
+function getManagedStoragePath(value: string) {
+  const publicPrefix = `/storage/v1/object/public/${MEDIA_BUCKET}/`;
+  const index = value.indexOf(publicPrefix);
+  if (index === -1) return null;
+  return decodeURIComponent(value.slice(index + publicPrefix.length));
+}
+
+export async function deleteProduct(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  await requireAdmin();
+  const id = formData.get("id")?.toString();
+  if (!id || !z.string().uuid().safeParse(id).success) {
+    return { ok: false, message: "No pudimos identificar el producto que quieres eliminar." };
+  }
+
+  const admin = createSupabaseAdminClient();
+  const { data: images, error: imagesError } = await admin.from("product_images").select("storage_path").eq("product_id", id);
+  if (imagesError) return { ok: false, message: "No pudimos preparar la eliminación del producto." };
+
+  const { error: deleteError } = await admin.from("products").delete().eq("id", id);
+  if (deleteError) return { ok: false, message: "No pudimos eliminar el producto. Intenta de nuevo." };
+
+  const managedPaths = (images ?? []).map((image) => getManagedStoragePath(image.storage_path)).filter((path): path is string => Boolean(path));
+  if (managedPaths.length) {
+    await admin.storage.from(MEDIA_BUCKET).remove(managedPaths);
+  }
+
+  revalidatePublicSite();
+  revalidatePath(adminRoute);
+  revalidatePath(`${adminRoute}/productos`);
+  return { ok: true, message: "Producto eliminado." };
 }
 
 async function saveSiteContentBlock(
