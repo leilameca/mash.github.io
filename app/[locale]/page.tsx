@@ -38,7 +38,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     "@type": "FurnitureStore",
     name: "MASH | Martinez Star Home",
     url: "https://mashoficial.com/",
-    image: "https://mashoficial.com/assets/images/oasis-hero-v2.jpg",
+    image: new URL(heroContent.image, "https://mashoficial.com").href,
     logo: "https://mashoficial.com/assets/images/logo.png",
     telephone: "+1-809-327-2139",
     email: site.email,
@@ -148,11 +148,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {homeSections.visible.lifestyle && <section className="lifestyle-band" aria-label={locale === "es" ? "Inspiracion exterior" : "Outdoor inspiration"}>
         <div className="lifestyle-band__track">
           <span>{homeSections.lifestyleLabels[0]}</span>
-          <div><Image src="/assets/images/cama-balinesa-trap.jpg" alt="" fill sizes="15rem" /></div>
+          <div><Image src={homeSections.lifestyleImageOne} alt="" fill sizes="15rem" /></div>
           <span>{homeSections.lifestyleLabels[1]}</span>
-          <div><Image src="/assets/images/rombois-set.jpg" alt="" fill sizes="15rem" /></div>
+          <div><Image src={homeSections.lifestyleImageTwo} alt="" fill sizes="15rem" /></div>
           <span>{homeSections.lifestyleLabels[2]}</span>
-          <div><Image src="/assets/images/oculus-chaise.jpg" alt="" fill sizes="15rem" /></div>
+          <div><Image src={homeSections.lifestyleImageThree} alt="" fill sizes="15rem" /></div>
         </div>
       </section>}
 

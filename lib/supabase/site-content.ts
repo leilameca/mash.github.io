@@ -172,6 +172,9 @@ export type HomeSectionsContent = {
   featuredTitle: string;
   featuredDescription: string;
   lifestyleLabels: [string, string, string];
+  lifestyleImageOne: string;
+  lifestyleImageTwo: string;
+  lifestyleImageThree: string;
   philosophyEyebrow: string;
   philosophyTitle: string;
   philosophyDescription: string;
@@ -219,6 +222,9 @@ export function getFallbackHomeSections(locale: Locale): HomeSectionsContent {
       ? "Sin carrito ni checkout. El recorrido lleva a entender la pieza y pedir una cotización por WhatsApp."
       : "No cart or checkout. The path helps visitors understand the piece and request a WhatsApp quote.",
     lifestyleLabels: es ? ["Terrazas", "Balcones", "Piscinas"] : ["Terraces", "Balconies", "Pools"],
+    lifestyleImageOne: "/assets/images/cama-balinesa-trap.jpg",
+    lifestyleImageTwo: "/assets/images/rombois-set.jpg",
+    lifestyleImageThree: "/assets/images/oculus-chaise.jpg",
     philosophyEyebrow: es ? "Filosofía MASH" : "MASH philosophy",
     philosophyTitle: es ? "Más que muebles, creamos espacios que se viven." : "More than furniture, we shape outdoor spaces to be lived in.",
     philosophyDescription: es
@@ -305,10 +311,13 @@ export async function getHomeSectionsContent(locale: Locale): Promise<HomeSectio
     featuredTitle: stringValue("featuredTitle", defaults.featuredTitle),
     featuredDescription: stringValue("featuredDescription", defaults.featuredDescription),
     lifestyleLabels: [
-      stringValue("lifestyleLabels", defaults.lifestyleLabels[0]),
+      typeof text.lifestyleLabelOne === "string" ? text.lifestyleLabelOne : defaults.lifestyleLabels[0],
       typeof text.lifestyleLabelTwo === "string" ? text.lifestyleLabelTwo : defaults.lifestyleLabels[1],
       typeof text.lifestyleLabelThree === "string" ? text.lifestyleLabelThree : defaults.lifestyleLabels[2]
     ],
+    lifestyleImageOne: imageValue("lifestyleImageOne", defaults.lifestyleImageOne),
+    lifestyleImageTwo: imageValue("lifestyleImageTwo", defaults.lifestyleImageTwo),
+    lifestyleImageThree: imageValue("lifestyleImageThree", defaults.lifestyleImageThree),
     philosophyEyebrow: stringValue("philosophyEyebrow", defaults.philosophyEyebrow),
     philosophyTitle: stringValue("philosophyTitle", defaults.philosophyTitle),
     philosophyDescription: stringValue("philosophyDescription", defaults.philosophyDescription),

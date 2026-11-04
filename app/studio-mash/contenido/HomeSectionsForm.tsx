@@ -21,6 +21,9 @@ const textGroups = [
 
 const imageFields = [
   ["introImage", "intro_image", "Introduccion"],
+  ["lifestyleImageOne", "lifestyle_image_one", "Franja visual · imagen 1"],
+  ["lifestyleImageTwo", "lifestyle_image_two", "Franja visual · imagen 2"],
+  ["lifestyleImageThree", "lifestyle_image_three", "Franja visual · imagen 3"],
   ["philosophyImage", "philosophy_image", "Filosofia"],
   ["projectsImage", "projects_image", "Proyectos"],
   ["materialsPrimaryImage", "materials_primary_image", "Material principal"],
@@ -79,8 +82,7 @@ export function HomeSectionsForm({ es, en }: { es: HomeSectionsContent; en: Home
             return (
               <label key={key}>{label}
                 <span className="studio-image-preview studio-image-preview--wide"><Image src={src} alt="" fill sizes="260px" /></span>
-                <input type="hidden" name={`existing_${key}`} value={src} />
-                <input name={field} type="file" accept="image/jpeg,image/png,image/webp,image/avif" />
+                <input name={field} type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={pending} />
               </label>
             );
           })}

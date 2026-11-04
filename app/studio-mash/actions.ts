@@ -603,7 +603,7 @@ export async function upsertCollection(_previous: ActionState, formData: FormDat
 
   const payload = {
     slug: parsed.data.slug,
-    cover_image_path: uploaded?.publicUrl ?? parsed.data.existing_image_path,
+    ...(uploaded ? { cover_image_path: uploaded.publicUrl } : parsed.data.id ? {} : { cover_image_path: parsed.data.existing_image_path }),
     status: parsed.data.status,
     featured: parsed.data.featured ?? false,
     sort_order: parsed.data.sort_order,
@@ -680,7 +680,14 @@ export async function upsertProject(_previous: ActionState, formData: FormData):
     return { ok: false, errors: { cover_image: error instanceof Error ? error.message : "No pudimos subir la imagen." } };
   }
 
-  const imagePath = uploaded?.publicUrl ?? parsed.data.existing_image_path!;
+  let imagePath = uploaded?.publicUrl ?? parsed.data.existing_image_path!;
+  if (parsed.data.id && !uploaded) {
+    const { data: existing, error } = await admin.from("projects").select("cover_image_path").eq("id", parsed.data.id).single();
+    if (error || !existing?.cover_image_path) {
+      return { ok: false, message: "No pudimos consultar la portada actual. Intenta guardar de nuevo." };
+    }
+    imagePath = existing.cover_image_path;
+  }
   const payload = {
     slug: parsed.data.slug,
     cover_image_path: imagePath,
@@ -1018,7 +1025,7 @@ export async function upsertMarketingPages(_previous: ActionState, formData: For
       admin,
       currentAdmin.user_id,
       "page.about",
-      { image_path: uploaded?.publicUrl ?? parsed.data.about_existing_image ?? "/assets/images/yascari.jpeg" },
+      uploaded ? { image_path: uploaded.publicUrl } : {},
       [
         {
           locale: "es",
@@ -1095,6 +1102,9 @@ export async function upsertHomeSections(_previous: ActionState, formData: FormD
 
   const imageFields = [
     ["introImage", "intro_image"],
+    ["lifestyleImageOne", "lifestyle_image_one"],
+    ["lifestyleImageTwo", "lifestyle_image_two"],
+    ["lifestyleImageThree", "lifestyle_image_three"],
     ["philosophyImage", "philosophy_image"],
     ["projectsImage", "projects_image"],
     ["materialsPrimaryImage", "materials_primary_image"],
@@ -1111,9 +1121,9 @@ export async function upsertHomeSections(_previous: ActionState, formData: FormD
     if (error) return { ok: false, message: error };
   }
 
-  const images: Record<string, string> = Object.fromEntries(
-    imageFields.map(([key]) => [key, formData.get(`existing_${key}`)?.toString() ?? ""])
-  );
+  // Only replace explicitly uploaded images. Hidden URLs may belong to an older
+  // version of this form; saveSiteContentBlock preserves the latest stored values.
+  const images: Record<string, string> = {};
   const admin = createSupabaseAdminClient();
   let uploaded: Awaited<ReturnType<typeof uploadImage>> | undefined;
   let imageLinked = false;

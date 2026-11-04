@@ -67,6 +67,8 @@ Después de publicar, aplica las migraciones de Supabase, confirma que el bucket
 
 La tabla `site_content` funciona como base modular para trasladar progresivamente al panel las demas secciones: materiales, datos de contacto, navegacion, banners, proyectos y paginas adicionales. El panel ya cubre catalogo, categorias, medios y el bloque principal del inicio; un constructor visual completo con secciones reordenables, temas y plugins requiere una fase posterior, equivalente a desarrollar un page builder.
 
+Las imágenes del inicio se gestionan en **Contenido**: la portada y sus dos imágenes de apoyo están en **Hero principal**; introducción, franja visual (tres fotos), filosofía, proyectos y materiales están en **Secciones, textos e imágenes**. La foto de Nosotros se cambia en **Páginas institucionales**. Cambia una foto por guardado en las secciones. Guardar solo textos conserva las últimas imágenes publicadas, incluso desde una pestaña antigua del administrador. Subir un archivo a Multimedia lo añade a la biblioteca; no sustituye automáticamente una foto ya asignada a una sección.
+
 ## App instalable (PWA)
 
 El sitio incluye un manifiesto, iconos para Android/iOS y un service worker que se activa en producción. En Android y computadoras compatibles aparece **Instalar MASH** en el footer. En iPhone/iPad, abre el sitio en Safari y usa **Compartir → Añadir a pantalla de inicio**.

@@ -31,7 +31,7 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroV
         maybeSingle() { return query; },
         then(resolve, reject) {
           return Promise.resolve({
-            data: table === "products" && operation === "select" && failure.source ? failure.source : ["products", "projects", "collections"].includes(table) ? { id: "record-1" } : table === "site_content" ? { id: "hero-1", value: heroValue } : savedImages,
+            data: ["products", "projects", "collections"].includes(table) && operation === "select" && failure.source ? failure.source : ["products", "projects", "collections"].includes(table) ? { id: "record-1" } : table === "site_content" ? { id: "hero-1", value: heroValue } : savedImages,
             error: table === failure.table && operation === failure.operation ? { message: "Database unavailable" } : table === "product_images" && operation === "upsert" ? imageError : null
           }).then(resolve, reject);
         }
@@ -300,6 +300,46 @@ test("individual benefits, FAQ answers and section visibility survive saving", a
   assert.equal(translations[0].value.benefitsTitle, data.get("benefitsTitle_es"));
 });
 
+test("saving text from a stale section form preserves the latest published images", async () => {
+  const latest = { introImage: "/new-intro.jpg", philosophyImage: "/new-philosophy.jpg", lifestyleImageOne: "/new-lifestyle.jpg", extra: "preserved" };
+  const { actions, calls } = fixture(undefined, null, latest);
+  const data = sectionsForm();
+  data.set("existing_introImage", "/old-intro.jpg");
+  data.set("existing_philosophyImage", "/old-philosophy.jpg");
+  assert.equal((await actions.upsertHomeSections({}, data)).ok, true);
+  const value = calls.find((call) => call.table === "site_content" && call.operation === "update").rows.value;
+  for (const [key, image] of Object.entries(latest)) assert.equal(value[key], image);
+});
+
+test("each visual strip image can be replaced without restoring the other old images", async () => {
+  for (const [key, field] of [["lifestyleImageOne", "lifestyle_image_one"], ["lifestyleImageTwo", "lifestyle_image_two"], ["lifestyleImageThree", "lifestyle_image_three"]]) {
+    const { actions, calls, revalidated } = fixture(undefined, null, { introImage: "/latest.jpg" });
+    const data = sectionsForm();
+    data.set("existing_introImage", "/old.jpg");
+    data.append(field, new File(["image"], "strip.jpg", { type: "image/jpeg" }));
+    assert.equal((await actions.upsertHomeSections({}, data)).ok, true);
+    const value = calls.find((call) => call.table === "site_content" && call.operation === "update").rows.value;
+    assert.equal(value[key], "/uploaded/strip.jpg");
+    assert.equal(value.introImage, "/latest.jpg");
+    assert.ok(revalidated.some(([url, scope]) => url === "/es" && scope === "layout"));
+    assert.ok(revalidated.some(([url, scope]) => url === "/en" && scope === "layout"));
+  }
+});
+
+test("saving institutional page text cannot restore a stale about image", async () => {
+  const { actions, calls } = fixture(undefined, null, { image_path: "/latest-about.jpg" });
+  const data = new FormData();
+  for (const page of ["about", "contact", "projects"]) {
+    for (const field of ["eyebrow", "title", "description"]) {
+      for (const locale of ["es", "en"]) data.set(`${page}_${field}_${locale}`, "Approved page content for visitors.");
+    }
+  }
+  data.set("about_existing_image", "/old-about.jpg");
+  assert.equal((await actions.upsertMarketingPages({}, data)).ok, true);
+  const value = calls.find((call) => call.table === "site_content" && call.operation === "update").rows.value;
+  assert.equal(value.image_path, "/latest-about.jpg");
+});
+
 test("a failed section translation does not delete an image already linked to the homepage", async () => {
   const { actions, calls } = fixture(undefined, null, {}, { table: "site_content_translations", operation: "upsert" });
   const data = sectionsForm();
@@ -327,5 +367,22 @@ test("collection and project translation failures preserve their already saved c
     assert.equal(result.ok, false);
     assert.match(result.message, /faltan los textos/);
     assert.equal(calls.some((call) => call.operation === "cleanup"), false);
+  }
+});
+
+test("text-only collection and project edits cannot restore stale covers", async () => {
+  for (const [actionName, table, route] of [["upsertCollection", "collections", "colecciones"], ["upsertProject", "projects", "proyectos"]]) {
+    const { actions, calls } = fixture(undefined, null, {}, { source: { id: "record-1", cover_image_path: "/latest-cover.jpg" } });
+    const data = form();
+    data.set("title_es", "Proyecto de terraza");
+    data.set("location", "Santiago");
+    data.set("existing_image_path", "/stale-cover.jpg");
+    await assert.rejects(actions[actionName]({}, data), new RegExp(`redirect:/studio-mash/${route}`));
+    const payload = calls.find((call) => call.table === table && call.operation === "update").rows;
+    assert.notEqual(payload.cover_image_path, "/stale-cover.jpg");
+    if (table === "projects") {
+      assert.equal(payload.cover_image_path, "/latest-cover.jpg");
+      assert.equal(calls.find((call) => call.table === "project_images" && call.operation === "upsert").rows.storage_path, "/latest-cover.jpg");
+    }
   }
 });
