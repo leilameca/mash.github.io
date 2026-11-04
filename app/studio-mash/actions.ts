@@ -6,7 +6,7 @@ import { z } from "zod";
 import { adminRoute, getSupabaseSetupIssues } from "@/lib/supabase/env";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/supabase/auth";
-import { getImageFile, MEDIA_BUCKET, removeUploadedImage, uploadImage, validateImage, type MediaFolder } from "@/lib/supabase/media";
+import { getImageFile, isLibraryImage, removeUploadedImage, uploadImage, validateImage, type MediaFolder } from "@/lib/supabase/media";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { HOME_HERO_IMAGES } from "@/lib/supabase/site-content";
 
@@ -18,6 +18,7 @@ export type ActionState = {
 
 function revalidatePublicSite() {
   for (const locale of ["es", "en"]) {
+    revalidatePath(`/${locale}`, "layout");
     revalidatePath(`/${locale}`);
     revalidatePath(`/${locale}/productos`);
     revalidatePath(`/${locale}/productos/[slug]`, "page");
@@ -353,7 +354,16 @@ export async function upsertProduct(_previous: ActionState, formData: FormData):
     ? await admin.from("product_images").select("id,storage_path").eq("product_id", parsed.data.id)
     : { data: [], error: null };
   if (savedImagesError) return { ok: false, message: "No pudimos consultar las imágenes del producto. Intenta de nuevo." };
-  if (existingPaths.some((path) => !savedImages?.some((image) => image.storage_path === path))) {
+  let libraryPaths: string[] = [];
+  try {
+    const value = JSON.parse(String(formData.get("library_image_paths") || "[]"));
+    if (!Array.isArray(value) || value.some((path) => typeof path !== "string")) throw new Error();
+    libraryPaths = value;
+  } catch { return { ok: false, errors: { hero_image: "Selección de biblioteca no válida." } }; }
+  if (existingPaths.length + imageFiles.length > 20) return { ok: false, errors: { hero_image: "Usa un máximo de 20 imágenes por producto." } };
+  const unfamiliar = existingPaths.filter((path) => !savedImages?.some((image) => image.storage_path === path));
+  const verified = await Promise.all(unfamiliar.map(async (path) => libraryPaths.includes(path) && await isLibraryImage(admin, path)));
+  if (verified.some((valid) => !valid)) {
     return { ok: false, errors: { hero_image: "Las imágenes del producto cambiaron. Recarga la página e intenta de nuevo." } };
   }
   if (existingPaths.length === 0 && imageFiles.length === 0) {
@@ -466,7 +476,7 @@ export async function upsertProduct(_previous: ActionState, formData: FormData):
   revalidatePublicSite();
   revalidatePath(adminRoute);
   revalidatePath(`${adminRoute}/productos`);
-  redirect(`${adminRoute}/productos`);
+  redirect(`${adminRoute}/productos?saved=1`);
 }
 
 export async function updateProductStatus(_previous: ActionState, formData: FormData): Promise<ActionState> {
@@ -483,13 +493,6 @@ export async function updateProductStatus(_previous: ActionState, formData: Form
   return { ok: true, message: "Estado guardado." };
 }
 
-function getManagedStoragePath(value: string) {
-  const publicPrefix = `/storage/v1/object/public/${MEDIA_BUCKET}/`;
-  const index = value.indexOf(publicPrefix);
-  if (index === -1) return null;
-  return decodeURIComponent(value.slice(index + publicPrefix.length));
-}
-
 export async function deleteProduct(_previous: ActionState, formData: FormData): Promise<ActionState> {
   await requireAdmin();
   const id = formData.get("id")?.toString();
@@ -498,21 +501,38 @@ export async function deleteProduct(_previous: ActionState, formData: FormData):
   }
 
   const admin = createSupabaseAdminClient();
-  const { data: images, error: imagesError } = await admin.from("product_images").select("storage_path").eq("product_id", id);
-  if (imagesError) return { ok: false, message: "No pudimos preparar la eliminación del producto." };
-
-  const { error: deleteError } = await admin.from("products").delete().eq("id", id);
-  if (deleteError) return { ok: false, message: "No pudimos eliminar el producto. Intenta de nuevo." };
-
-  const managedPaths = (images ?? []).map((image) => getManagedStoragePath(image.storage_path)).filter((path): path is string => Boolean(path));
-  if (managedPaths.length) {
-    await admin.storage.from(MEDIA_BUCKET).remove(managedPaths);
-  }
+  // Archived products remain recoverable, including shared image references.
+  const { data, error: deleteError } = await admin.from("products").update({ status: "archived" }).eq("id", id).select("id").single();
+  if (deleteError || !data) return { ok: false, message: "No pudimos mover el producto a la papelera. Intenta de nuevo." };
 
   revalidatePublicSite();
   revalidatePath(adminRoute);
   revalidatePath(`${adminRoute}/productos`);
-  return { ok: true, message: "Producto eliminado." };
+  return { ok: true, message: "Producto en la papelera. Puedes restaurarlo como borrador." };
+}
+
+export async function duplicateProduct(_previous: ActionState, formData: FormData): Promise<ActionState> {
+  const user = await requireAdmin();
+  const id = formData.get("id");
+  if (!z.string().uuid().safeParse(id).success) return { ok: false, message: "Producto no válido." };
+  const admin = createSupabaseAdminClient();
+  const { data: source, error } = await admin.from("products").select("slug,collection_id,dimensions,finishes,availability,product_translations(locale,name,description,materials,care,translation_status),product_images(storage_path,alt_es,alt_en,sort_order,is_primary)").eq("id", id).single();
+  if (error || !source) return { ok: false, message: "No pudimos leer el producto." };
+  const { data: copy, error: copyError } = await admin.from("products").insert({ slug: `${source.slug}-copia-${crypto.randomUUID().slice(0, 8)}`, collection_id: source.collection_id, dimensions: source.dimensions, finishes: source.finishes, availability: source.availability, status: "draft", featured: false, created_by: user.user_id, updated_by: user.user_id }).select("id").single();
+  if (copyError || !copy) return { ok: false, message: "No pudimos crear la copia." };
+  const translations = source.product_translations.map((item) => ({ ...item, product_id: copy.id, name: `${item.name} (copia)` }));
+  const images = source.product_images.map((item) => ({ ...item, product_id: copy.id }));
+  const results = await Promise.all([
+    translations.length ? admin.from("product_translations").insert(translations) : Promise.resolve({ error: null }),
+    images.length ? admin.from("product_images").insert(images) : Promise.resolve({ error: null })
+  ]);
+  if (results.some((result) => result.error)) {
+    const { error: cleanupError } = await admin.from("products").delete().eq("id", copy.id);
+    revalidatePath(`${adminRoute}/productos`);
+    return { ok: false, message: cleanupError ? "Quedó una copia incompleta en borradores. Revísala antes de publicar." : "No pudimos completar la copia. Intenta de nuevo." };
+  }
+  revalidatePath(`${adminRoute}/productos`);
+  redirect(`${adminRoute}/productos/${copy.id}`);
 }
 
 async function saveSiteContentBlock(

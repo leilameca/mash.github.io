@@ -19,7 +19,7 @@ export function StatusForm({ id, status, label, action }: {
         <option value="draft">Borrador</option>
         <option value="published">Publicado</option>
         <option value="hidden">Oculto</option>
-        <option value="archived">Archivado</option>
+        <option value="archived">Archivado / papelera</option>
       </select>
       <button type="submit" disabled={pending}>{pending ? "Guardando..." : "Aplicar"}</button>
       {state.message && <p role="status" className={state.ok ? "admin-success" : "admin-error"}>{state.message}</p>}

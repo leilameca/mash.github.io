@@ -17,6 +17,10 @@ function catalogFixture(rows) {
         select(fields) { queries.push({ table, fields }); return query; },
         eq(field, value) { queries.push({ table, field, value }); return query; },
         order() { return query; },
+        neq(field, value) { queries.push({ table, field, value, comparison: "neq" }); return query; },
+        limit(value) { queries.push({ table, limit: value }); return query; },
+        range(from, to) { queries.push({ table, from, to }); return query; },
+        maybeSingle() { return Promise.resolve({ data: rows[0] ?? null, error: null }); },
         then(resolve, reject) { return Promise.resolve({ data: rows, error: null }).then(resolve, reject); }
       };
       return query;
@@ -60,4 +64,25 @@ test("products without gallery images are not replaced by old catalog content", 
     slug: "unfinished", product_translations: [{ locale: "es", name: "Unfinished" }], product_images: []
   }]);
   assert.equal((await catalog.getCatalogProducts("es")).length, 0);
+});
+
+test("product details query only the requested published slug", async () => {
+  const { catalog, queries } = catalogFixture([]);
+  assert.equal(await catalog.getCatalogProduct("es", "not-found"), undefined);
+  assert.ok(queries.some((query) => query.field === "slug" && query.value === "not-found"));
+  assert.ok(queries.some((query) => query.field === "status" && query.value === "published"));
+});
+
+test("related products are filtered and limited in the database", async () => {
+  const { catalog, queries } = catalogFixture([]);
+  await catalog.getRelatedProducts("es", "dining", "candor");
+  assert.ok(queries.some((query) => query.limit === 3));
+  assert.ok(queries.some((query) => query.field === "collections.slug" && query.value === "dining"));
+  assert.ok(queries.some((query) => query.field === "slug" && query.comparison === "neq"));
+});
+
+test("catalog pagination requests only twelve database rows", async () => {
+  const { catalog, queries } = catalogFixture([]);
+  await catalog.getCatalogPage("es", 2);
+  assert.ok(queries.some((query) => query.from === 12 && query.to === 23));
 });

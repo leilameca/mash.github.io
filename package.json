@@ -9,7 +9,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test:products": "node --test tests/admin-content.test.cjs",
-    "test:admin": "node --test tests/admin-content.test.cjs tests/catalog.test.cjs",
+    "test:admin": "node --test tests/admin-content.test.cjs tests/catalog.test.cjs tests/media-library.test.cjs",
+    "test:ux": "node tests/admin-ui-browser.cjs && node tests/ux-browser.cjs",
     "test:pwa": "node --test tests/pwa.test.cjs",
     "test:pwa:browser": "node tests/pwa-browser.cjs"
   },

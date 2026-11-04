@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StudioNav } from "./StudioNav";
 import { logoutAdmin } from "./actions";
 import type { AdminProfile } from "@/lib/supabase/auth";
 
@@ -19,13 +20,7 @@ export function StudioShell({ children, admin }: { children: React.ReactNode; ad
           <span>MASH</span>
           <small>Admin privado</small>
         </Link>
-        <nav className="studio-nav" aria-label="Administracion">
-          {nav.map((item) => (
-            <Link key={item.href} href={item.href}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <StudioNav items={nav} />
         <form action={logoutAdmin}>
           <button className="studio-logout" type="submit">
             Cerrar sesion

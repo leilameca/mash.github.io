@@ -1,4 +1,5 @@
 import type { Collection, Product, Project } from "@/lib/content";
+import { cache } from "react";
 import { collections as fallbackCollections, products as fallbackProducts, projects as fallbackProjects } from "@/lib/content";
 import type { Locale } from "@/lib/i18n";
 import { isSupabaseCatalogEnabled } from "./env";
@@ -54,7 +55,7 @@ function localizeProduct(row: ProductRow, locale: Locale): Product | null {
   };
 }
 
-export async function getCatalogProducts(locale: Locale) {
+export const getCatalogProducts = cache(async function getCatalogProducts(locale: Locale) {
   if (!isSupabaseCatalogEnabled()) return fallbackProducts;
 
   const supabase = await createSupabaseServerClient();
@@ -72,11 +73,28 @@ export async function getCatalogProducts(locale: Locale) {
 
   const mapped = (data as unknown as ProductRow[]).map((row) => localizeProduct(row, locale)).filter((item): item is Product => Boolean(item));
   return mapped;
-}
+});
 
-export async function getCatalogProduct(locale: Locale, slug: string) {
-  const products = await getCatalogProducts(locale);
-  return products.find((product) => product.slug === slug);
+export const getCatalogProduct = cache(async function getCatalogProduct(locale: Locale, slug: string) {
+  if (!isSupabaseCatalogEnabled()) return fallbackProducts.find((product) => product.slug === slug);
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) throw new Error("Catálogo no disponible");
+  const { data, error } = await supabase.from("products")
+    .select("id,slug,featured,status,dimensions,finishes,collections(slug),product_translations(locale,name,description,materials,care),product_images(storage_path,alt_es,alt_en,sort_order,is_primary)")
+    .eq("status", "published").eq("slug", slug).maybeSingle();
+  if (error) throw new Error("No pudimos cargar el producto");
+  return data ? localizeProduct(data as unknown as ProductRow, locale) ?? undefined : undefined;
+});
+
+export async function getRelatedProducts(locale: Locale, collectionSlug: string, slug: string) {
+  if (!isSupabaseCatalogEnabled()) return fallbackProducts.filter((product) => product.collectionSlug === collectionSlug && product.slug !== slug).slice(0, 3);
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("products")
+    .select("id,slug,featured,status,dimensions,finishes,collections!inner(slug),product_translations(locale,name,description,materials,care),product_images(storage_path,alt_es,alt_en,sort_order,is_primary)")
+    .eq("status", "published").eq("collections.slug", collectionSlug).neq("slug", slug).order("sort_order").limit(3);
+  if (error || !data) return [];
+  return (data as unknown as ProductRow[]).map((row) => localizeProduct(row, locale)).filter((product): product is Product => Boolean(product));
 }
 
 export async function getCatalogProductsByCollection(locale: Locale, collectionSlug: string) {
@@ -84,7 +102,7 @@ export async function getCatalogProductsByCollection(locale: Locale, collectionS
   return products.filter((product) => product.collectionSlug === collectionSlug);
 }
 
-export async function getCatalogCollections() {
+export const getCatalogCollections = cache(async function getCatalogCollections() {
   if (!isSupabaseCatalogEnabled()) return fallbackCollections;
 
   const supabase = await createSupabaseServerClient();
@@ -116,7 +134,7 @@ export async function getCatalogCollections() {
     .filter((item: Collection | null): item is Collection => Boolean(item));
 
   return mapped;
-}
+});
 
 export async function getCatalogCollection(slug: string) {
   const collections = await getCatalogCollections();
@@ -150,4 +168,16 @@ export async function getCatalogProjects(locale: Locale): Promise<Project[]> {
     })
     .filter((item): item is Project => Boolean(item));
   return mapped;
+}
+
+export async function getCatalogPage(locale: Locale, page: number) {
+  const pageSize = 12;
+  if (!isSupabaseCatalogEnabled()) return { products: fallbackProducts.slice((page - 1) * pageSize, page * pageSize), total: fallbackProducts.length };
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) throw new Error("Catálogo no disponible");
+  const { data, count, error } = await supabase.from("products")
+    .select("id,slug,featured,status,dimensions,finishes,collections(slug),product_translations(locale,name,description,materials,care),product_images(storage_path,alt_es,alt_en,sort_order,is_primary)", { count: "exact" })
+    .eq("status", "published").order("sort_order").order("id").range((page - 1) * pageSize, page * pageSize - 1);
+  if (error || !data) throw new Error("No pudimos cargar el catálogo");
+  return { products: (data as unknown as ProductRow[]).map((row) => localizeProduct(row, locale)).filter((product): product is Product => Boolean(product)), total: count ?? 0 };
 }

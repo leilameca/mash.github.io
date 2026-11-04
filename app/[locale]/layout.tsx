@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { MotionEnhancer } from "@/components/MotionEnhancer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { SiteSettingsProvider } from "@/components/SiteSettingsProvider";
+import { QuoteSelectionProvider } from "@/components/QuoteSelection";
 import { dictionary } from "@/lib/content";
 import { isLocale, type Locale } from "@/lib/i18n";
 import { getSiteChromeContent } from "@/lib/supabase/site-content";
@@ -64,6 +65,7 @@ export default async function LocaleLayout({
 
   return (
     <SiteSettingsProvider value={{ whatsapp: siteContent.whatsapp }}>
+      <QuoteSelectionProvider locale={locale}>
       <a href="#main-content" className="skip-link">
         {locale === "es" ? "Saltar al contenido" : "Skip to content"}
       </a>
@@ -74,6 +76,7 @@ export default async function LocaleLayout({
       <Footer locale={locale} content={siteContent} />
       <WhatsAppFloat locale={locale} href={siteContent.whatsapp} label={siteContent.requestQuoteLabel} />
       <MotionEnhancer />
+      </QuoteSelectionProvider>
     </SiteSettingsProvider>
   );
 }

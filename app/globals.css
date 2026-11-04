@@ -1674,3 +1674,46 @@ html:not(.motion-ready) [data-reveal] {
     max-width: 18ch;
   }
 }
+
+/* Catalog refinements: consistent framing and quiet, accessible controls. */
+.product-card { display: flex; flex-direction: column; box-shadow: 0 6px 20px #20161108; }
+.product-card__image { aspect-ratio: 4 / 3; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+.product-card__body { flex: 1; grid-template-rows: auto 1fr auto; }
+.product-card__body p { color: var(--brown); font-size: .75rem; letter-spacing: .08em; }
+.product-card__body h3 { line-height: 1.15; text-wrap: balance; }
+.product-card__body .text-link { color: var(--brown); justify-self: start; }
+.product-card__image img { transition-duration: 240ms; }
+.interactive-gallery { min-width: 0; }
+.interactive-gallery__main { display: block; position: relative; width: 100%; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--bg-soft); cursor: zoom-in; }
+.interactive-gallery__main img, .interactive-gallery__thumbs img, .product-lightbox__image img { object-fit: contain; }
+.interactive-gallery__main > span { position: absolute; bottom: .8rem; right: .8rem; background: var(--bg-soft); color: var(--brown); padding: .5rem .7rem; border-radius: .3rem; }
+.interactive-gallery__thumbs { display: flex; gap: .65rem; overflow-x: auto; padding: .8rem .2rem; }
+.interactive-gallery__thumbs button { flex: 0 0 5rem; position: relative; aspect-ratio: 1; background: var(--bg-soft); border: 1px solid var(--line); border-radius: .4rem; cursor: pointer; }
+.interactive-gallery__thumbs button[aria-pressed=true] { border: 2px solid var(--brown); }
+.product-lightbox { margin: auto; width: min(75rem, 96vw); max-height: 95dvh; overflow: auto; border: 0; border-radius: .8rem; padding: 1rem; background: var(--bg-soft); color: var(--text); }
+.product-lightbox::backdrop { background: #201611c9; }
+.product-lightbox__image { position: relative; height: 65dvh; }
+.product-lightbox__controls { display: flex; justify-content: center; align-items: center; gap: 1rem; }
+.product-mobile-quote { display: none; }
+.catalog-pagination { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem; }
+.quote-selection-add { justify-self: start; background: none; border: 0; border-bottom: 1px solid var(--line); color: var(--brown); font: inherit; font-size: .8rem; padding: .65rem 0; cursor: pointer; min-height: 44px; }
+.quote-selection-add[aria-pressed=true] { font-weight: 600; }
+.quote-selection-add:disabled { opacity: .6; cursor: not-allowed; }
+.quote-selection-trigger { position: fixed; left: 1rem; bottom: 1.25rem; z-index: 44; background: var(--charcoal); color: var(--bg-soft); border: 1px solid var(--gold-soft); padding: .8rem 1rem; border-radius: .5rem; font: inherit; cursor: pointer; }
+.quote-selection-dialog { margin: auto; width: min(36rem, 94vw); max-height: 90dvh; overflow: auto; background: var(--bg-soft); color: var(--text); padding: 1.5rem; border: 1px solid var(--line); border-radius: .75rem; }
+.quote-selection-dialog::backdrop { background: #201611a0; }
+.quote-selection-dialog h2 { font-family: var(--font-serif), Georgia, serif; font-size: 2rem; margin-block: 1rem; }
+.quote-selection-dialog ul { list-style: none; padding: 0; }
+.quote-selection-dialog li { display: flex; gap: 1rem; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-block: .6rem; }
+.quote-selection-dialog li button { min-width: 44px; min-height: 44px; background: none; border: 0; font-size: 1.4rem; cursor: pointer; }
+.product-detail .spec-list div:has(dd:empty) { display: none; }
+@media (max-width: 900px) {
+  .product-mobile-quote { display: flex; align-items: center; justify-content: space-between; gap: .7rem; position: fixed; bottom: 0; left: 0; right: 0; z-index: 45; padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom)); background: var(--bg-soft); border-top: 1px solid var(--line); box-shadow: 0 -5px 24px #2016110c; }
+  .product-mobile-quote > span { font-family: var(--font-serif), Georgia, serif; font-size: 1.2rem; max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  body:has(.product-mobile-quote) { padding-bottom: 5.5rem; }
+  body:has(.product-mobile-quote) .whatsapp-float { display: none; }
+  body:has(.product-mobile-quote) .quote-selection-trigger { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-card, .product-card img { transition: none; transform: none !important; }
+}

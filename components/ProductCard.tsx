@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { AddToQuote } from "./QuoteSelection";
 import Link from "next/link";
 import type { Product } from "@/lib/content";
 import { dictionary, getCollectionLabel } from "@/lib/content";
@@ -26,6 +27,7 @@ export function ProductCard({ product, locale, priority = false }: { product: Pr
         <Link className="text-link" href={localizedPath(locale, `/productos/${product.slug}`)}>
           {t.viewDetails}
         </Link>
+        <AddToQuote slug={product.slug} name={product.name} locale={locale} />
       </div>
     </article>
   );

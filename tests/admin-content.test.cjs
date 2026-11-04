@@ -26,12 +26,12 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroV
         update(rows) { operation = "update"; calls.push({ table, operation, rows }); return query; },
         insert(rows) { operation = "insert"; calls.push({ table, operation, rows }); return query; },
         upsert(rows, options) { operation = "upsert"; calls.push({ table, operation, rows, options }); return query; },
-        delete() { operation = "delete"; return query; },
+        delete() { operation = "delete"; if (table === "products") calls.push({ table, operation }); return query; },
         single() { return query; },
         maybeSingle() { return query; },
         then(resolve, reject) {
           return Promise.resolve({
-            data: ["products", "projects", "collections"].includes(table) ? { id: "record-1" } : table === "site_content" ? { id: "hero-1", value: heroValue } : savedImages,
+            data: table === "products" && operation === "select" && failure.source ? failure.source : ["products", "projects", "collections"].includes(table) ? { id: "record-1" } : table === "site_content" ? { id: "hero-1", value: heroValue } : savedImages,
             error: table === failure.table && operation === failure.operation ? { message: "Database unavailable" } : table === "product_images" && operation === "upsert" ? imageError : null
           }).then(resolve, reject);
         }
@@ -57,12 +57,13 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroV
     "@/lib/supabase/media": {
       getImageFile: (data, field) => { const file = data.get(field); return file instanceof File && file.size ? file : null; },
       validateImage: (file) => file.type === "image/jpeg" ? null : "Invalid image format",
+      isLibraryImage: async (_admin, path) => path === "https://trusted.test/library.jpg",
       uploadImage: async (_admin, file) => ({ publicUrl: `/uploaded/${file.name}`, storagePath: file.name }),
       removeUploadedImage: async (_admin, storagePath) => calls.push({ operation: "cleanup", storagePath })
     }
   };
   vm.runInNewContext(source, {
-    module, exports: module.exports, require: (name) => mocks[name] ?? require(name), File, FormData
+    module, exports: module.exports, require: (name) => mocks[name] ?? require(name), File, FormData, crypto: require("node:crypto").webcrypto
   });
   return { save: module.exports.upsertProduct, saveHero: module.exports.upsertHomeContent, actions: module.exports, calls, revalidated };
 }
@@ -81,6 +82,57 @@ function form(paths = ["/one.jpg", "/two.jpg"], primary = "/two.jpg") {
 async function saved(save, data) {
   await assert.rejects(save({}, data), /redirect:\/studio-mash\/productos/);
 }
+
+test("trash keeps the product and all shared image files recoverable", async () => {
+  const { actions, calls, revalidated } = fixture();
+  const data = new FormData(); data.set("id", "11111111-1111-4111-8111-111111111111");
+  assert.equal((await actions.deleteProduct({}, data)).ok, true);
+  assert.ok(calls.some((call) => call.table === "products" && call.rows?.status === "archived"));
+  assert.equal(calls.some((call) => call.operation === "delete" || call.operation === "cleanup"), false);
+  assert.ok(revalidated.some(([path]) => path === "/es/productos"));
+});
+
+test("trash failure does not report success", async () => {
+  const { actions } = fixture(undefined, null, {}, { table: "products", operation: "update" });
+  const data = new FormData(); data.set("id", "11111111-1111-4111-8111-111111111111");
+  assert.equal((await actions.deleteProduct({}, data)).ok, false);
+});
+
+test("verified library images are reusable and preserve gallery order", async () => {
+  const { save, calls } = fixture();
+  const data = form(["https://trusted.test/library.jpg", "/one.jpg"]);
+  data.set("library_image_paths", JSON.stringify(["https://trusted.test/library.jpg"]));
+  await saved(save, data);
+  const rows = calls.find((call) => call.table === "product_images" && call.operation === "upsert").rows;
+  assert.equal(rows[0].storage_path, "https://trusted.test/library.jpg");
+  assert.equal(rows[0].sort_order, 0);
+});
+
+test("unverified library URLs are rejected before saving", async () => {
+  const { save, calls } = fixture();
+  const data = form(["https://attacker.test/fake.jpg"]);
+  data.set("library_image_paths", JSON.stringify(["https://attacker.test/fake.jpg"]));
+  assert.equal((await save({}, data)).ok, false);
+  assert.equal(calls.length, 0);
+});
+
+test("duplicate copies descriptions and images into an unpublished draft", async () => {
+  const { actions, calls } = fixture(undefined, null, {}, { source: { slug: "candor", collection_id: "collection-1", product_translations: [{ locale: "es", name: "Candor", description: "Descripción" }], product_images: [{ storage_path: "/shared.jpg", is_primary: true, sort_order: 0 }] } });
+  const data = new FormData(); data.set("id", "11111111-1111-4111-8111-111111111111");
+  await assert.rejects(actions.duplicateProduct({}, data), /redirect:\/studio-mash\/productos\/record-1/);
+  const copy = calls.find((call) => call.table === "products" && call.operation === "insert").rows;
+  assert.equal(copy.status, "draft"); assert.equal(copy.featured, false);
+  assert.match(copy.slug, /^candor-copia-/);
+  assert.equal(calls.find((call) => call.table === "product_images" && call.operation === "insert").rows[0].storage_path, "/shared.jpg");
+});
+
+test("failed duplication rolls back the new draft without deleting shared files", async () => {
+  const { actions, calls } = fixture(undefined, null, {}, { table: "product_translations", operation: "insert", source: { slug: "candor", product_translations: [{ locale: "es", name: "Candor" }], product_images: [] } });
+  const data = new FormData(); data.set("id", "11111111-1111-4111-8111-111111111111");
+  assert.equal((await actions.duplicateProduct({}, data)).ok, false);
+  assert.ok(calls.some((call) => call.table === "products" && call.operation === "delete"));
+  assert.equal(calls.some((call) => call.operation === "cleanup"), false);
+});
 
 test("editing English text without uploads saves unique images and the selected primary", async () => {
   const { save, calls } = fixture();
