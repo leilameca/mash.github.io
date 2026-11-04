@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { StudioNav } from "./StudioNav";
+import { StudioSidebar } from "./StudioSidebar";
+import { StudioIcon } from "./StudioIcon";
 import { logoutAdmin } from "./actions";
 import type { AdminProfile } from "@/lib/supabase/auth";
 
@@ -15,18 +16,13 @@ const nav = [
 export function StudioShell({ children, admin }: { children: React.ReactNode; admin: AdminProfile }) {
   return (
     <main className="studio">
-      <aside className="studio-sidebar">
-        <Link href="/studio-mash" className="studio-logo" aria-label="MASH admin">
-          <span>MASH</span>
-          <small>Admin privado</small>
-        </Link>
-        <StudioNav items={nav} />
+      <StudioSidebar items={nav}>
         <form action={logoutAdmin}>
           <button className="studio-logout" type="submit">
-            Cerrar sesion
+            <StudioIcon name="logout" /> Cerrar sesión
           </button>
         </form>
-      </aside>
+      </StudioSidebar>
       <section className="studio-main">
         <header className="studio-topbar">
           <div>
@@ -34,7 +30,7 @@ export function StudioShell({ children, admin }: { children: React.ReactNode; ad
             <strong>{admin.email}</strong>
           </div>
           <Link href="/es" className="studio-public-link">
-            Ver sitio
+            Ver sitio <StudioIcon name="external" />
           </Link>
         </header>
         {children}
