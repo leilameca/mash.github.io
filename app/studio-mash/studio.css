@@ -4053,3 +4053,7 @@
   .studio-translation-summary strong { min-width:1rem; }
   .studio-translation-summary span { font-size:.71rem; }
 }
+
+@media (max-width: 600px) {
+  .studio-translation-top { margin-block-end: 1.25rem; }
+}

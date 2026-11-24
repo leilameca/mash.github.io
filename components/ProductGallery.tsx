@@ -24,6 +24,7 @@ export function ProductGallery({
   return (
     <div className="interactive-gallery">
       <button
+        data-analytics="view_gallery"
         className="interactive-gallery__main"
         onClick={() => dialog.current?.showModal()}
         aria-label={
@@ -48,6 +49,7 @@ export function ProductGallery({
           {images.map((src, index) => (
             <button
               key={src}
+              data-analytics="view_gallery"
               aria-pressed={index === selected}
               aria-label={`${es ? "Ver imagen" : "View image"} ${index + 1}`}
               onClick={() => setSelected(index)}

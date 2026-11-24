@@ -528,90 +528,95 @@ export function VisualEditor({
                         ))}
                       </ul>
                     )}
-                  {expanded && selected === item.id && !protectedItem && (
-                    <div className="visual-tree-operations">
-                      <button
-                        type="button"
-                        disabled={index <= 1 || busy}
-                        aria-label="Subir sección"
-                        onClick={() =>
-                          change((current) =>
-                            moveSection(
-                              current,
-                              item.id,
-                              doc.layout.sections[index - 1].id,
-                            ),
-                          )
-                        }
-                      >
-                        ↑
-                      </button>
-                      <button
-                        type="button"
-                        disabled={
-                          index >= doc.layout.sections.length - 2 || busy
-                        }
-                        aria-label="Bajar sección"
-                        onClick={() =>
-                          change((current) =>
-                            moveSection(
-                              current,
-                              item.id,
-                              doc.layout.sections[index + 1].id,
-                            ),
-                          )
-                        }
-                      >
-                        ↓
-                      </button>
-                      <button
-                        type="button"
-                        disabled={!canAdd || busy}
-                        onClick={() => {
-                          const clone = uid();
-                          change((current) =>
-                            duplicateSection(current, item.id, clone),
-                          );
-                          setSelected(clone);
-                        }}
-                      >
-                        Duplicar
-                      </button>
-                      <button
-                        type="button"
-                        disabled={busy}
-                        onClick={() =>
-                          change((current) =>
-                            changeSection(current, item.id, (section) => ({
-                              ...section,
-                              visible: !section.visible,
-                            })),
-                          )
-                        }
-                      >
-                        {item.visible ? "Ocultar" : "Mostrar"}
-                      </button>
-                      <button
-                        type="button"
-                        disabled={busy}
-                        onClick={() => {
-                          if (
-                            window.confirm(
-                              "¿Eliminar esta sección de la composición?",
-                            )
-                          ) {
+                  {selected === item.id && !protectedItem && (
+                    <details className="visual-tree-menu" key={item.id}>
+                      <summary aria-label="Acciones de sección">
+                        Acciones <span aria-hidden="true">⋯</span>
+                      </summary>
+                      <div className="visual-tree-operations">
+                        <button
+                          type="button"
+                          disabled={index <= 1 || busy}
+                          aria-label="Subir sección"
+                          onClick={() =>
                             change((current) =>
-                              removeSection(current, item.id),
-                            );
-                            setSelected(
-                              doc.layout.sections[Math.max(0, index - 1)].id,
-                            );
+                              moveSection(
+                                current,
+                                item.id,
+                                doc.layout.sections[index - 1].id,
+                              ),
+                            )
                           }
-                        }}
-                      >
-                        Eliminar
-                      </button>
-                    </div>
+                        >
+                          ↑
+                        </button>
+                        <button
+                          type="button"
+                          disabled={
+                            index >= doc.layout.sections.length - 2 || busy
+                          }
+                          aria-label="Bajar sección"
+                          onClick={() =>
+                            change((current) =>
+                              moveSection(
+                                current,
+                                item.id,
+                                doc.layout.sections[index + 1].id,
+                              ),
+                            )
+                          }
+                        >
+                          ↓
+                        </button>
+                        <button
+                          type="button"
+                          disabled={!canAdd || busy}
+                          onClick={() => {
+                            const clone = uid();
+                            change((current) =>
+                              duplicateSection(current, item.id, clone),
+                            );
+                            setSelected(clone);
+                          }}
+                        >
+                          Duplicar
+                        </button>
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() =>
+                            change((current) =>
+                              changeSection(current, item.id, (section) => ({
+                                ...section,
+                                visible: !section.visible,
+                              })),
+                            )
+                          }
+                        >
+                          {item.visible ? "Ocultar" : "Mostrar"}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                "¿Eliminar esta sección de la composición?",
+                              )
+                            ) {
+                              change((current) =>
+                                removeSection(current, item.id),
+                              );
+                              setSelected(
+                                doc.layout.sections[Math.max(0, index - 1)].id,
+                              );
+                            }
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </details>
                   )}
                 </li>
               );
@@ -737,6 +742,7 @@ export function VisualEditor({
                 <span
                   className="visual-block-symbol"
                   data-icon={info.representation}
+                  data-block={type}
                   aria-hidden
                 >
                   <i />

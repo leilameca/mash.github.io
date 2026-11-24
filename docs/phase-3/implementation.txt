@@ -48,7 +48,7 @@ Los 68 escenarios anteriores se conservan. Se actualizan las aserciones de naveg
 SQL real: PostgreSQL/WASM, migraciones, funciones, restricciones, RLS, revisiones, rollback y concurrencia.
 Integración de acciones: código real de acciones/persistencia/decodificación de imagen, con Auth y Storage simulados y SQL real.
 Navegador Studio: build de producción real y páginas/componentes reales; fachada Data API/Auth solo de pruebas sobre SQL real. El listado vacío de Storage se simula para comprobar la navegación del módulo Multimedia; no se afirman uploads hosted. El token y los usuarios son sintéticos y no validan Supabase Auth hosted. No existe acceso alternativo en el código de producción.
-Ver validation.json, unit-results.txt, browser-evidence.json y public-http-regression.json para los resultados finales. Las capturas son PNG de navegador en screenshots; no son renders conceptuales. Los contactos del fixture administrativo usan datos reservados isolated.invalid.
+Ver validation.json, unit-results.txt, browser-evidence.json y public-http-regression.json para los resultados finales. Los contactos del fixture administrativo usan datos reservados isolated.invalid.
 
 LÍMITES
 Sin biblioteca multimedia avanzada, multicolecciones, variantes de imagen, traducción automática, drag and drop de páginas, programación de noticias, editor avanzado del mapa ni Analytics real. El orden de imágenes existente y la biblioteca básica se conservan.

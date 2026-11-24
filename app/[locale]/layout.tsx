@@ -1,10 +1,12 @@
 import "../globals.css";
+import "./editorial-theme.css";
 import { getAnnouncements } from "@/lib/editorial/queries";
 import { ScheduledAnnouncements } from "@/components/editorial/Announcements";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { PublicAnalytics } from "@/components/PublicAnalytics";
 import { MotionEnhancer } from "@/components/MotionEnhancer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { SiteSettingsProvider } from "@/components/SiteSettingsProvider";
@@ -89,7 +91,7 @@ export default async function LocaleLayout({
             where needed.
           </p>
         )}
-        <main id="main-content" className="page-shell">
+        <main id="main-content" className="page-shell mash-public">
           <ScheduledAnnouncements initial={announcements} locale={locale} />
           {children}
         </main>
@@ -100,6 +102,7 @@ export default async function LocaleLayout({
           label={siteContent.requestQuoteLabel}
         />
         <MotionEnhancer />
+        <PublicAnalytics />
       </QuoteSelectionProvider>
     </SiteSettingsProvider>
   );

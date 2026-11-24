@@ -9,7 +9,7 @@ export function Footer({ locale, content }: { locale: Locale; content: SiteChrom
     <footer className="site-footer" id="contacto">
       <div className="footer-cta section-shell">
         <p>{content.footerCta}</p>
-        <a href={content.whatsapp} target="_blank" rel="noreferrer" className="button button--gold">
+        <a data-analytics="click_whatsapp" href={content.whatsapp} target="_blank" rel="noreferrer" className="button button--gold">
           {content.requestQuoteLabel}
         </a>
       </div>

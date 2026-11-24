@@ -20,8 +20,6 @@ El servidor limita a dos trabajos simultáneos y a 15 trabajos iniciados por min
 
 ## Evidencia de Fase 5
 
-- [Centro de traducciones](screenshots/01-centro.png), [revisión](screenshots/02-revision.png) y [preferencias](screenshots/03-preferencias.png).
-- [Modo oscuro](screenshots/04-modo-oscuro.png), [móvil](screenshots/05-movil.png) y [Multimedia](screenshots/06-multimedia.png).
 - [Pruebas de navegador](browser-evidence.json) y [resultado consolidado](validation.json).
 
 Pasaron 94 pruebas automatizadas, incluidas las 88 anteriores. También completaron typecheck, build y las regresiones de contenido público, interfaz y PWA. La integración con DeepL se probó mediante un transporte simulado en pruebas. PostgreSQL aislado ejecutó las migraciones y contratos reales. Quedan pendientes una llamada real de DeepL, la integración con Supabase hospedado y la verificación de trabajos después de responder bajo los límites efectivos del proyecto Vercel.

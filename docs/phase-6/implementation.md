@@ -16,8 +16,6 @@ El selector ofrece portada, carrusel manual, banner, texto editorial, imagen y t
 
 ## Verificación y capturas
 
-- [Editor de escritorio](screenshots/01-editor-escritorio.png), [biblioteca de secciones](screenshots/02-biblioteca-de-secciones.png), [tableta](screenshots/03-tablet-ajustes.png) y [móvil](screenshots/04-editor-movil.png).
-- [Contraste oscuro de Traducciones](screenshots/05-contraste-oscuro.png) y [distribución móvil](screenshots/06-traducciones-movil.png).
 - [Validación consolidada](validation.json), [pruebas automatizadas](unit-results.txt) y [recorrido en Chrome](browser-evidence.json).
 
 Pasaron 99 pruebas automatizadas, incluidas las 94 anteriores. También completaron typecheck, build y las regresiones de Studio, HTTP, interfaz pública y PWA. Se corrigieron los estilos compartidos de botones secundarios y deshabilitados, las casillas por tema, la navegación lateral y el foco de teclado. Las pruebas miden los colores capturados de Preferencias, Revisar y Filtrar. Las escrituras de navegador usan la demostración aislada. Las frases sintéticas de las pruebas no están en código que sirve contenido ni en las migraciones.
@@ -28,4 +26,4 @@ La integración hospedada queda para Fase 9. Se mantienen pendientes la comproba
 
 ## Reproducción
 
-En PowerShell, ejecuta `$env:MASH_PREVIEW_PORT='3013'; npm run preview:studio` y abre [Studio local](http://localhost:3013/__preview__/enter). La vista usa una base aislada y desactiva DeepL. Ejecuta `npm run test:phase6` para las pruebas dirigidas y `npm run test:phase6:browser` con esa vista iniciada. La salida predeterminada de la prueba de navegador queda en `.test-artifacts/phase6-browser`. Las seis capturas de entrega se guardan cuando `MASH_EVIDENCE_DIR` apunta a `docs/phase-6`.
+En PowerShell, ejecuta `$env:MASH_PREVIEW_PORT='3013'; npm run preview:studio` y abre [Studio local](http://localhost:3013/__preview__/enter). La vista usa una base aislada y desactiva DeepL. Ejecuta `npm run test:phase6` para las pruebas dirigidas y `npm run test:phase6:browser` con esa vista iniciada. La salida predeterminada de la prueba de navegador queda en `.test-artifacts/phase6-browser`.

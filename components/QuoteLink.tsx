@@ -23,6 +23,7 @@ export function QuoteLink({
   if (message) url.searchParams.set("text", message);
   return (
     <a
+      data-analytics="click_whatsapp"
       href={url.toString()}
       target="_blank"
       rel="noreferrer"

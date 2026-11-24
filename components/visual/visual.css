@@ -287,3 +287,29 @@
 .visual-comparison .editorial-compare img {
   object-fit: var(--visual-fit);
 }
+
+.visual-wordmark {
+  font: 500 clamp(1.6rem, 4cqi, 2.2rem)/1 var(--font-serif, Georgia), serif;
+  letter-spacing: 0.11em;
+}
+.visual-wordmark span { color: #9b7946; }
+.visual-preview-nav { position: relative; background: #fbf8f4; color: #201915; }
+.visual-preview-nav details { display: none; }
+.visual-preview-nav summary { cursor: pointer; list-style: none; padding: 0.55rem; }
+.visual-grid .visual-item .visual-photo { border-radius: 0.25rem; }
+@container (max-width: 920px) {
+  .visual-preview-nav { min-height: 74px; justify-content: center; }
+  .visual-preview-nav > nav { display: none; }
+  .visual-preview-nav details { display: block; position: absolute; right: 4%; }
+  .visual-preview-nav details[open] { z-index: 4; }
+  .visual-preview-nav details nav {
+    position: absolute;
+    right: 0;
+    width: min(17rem, 86cqi);
+    display: grid;
+    padding: 1em;
+    color: #fff7ec;
+    background: #201611;
+    border-radius: 0.25rem;
+  }
+}

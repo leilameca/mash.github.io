@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { useId, useState } from "react";
+import { useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { Comparison } from "@/lib/editorial/schema";
 import "./editorial.css";
@@ -23,7 +23,20 @@ export function ComparePhotos({
   inheritCrop?: boolean;
 }) {
   const [position, setPosition] = useState(50);
-  const marker = useId();
+  const images = useRef<HTMLDivElement>(null);
+  const control = useRef<HTMLInputElement>(null);
+  const reported = useRef(false);
+  const drag = useRef<{ startX: number; startPosition: number } | null>(null);
+  function move(next: number) {
+    if (next === position) return;
+    setPosition(next);
+    if (!reported.current) {
+      reported.current = true;
+      images.current?.dispatchEvent(
+        new Event("mash:compare", { bubbles: true }),
+      );
+    }
+  }
   const es = locale === "es";
   const labels = [
     beforeLabel || (es ? "Antes" : "Before"),
@@ -54,7 +67,7 @@ export function ComparePhotos({
       className="editorial-compare"
       aria-label={es ? "Comparación de fotografías" : "Photo comparison"}
     >
-      <div className="editorial-compare-images">
+      <div className="editorial-compare-images" ref={images}>
         <img src={comparison.after} alt={afterAlt || labels[1]} style={style} />
         <img
           src={comparison.before}
@@ -71,24 +84,48 @@ export function ComparePhotos({
           className="editorial-compare-divider"
           style={{ left: position + "%" }}
           aria-hidden="true"
-        >
-          <i>↔</i>
-        </span>
-      </div>
-      <figcaption className="editorial-compare-control">
-        <label htmlFor={marker}>
-          {es ? "Desliza para comparar" : "Slide to compare"}
-        </label>
-        <input
-          id={marker}
-          type="range"
-          min={0}
-          max={100}
-          value={position}
-          aria-valuetext={`${labels[0]} ${position}%, ${labels[1]} ${100 - position}%`}
-          onChange={(event) => setPosition(Number(event.target.value))}
         />
-      </figcaption>
+        <div
+          className="editorial-compare-handle"
+          style={{ left: `clamp(24px, ${position}%, calc(100% - 24px))` }}
+          onPointerDown={(event) => {
+            if (!event.isPrimary || event.button !== 0) return;
+            event.preventDefault();
+            control.current?.focus({ preventScroll: true });
+            event.currentTarget.setPointerCapture(event.pointerId);
+            drag.current = { startX: event.clientX, startPosition: position };
+          }}
+          onPointerMove={(event) => {
+            if (
+              !drag.current ||
+              !event.currentTarget.hasPointerCapture(event.pointerId)
+            )
+              return;
+            const width = images.current?.getBoundingClientRect().width;
+            if (!width) return;
+            const { startX, startPosition } = drag.current;
+            const next = Math.round(
+              startPosition + ((event.clientX - startX) / width) * 100,
+            );
+            move(Math.max(0, Math.min(100, next)));
+          }}
+          onLostPointerCapture={() => {
+            drag.current = null;
+          }}
+        >
+          <input
+            ref={control}
+            type="range"
+            min={0}
+            max={100}
+            value={position}
+            aria-label={es ? "Desliza para comparar" : "Slide to compare"}
+            aria-valuetext={`${labels[0]} ${position}%, ${labels[1]} ${100 - position}%`}
+            onChange={(event) => move(Number(event.target.value))}
+          />
+          <span aria-hidden="true">↔</span>
+        </div>
+      </div>
     </figure>
   );
 }

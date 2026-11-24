@@ -15,10 +15,10 @@ begin
     $r$'alt_es','alt_en','media_asset_id',case k when 'product' then 'is_primary' else 'is_cover' end]||
       case when k='project' then array['caption_es','caption_en'] else '{}'::text[] end$r$);
  -- Restoring a document always returns it to the editorial draft queue.
- engine:=replace(engine,$m$if k='site' then
-      d:=d||jsonb_build_object('is_public'$m$,
-    $r$if k='site' then
-      if coalesce(d->>'key',existing->>'key','') ~ '^(news|announcement)[.]' then
+ marker:=$m$d:=d||jsonb_build_object('is_public'$m$;
+ if position(marker in engine)=0 then raise exception 'Editorial state hook missing';end if;
+ engine:=replace(engine,marker,
+    $r$if coalesce(d->>'key',existing->>'key','') ~ '^(news|announcement)[.]' then
         if intent='archive' then
           d:=jsonb_set(d,'{value}',coalesce(existing->'value','{}')||jsonb_build_object('archived',true));
         elsif intent='restore' then
@@ -28,7 +28,7 @@ begin
       d:=d||jsonb_build_object('is_public'$r$);
  execute engine;
  select pg_get_functiondef('public.restore_mash_revision(text,uuid,bigint,bigint)'::regprocedure) into restore;
- restore:=replace(restore,marker,$r$array['slug','cover_image_path','location','project_date','featured','sort_order','editorial']$r$);
+ restore:=replace(restore,$m$array['slug','cover_image_path','location','project_date','featured','sort_order']$m$,$r$array['slug','cover_image_path','location','project_date','featured','sort_order','editorial']$r$);
  restore:=replace(restore,$m$change:=jsonb_build_object('kind',p_kind$m$,
    $r$if p_kind='project' then
       d:=d||jsonb_build_object('editorial',coalesce(snap->'editorial','{}'::jsonb));

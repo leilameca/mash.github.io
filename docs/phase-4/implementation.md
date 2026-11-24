@@ -39,11 +39,6 @@ La escritura de contenido y la restauración siguen usando los contratos transac
 
 ## Evidencia y aceptación
 
-- Editor y galería. [Nuevo editor](screenshots/01-editor-nuevo.png), [galería](screenshots/02-galeria.png), [portada](screenshots/03-portada.png) y [móvil](screenshots/08-editor-movil.png).
-- Biblioteca. [Cuadrícula](screenshots/04-biblioteca.png), [detalle](screenshots/05-detalle.png), [selector](screenshots/06-selector-multimedia.png), [carga](screenshots/09-carga.png) y [error](screenshots/10-error.png).
-- Selección de [colecciones múltiples](screenshots/07-colecciones-multiples.png).
-- Frente al [editor de Fase 3](../phase-3/screenshots/product-edit.png), la Fase 4 reúne las fotos en una cuadrícula y muestra los campos de la foto seleccionada. Estado y colecciones pasan a la columna lateral. Guardar, previsualizar y publicar siguen visibles durante la edición.
-- Frente al [historial](../phase-3/screenshots/history.png) y [configuración](../phase-3/screenshots/settings.png) anteriores, la comparación se abre por revisión y configuración muestra un grupo de campos por pestaña.
 
 | Verificación | Evidencia |
 | --- | --- |

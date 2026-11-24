@@ -38,17 +38,9 @@ $env:MASH_EVIDENCE_DIR='.test-artifacts/phase7-http'
 npm run test:phase2:http
 ```
 
-Abrir [Studio de ensayo](http://localhost:3016/__preview__/enter). Las capturas corresponden a registros sintéticos creados por la prueba local. El servidor de ensayo guarda esos cambios en memoria.
+Abrir [Studio de ensayo](http://localhost:3016/__preview__/enter). El servidor de ensayo guarda esos cambios en memoria.
 
 La comprobación pasó con 102 pruebas automatizadas, incluidas las 99 anteriores, más typecheck, build, pruebas HTTP y los ocho recorridos registrados en Chrome. [Resultados de Chrome](browser-evidence.json), [resultados HTTP](http-evidence.json), [resumen de validación](validation.json).
-
-Capturas de la compilación local:
-
-- [Noticias en escritorio](screenshots/01-noticia-escritorio.png)
-- [Proyectos en escritorio](screenshots/02-proyecto-escritorio.png)
-- [Ubicación del taller en móvil](screenshots/03-ubicacion-taller-movil.png)
-- [Comparador en móvil](screenshots/04-comparador-movil.png)
-- [Anuncios en móvil y modo oscuro](screenshots/05-anuncios-movil.png)
 
 ## Pendientes
 

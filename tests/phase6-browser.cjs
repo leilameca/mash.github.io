@@ -116,11 +116,19 @@ async function main() {
       name: "Secciones",
       exact: true,
     });
+    const actions = list.getByLabel("Acciones de sección", { exact: true });
+    const openActions = async () => {
+      if (!(await actions.evaluate((node) => node.parentElement.open)))
+        await actions.click();
+    };
+    await openActions();
     await list
       .getByRole("button", { name: "Subir sección", exact: true })
       .click();
+    await openActions();
     await list.getByRole("button", { name: "Duplicar", exact: true }).click();
     assert.equal(await photoGrid.count(), 2);
+    await openActions();
     await list.getByRole("button", { name: "Ocultar", exact: true }).click();
     assert.equal(await photoGrid.count(), 1);
     page.once("dialog", (d) => d.accept());

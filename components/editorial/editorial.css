@@ -43,36 +43,45 @@
   background: #fff;
   position: absolute;
   top: 0;
+  transform: translateX(-50%);
   pointer-events: none;
 }
-.editorial-compare-divider i {
+.editorial-compare-handle {
   position: absolute;
   top: 50%;
-  left: 1px;
   transform: translate(-50%, -50%);
-  border: 2px solid white;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 48px;
+  height: 48px;
+  cursor: ew-resize;
+  touch-action: none;
+}
+.editorial-compare-handle input {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.editorial-compare-handle span {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 2px solid white;
   border-radius: 50%;
   background: #235d43;
   color: white;
-  font-style: normal;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
 }
-.editorial-compare-control {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  padding-inline: 0.25rem;
-}
-.editorial-compare-control input {
-  min-width: 0;
-  height: 44px;
-  accent-color: var(--studio-accent, #235d43);
-  width: 100%;
+.editorial-compare-handle input:focus-visible + span {
+  outline: 2px solid white;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px #235d43;
 }
 .editorial-compare figcaption {
   font-size: 0.88rem;
@@ -170,10 +179,6 @@
   color: inherit;
 }
 @media (max-width: 440px) {
-  .editorial-compare-control {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
   .editorial-banner button {
     width: 44px;
     height: 44px;

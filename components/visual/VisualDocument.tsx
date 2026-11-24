@@ -186,13 +186,31 @@ export function VisualDocument({
         let node: ReactNode;
         if (section.type === "navigation")
           node = (
-            <div className="visual-chrome">
-              <strong>MASH</strong>
-              <nav>
-                {chrome.navigation.map((link, index) => (
-                  <span key={index}>{link.label}</span>
+            <div className="visual-chrome visual-preview-nav">
+              <strong className="visual-wordmark">
+                M<span>A</span>SH
+              </strong>
+              <nav aria-label={locale === "es" ? "Principal" : "Main"}>
+                {chrome.navigation.map((link) => (
+                  <span key={link.href}>{link.label}</span>
                 ))}
+                <span aria-current="true">{locale.toUpperCase()}</span>
               </nav>
+              <details>
+                <summary aria-label={locale === "es" ? "Menú" : "Menu"}>
+                  ☰
+                </summary>
+                <nav
+                  aria-label={
+                    locale === "es" ? "Navegación móvil" : "Mobile navigation"
+                  }
+                >
+                  {chrome.navigation.map((link) => (
+                    <span key={link.href}>{link.label}</span>
+                  ))}
+                  <span aria-current="true">{locale.toUpperCase()}</span>
+                </nav>
+              </details>
             </div>
           );
         else if (section.type === "footer")

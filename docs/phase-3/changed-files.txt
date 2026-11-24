@@ -43,17 +43,6 @@ docs/phase-3/design-tokens.json
 docs/phase-3/implementation.txt
 docs/phase-3/public-http-regression.json
 docs/phase-3/restore-evidence.json
-docs/phase-3/screenshots/collections.png
-docs/phase-3/screenshots/dashboard-dark.png
-docs/phase-3/screenshots/dashboard-light.png
-docs/phase-3/screenshots/dashboard-mobile.png
-docs/phase-3/screenshots/empty.png
-docs/phase-3/screenshots/error.png
-docs/phase-3/screenshots/history.png
-docs/phase-3/screenshots/index.json
-docs/phase-3/screenshots/product-edit.png
-docs/phase-3/screenshots/products-list.png
-docs/phase-3/screenshots/settings.png
 docs/phase-3/unit-results.txt
 docs/phase-3/validation.json
 lib/admin/navigation.ts

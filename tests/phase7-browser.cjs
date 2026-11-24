@@ -251,24 +251,72 @@ async function main() {
     await fresh
       .getByRole("heading", { name: projectTitle, exact: true })
       .waitFor();
+    const projectPath = "/es/proyectos/" + projectSlug;
+    await visitor.setViewportSize({ width: 1440, height: 960 });
+    await visitor.goto(origin + projectPath);
+    const desktopSlider = visitor.getByRole("slider");
+    const desktopImages = visitor.locator(".editorial-compare-images");
+    await desktopSlider.scrollIntoViewIfNeeded();
+    assert.equal(await desktopSlider.inputValue(), "50");
+    assert.equal(await desktopImages.getByRole("slider").count(), 1);
+    assert.equal(
+      await visitor.locator(".editorial-compare figcaption").count(),
+      0,
+    );
+    const handle = await desktopSlider.boundingBox();
+    const frame = await desktopImages.boundingBox();
+    const mouseX = handle.x + handle.width / 2,
+      mouseY = handle.y + handle.height / 2;
+    assert.ok(Math.abs(mouseX - (frame.x + frame.width / 2)) < 1);
+    await visitor.mouse.move(mouseX, mouseY);
+    await visitor.mouse.down();
+    await visitor.mouse.move(mouseX - frame.width * 0.25, mouseY + 25, {
+      steps: 8,
+    });
+    await visitor.mouse.up();
+    assert.equal(await desktopSlider.inputValue(), "25");
+
+    await visitor.setViewportSize({ width: 768, height: 900 });
+    await visitor.reload();
+    await desktopSlider.scrollIntoViewIfNeeded();
+    assert.equal(await desktopSlider.inputValue(), "50");
+
+    await fresh.setViewportSize({ width: 320, height: 760 });
     const slider = fresh.getByRole("slider");
     await slider.scrollIntoViewIfNeeded();
-    await fresh.evaluate(() => {
-      history.scrollRestoration = "manual";
-    });
+    assert.equal(await slider.inputValue(), "50");
     const sliderBox = await slider.boundingBox();
-    await fresh.touchscreen.tap(
-      sliderBox.x + sliderBox.width * 0.72,
-      sliderBox.y + sliderBox.height / 2,
-    );
-    assert.ok(Number(await slider.inputValue()) > 60);
+    const imageBox = await fresh
+      .locator(".editorial-compare-images")
+      .boundingBox();
+    const x = Math.round(sliderBox.x + sliderBox.width / 2);
+    const y = Math.round(sliderBox.y + sliderBox.height / 2);
+    const touch = await fresh.context().newCDPSession(fresh);
+    await touch.send("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [{ x, y }],
+    });
+    for (const step of [0.08, 0.16, 0.25]) {
+      await touch.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{ x: x + Math.round(imageBox.width * step), y }],
+      });
+    }
+    await touch.send("Input.dispatchTouchEvent", {
+      type: "touchEnd",
+      touchPoints: [],
+    });
+    assert.equal(await slider.inputValue(), "75");
     await slider.press("Home");
     assert.equal(await slider.inputValue(), "0");
     await slider.press("ArrowRight");
     assert.equal(await slider.inputValue(), "1");
     await slider.press("End");
+    assert.equal(await slider.inputValue(), "100");
+    await fresh.reload();
+    await slider.scrollIntoViewIfNeeded();
+    assert.equal(await slider.inputValue(), "50");
     await screenshots(fresh, "04-comparador-movil");
-    await fresh.setViewportSize({ width: 320, height: 760 });
     assert.equal(
       await fresh.evaluate(
         () => document.documentElement.scrollWidth > innerWidth + 1,
@@ -276,7 +324,7 @@ async function main() {
       false,
     );
     checks.push(
-      "Project publishes with media, stable detail route, and keyboard and touch comparison at 320 px",
+      "Project publishes with media, stable detail route and an image-centered comparison operated with mouse, touch and keyboard",
     );
 
     await fresh.setViewportSize({ width: 390, height: 844 });

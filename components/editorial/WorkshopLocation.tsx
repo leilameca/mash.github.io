@@ -18,6 +18,7 @@ export function WorkshopLocation({ locale }: { locale: Locale }) {
         <h2 id="workshop-location-title">{title}</h2>
         <a
           className="button button--gold"
+          data-analytics="click_directions"
           href={directions}
           target="_blank"
           rel="noopener noreferrer"
