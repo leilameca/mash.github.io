@@ -57,3 +57,5 @@ Los cambios se concentran en `app/studio-mash`, las rutas `app/api/studio-media`
 La evidencia local usa Chrome y Next compilado. Sharp y PostgreSQL son reales. Auth, la API HTTP de datos y el transporte de Storage usan la fachada de pruebas. Las políticas de Storage se ejecutaron en PostgreSQL con un esquema local equivalente para las pruebas. Quedan pendientes de integración hospedada el acceso OTP real, la latencia y límites del proveedor, los permisos efectivos de los buckets y la restauración de un respaldo hospedado. La Fase 4 finaliza en la rama de trabajo y la activación hospedada requiere su propia verificación.
 
 Para abrir una vista local con datos de demostración, ejecuta `npm run preview:studio` y visita `http://localhost:3010/__preview__/enter`. `npm run test:all` ejecuta las suites SQL y JavaScript. El recorrido `npm run test:phase4:browser` requiere la vista de demostración. Las capturas se guardan en `.test-artifacts/phase4-browser` salvo que se indique `MASH_EVIDENCE_DIR`.
+
+El commit de implementación es `b3ef358cdcc11d013d5d4ff6bd993a4a3ad8fdeb`. Se confirmó su publicación en `origin/feature/mash-3`. 
