@@ -1,10 +1,12 @@
+const previewPort = /^[1-9]\d{3,4}$/.test(process.env.MASH_LOCAL_PREVIEW ?? "")
+  ? process.env.MASH_LOCAL_PREVIEW : null;
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseHostname = supabaseUrl ? new URL(supabaseUrl).hostname : null;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   ...(process.env.MASH_VERIFICATION_BUILD === "1" ? { distDir: ".next-verify" }
-    : process.env.MASH_LOCAL_PREVIEW === "1" ? { distDir: ".next-preview" } : {}),
+    : previewPort ? { distDir: `.next-preview-${previewPort}` } : {}),
   poweredByHeader: false,
   // PWA metadata must be in the initial head so browsers can discover the manifest and Apple icons.
   htmlLimitedBots: /.*/,

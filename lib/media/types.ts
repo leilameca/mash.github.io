@@ -37,6 +37,7 @@ export const MEDIA_FIELDS =
   "id,name,folder,state,revision,url,thumbnail_url,mime,width,height,byte_size,created_at,usage_count,working_uses,historical_uses,publication_uses,variants";
 export function mediaSize(bytes: number | null | undefined) {
   if (!bytes) return "Peso sin inspeccionar";
+  if (bytes < 1024) return `${bytes} B`;
   return bytes < 1024 * 1024
     ? `${Math.round(bytes / 1024)} KB`
     : `${(bytes / 1024 / 1024).toFixed(1)} MB`;

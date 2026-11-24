@@ -11,3 +11,5 @@ dist
 
 .next-preview/
 .next-verify/
+
+.next-preview-*/

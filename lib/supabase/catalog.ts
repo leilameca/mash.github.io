@@ -126,7 +126,7 @@ export async function getCatalogProductsByCollection(
 }
 export const getCatalogCollections = cache(async (): Promise<Collection[]> => {
   return (await readPublished("collection"))
-    .map(({ snapshot: r, slug }) => {
+    .map<Collection | null>(({ snapshot: r, slug }) => {
       const es = localizedTranslation(r.translations, "es").text;
       const en = localizedTranslation(r.translations, "en").text;
       if (!es?.name || !r.cover_image_path) return null;
@@ -138,6 +138,8 @@ export const getCatalogCollections = cache(async (): Promise<Collection[]> => {
         image: r.cover_image_path,
         alt: pair(es.name, en?.name),
         note: pair(es.description ?? "", en?.description ?? ""),
+        seoTitle: pair(es.seo_title ?? "", en?.seo_title ?? ""),
+        seoDescription: pair(es.seo_description ?? "", en?.seo_description ?? ""),
       };
     })
     .filter((r): r is Collection => !!r);

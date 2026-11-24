@@ -150,6 +150,8 @@ export async function ContentWorkspace({
                   <div id="cuenta">
                     <h2>Preferencias de interfaz</h2>
                     <ThemePreferences />
+                    <h3>Traducción</h3>
+                    <Link href="/studio-mash/traducciones?preferencias=1">Abrir preferencias y diccionario</Link>
                     <h3>Cuenta</h3>
                     <p>Sesión: {currentAdmin.email}</p>
                   </div>

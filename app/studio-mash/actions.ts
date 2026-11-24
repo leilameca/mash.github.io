@@ -648,7 +648,10 @@ async function saveCatalogEntry(
     };
     const title = kind === "collection" ? "name" : "title";
     let projectImages;
-    if (kind === "project" && image) {
+    if (
+      kind === "project" &&
+      (image || (v.id && v.cover_alt_es !== undefined))
+    ) {
       const { data: existingImages, error: readError } = v.id
         ? await client
             .from("project_images")
@@ -656,16 +659,28 @@ async function saveCatalogEntry(
             .eq("project_id", v.id)
         : { data: [], error: null };
       if (readError) throw new Error("No pudimos consultar la galería actual.");
-      projectImages = [
-        ...(existingImages ?? [])
-          .filter((i) => i.storage_path !== image)
-          .map((i) => ({ ...i, is_cover: false })),
-        {
-          storage_path: image,
-          sort_order: existingImages?.length ?? 0,
-          is_cover: true,
-        },
-      ];
+      const existing = existingImages ?? [];
+      if (image) {
+        const matched = existing.find((item) => item.storage_path === image);
+        projectImages = [
+          ...existing
+            .filter((item) => item.storage_path !== image)
+            .map((item) => ({ ...item, is_cover: false })),
+          {
+            storage_path: image,
+            sort_order: matched?.sort_order ?? existing.length,
+            ...(v.cover_alt_es !== undefined
+              ? { alt_es: v.cover_alt_es || null }
+              : {}),
+            ...(matched?.alt_en ? { alt_en: matched.alt_en } : {}),
+            is_cover: true,
+          },
+        ];
+      } else if (existing.some((item) => item.is_cover)) {
+        projectImages = existing.map((item) =>
+          item.is_cover ? { ...item, alt_es: v.cover_alt_es || null } : item,
+        );
+      }
     }
     await commitContent(client, [
       {
@@ -678,6 +693,12 @@ async function saveCatalogEntry(
             locale: "es",
             [title]: v[title + "_es"],
             description: v.description_es,
+            ...(v.seo_title_es !== undefined
+              ? { seo_title: v.seo_title_es || null }
+              : {}),
+            ...(v.seo_description_es !== undefined
+              ? { seo_description: v.seo_description_es || null }
+              : {}),
           },
           {
             locale: "en",

@@ -13,6 +13,9 @@ export type ProjectFormValue = {
   title_es?: string;
   title_en?: string;
   description_es?: string;
+  seo_title_es?: string;
+  seo_description_es?: string;
+  cover_alt_es?: string;
   description_en?: string;
   location?: string;
   cover_image_path?: string;
@@ -131,29 +134,55 @@ export function ProjectForm({ project }: { project?: ProjectFormValue }) {
         <small>JPG, PNG, WebP o AVIF. Maximo 6 MB.</small>
         {state.errors?.cover_image && <span>{state.errors.cover_image}</span>}
       </label>
-      <div className="studio-language-note">
-        <strong>Version en ingles</strong>
-        <p>
-          Si queda vacia, se conserva el contenido en espanol marcado para
-          revision.
-        </p>
-      </div>
-      <div className="studio-form__grid">
+      <details className="studio-fieldset">
+        <summary>Buscadores</summary>
         <label>
-          Titulo en ingles
-          <input name="title_en" defaultValue={project?.title_en} />
-        </label>
-        <label>
-          Descripcion en ingles
-          <textarea
-            name="description_en"
-            defaultValue={project?.description_en}
-            rows={4}
+          Título SEO{" "}
+          <input
+            name="seo_title_es"
+            maxLength={70}
+            defaultValue={project?.seo_title_es}
           />
         </label>
-      </div>
+        <label>
+          Descripción SEO{" "}
+          <textarea
+            name="seo_description_es"
+            rows={2}
+            maxLength={180}
+            defaultValue={project?.seo_description_es}
+          />
+        </label>
+      </details>
+      <label>
+        Texto alternativo de portada{" "}
+        <textarea
+          name="cover_alt_es"
+          rows={2}
+          maxLength={600}
+          defaultValue={project?.cover_alt_es}
+        />
+      </label>
+      <details className="studio-fieldset">
+        <summary>Traducción al inglés (opcional)</summary>
+        <div className="studio-form__grid">
+          <label>
+            Titulo en ingles
+            <input name="title_en" defaultValue={project?.title_en} />
+          </label>
+          <label>
+            Descripcion en ingles
+            <textarea
+              name="description_en"
+              defaultValue={project?.description_en}
+              rows={4}
+            />
+          </label>
+        </div>
+      </details>
       <FormActions
-        ok={state.ok} redirectTo={state.redirectTo}
+        ok={state.ok}
+        redirectTo={state.redirectTo}
         pending={pending}
         existing={!!project?.id}
         message={state.message}

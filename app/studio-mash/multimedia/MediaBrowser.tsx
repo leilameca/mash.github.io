@@ -325,7 +325,7 @@ export function MediaBrowser({
         <ul
           className={`studio-asset-grid${view === "list" ? " studio-asset-grid--list" : ""}`}
         >
-          {items.map((asset) => {
+          {items.map((asset, index) => {
             const already = existingPaths.includes(asset.url || "");
             const checked = selected.has(asset.id);
             const available =
@@ -343,7 +343,8 @@ export function MediaBrowser({
                     onClick={() => (picker ? toggle(asset) : setDetail(asset))}
                   >
                     <MediaImage
-                      src={asset.thumbnail_url}
+                      src={asset.thumbnail_url ?? asset.url}
+                      eager={index < 4}
                       variants={asset.variants}
                       alt=""
                     />

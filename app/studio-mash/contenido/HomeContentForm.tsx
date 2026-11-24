@@ -45,8 +45,12 @@ export function HomeContentForm({ content }: { content: HomeContent }) {
   );
 
   return (
-    <form action={action} className="studio-form">
+    <form action={action} className="studio-form studio-spanish-first">
       <PublicationFields />
+      <label className="studio-english-toggle studio-checkbox">
+        <input type="checkbox" />
+        Mostrar campos en inglés
+      </label>
       <div className="studio-language-note">
         <strong>Portada del inicio</strong>
         <p>

@@ -42,6 +42,7 @@ export async function PublicationNotice({
           Ver versión publicada ↗
         </Link>
       )}
+      <Link href={`/studio-mash/traducciones?kind=${kind}&id=${id}`}>Traducción en inglés</Link>
       <Link href={`/studio-mash/revisiones?kind=${kind}&id=${id}`}>
         Historial
       </Link>

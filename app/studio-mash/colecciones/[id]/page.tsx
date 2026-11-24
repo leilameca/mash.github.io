@@ -16,7 +16,7 @@ export default async function EditCollectionPage({
   const { data: collection, error } = await admin
     .from("collections")
     .select(
-      "id,revision,slug,status,featured,sort_order,cover_image_path,collection_translations(locale,name,description)",
+      "id,revision,slug,status,featured,sort_order,cover_image_path,collection_translations(locale,name,description,seo_title,seo_description)",
     )
     .eq("id", id)
     .maybeSingle();
@@ -49,6 +49,8 @@ export default async function EditCollectionPage({
             cover_image_path: (collection as any).cover_image_path,
             name_es: es?.name,
             description_es: es?.description,
+            seo_title_es: es?.seo_title,
+            seo_description_es: es?.seo_description,
             name_en: en?.name,
             description_en: en?.description,
           }}

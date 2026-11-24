@@ -3916,3 +3916,94 @@
 .studio-gallery-selected-preview {
   max-height: 128px;
 }
+
+/* Translation review uses the same Studio tokens in both themes. */
+.studio-translation-top,
+.studio-translation-toolbar,
+.studio-translation-detail-meta,
+.studio-translation-detail-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+.studio-translation-top .admin-button { gap: .5rem; }
+.studio-translation-top svg { width: 16px; height: 16px; }
+.studio-translation-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: .6rem;
+}
+.studio-translation-summary button {
+  display: grid;
+  text-align: start;
+  gap: .25rem;
+  padding: .75rem;
+  border: 1px solid var(--studio-line);
+  border-radius: 8px;
+  background: var(--studio-surface);
+  color: var(--studio-text);
+  font: inherit;
+  cursor: pointer;
+}
+.studio-translation-summary button[aria-pressed="true"] {
+  border-color: var(--studio-accent);
+  background: var(--studio-accent-soft);
+}
+.studio-translation-summary strong { font-size: 1.35rem; }
+.studio-translation-summary span { color: var(--studio-muted); font-size: .8rem; }
+.studio-translation-toolbar { margin: .8rem 0; color: var(--studio-muted); }
+.studio-translation-rows { list-style: none; margin: 0; padding: 0; }
+.studio-translation-rows li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(120px, auto) auto;
+  align-items: center;
+  gap: 1rem;
+  min-height: 64px;
+  border-block-start: 1px solid var(--studio-line);
+}
+.studio-translation-rows li div { display: grid; gap: .2rem; overflow-wrap: anywhere; }
+.studio-translation-rows small { color: var(--studio-muted); }
+.studio-translation-rows .studio-status { justify-self: start; }
+.studio-root .studio-translation-reviewed, .studio-root .studio-translation-translated {
+  background: var(--studio-accent-soft); color: var(--studio-accent);
+}
+.studio-root .studio-translation-error { color: var(--studio-danger); }
+.studio-translation-detail-actions { justify-content: start; margin-block: .8rem; }
+.studio-translation-compare { margin-block: 1rem; border: 1px solid var(--studio-line); border-radius: 8px; }
+.studio-translation-language-labels, .studio-translation-field {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: .75rem;
+  gap: .55rem 1rem;
+}
+.studio-translation-language-labels { background: var(--studio-subtle); font-weight: 600; }
+.studio-translation-field { border-block-start: 1px solid var(--studio-line); }
+.studio-translation-field strong { grid-column: 1 / -1; }
+.studio-translation-field p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.studio-translation-preferences { display: grid; gap: 1rem; }
+.studio-root .studio-dialog .studio-translation-preferences .studio-checkbox {
+  display: flex; align-items: center; gap: .55rem;
+}
+.studio-translation-summary button:focus-visible { outline: 2px solid var(--studio-accent); outline-offset: 3px; }
+.studio-media-library-card .studio-asset-copy strong { font-size: .87rem; font-weight: 600; }
+.studio-media-library-card .studio-media-toolbar strong { font-size: .92rem; }
+.studio-asset-photo .studio-media-placeholder { min-height: 100%; }
+@media (max-width: 600px) {
+  .studio-translation-rows li { grid-template-columns: auto minmax(0,1fr) auto; gap: .4rem .65rem; padding: .55rem 0; }
+  .studio-translation-rows li .studio-status { grid-column: 2; grid-row: 2; }
+  .studio-translation-rows li button { grid-column: 3; grid-row: 1 / span 2; }
+  .studio-translation-language-labels, .studio-translation-field { gap: .5rem; padding: .6rem; }
+}
+.studio-spanish-first:not(:has(.studio-english-toggle input:checked)) label:has([name$="_en"]),
+.studio-spanish-first:not(:has(.studio-english-toggle input:checked)) [data-english-field] {
+  display: none;
+}
+.studio-root .studio-spanish-first .studio-english-toggle { gap: .55rem; }
+.studio-translation-rows input[type="checkbox"] { width: 17px; height: 17px; }
+
+@media (max-width: 600px) {
+  .studio-translation-summary button { display: flex; align-items: center; gap: .55rem; min-height: 44px; padding: .45rem .55rem; }
+  .studio-translation-summary strong { font-size: 1.15rem; min-width: 1.35rem; }
+}

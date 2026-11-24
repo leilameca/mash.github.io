@@ -203,6 +203,9 @@ async function dataApi({ adminMode = false, mediaTransport = false } = {}) {
           rows: [],
         };
       const rpcArgs={
+        'rpc/enqueue_translation_batch':{role:'authenticated',sql:'select public.enqueue_translation_batch($1) result',params:[JSON.stringify(args.p_entries)]},
+        'rpc/claim_translation':{role:'authenticated',sql:'select public.claim_translation($1,$2,$3,$4,$5) result',params:[args.p_kind,args.p_id,args.p_version,args.p_mode,args.p_queue_only]},
+        'rpc/finish_translation':{role:'authenticated',sql:'select public.finish_translation($1,$2,$3,$4,$5,$6,$7,$8,$9) result',params:[args.p_id,args.p_lease,JSON.stringify(args.p_fields),JSON.stringify(args.p_text),JSON.stringify(args.p_alts),args.p_provider,args.p_billed,args.p_error,args.p_retry]},
         'rpc/begin_mash_media':{role:'authenticated',sql:'select public.begin_mash_media($1,$2,$3) result',params:[args.p_id,args.p_lease,JSON.stringify(args.p_meta)]},
         'rpc/complete_mash_media':{role:'service_role',sql:'select public.complete_mash_media($1,$2,$3,$4) result',params:[args.p_id,args.p_lease,args.p_original_path,JSON.stringify(args.p_variants)]},
         'rpc/fail_mash_media':{role:'service_role',sql:'select public.fail_mash_media($1,$2,$3) result',params:[args.p_id,args.p_lease,args.p_code]},
@@ -212,12 +215,24 @@ async function dataApi({ adminMode = false, mediaTransport = false } = {}) {
       if(rpcArgs){if(service!==(rpcArgs.role==='service_role'))throw Error('Wrong fixture role for RPC');return {rpc:await f.as(rpcArgs.role,service?'':f.ADMIN,async tx=>(await tx.query(rpcArgs.sql,rpcArgs.params)).rows[0].result),rows:[]};}
       throw Error("Unsupported RPC");
     }
+    if (table === "translation_preferences" && req.method === "PATCH" && !service) {
+      let body = "";
+      for await (const chunk of req) body += chunk;
+      const { auto_on_save, terms } = JSON.parse(body);
+      await f.as("authenticated", f.ADMIN, tx => tx.query(
+        "update translation_preferences set auto_on_save=$1,terms=$2 where singleton",
+        [auto_on_save, terms],
+      ));
+      return { rows: [] };
+    }
     const allowed = [
       "published_product_collections",
       "media_assets","media_library","media_variants","media_asset_references","media_events","product_collections",
       "published_content",
       "published_redirects",
       "studio_entries",
+      "studio_translation_entries",
+      "translation_preferences",
       "studio_summary",
       "admin_users",
       "products",

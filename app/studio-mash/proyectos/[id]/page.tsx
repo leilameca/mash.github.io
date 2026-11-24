@@ -16,7 +16,7 @@ export default async function EditProjectPage({
   const { data: project, error } = await admin
     .from("projects")
     .select(
-      "id,revision,slug,status,featured,sort_order,location,cover_image_path,project_translations(locale,title,description)",
+      "id,revision,slug,status,featured,sort_order,location,cover_image_path,project_translations(locale,title,description,seo_title,seo_description),project_images(storage_path,is_cover,alt_es)",
     )
     .eq("id", id)
     .maybeSingle();
@@ -49,6 +49,13 @@ export default async function EditProjectPage({
             cover_image_path: (project as any).cover_image_path,
             title_es: es?.title,
             description_es: es?.description,
+            seo_title_es: es?.seo_title,
+            seo_description_es: es?.seo_description,
+            cover_alt_es:
+              project.project_images.find(
+                (image) => image.storage_path === project.cover_image_path,
+              )?.alt_es ??
+              project.project_images.find((image) => image.is_cover)?.alt_es,
             title_en: en?.title,
             description_en: en?.description,
           }}

@@ -33,6 +33,9 @@ async function main(){
     const redirect=await get('/es/productos/oasis-set',308);assert.equal(new URL(redirect.headers.get('location'),origin).href,origin+'/es/productos/oasis-confirmado');
     const studio=await fetch(origin+'/studio-mash/productos');const studioBody=await studio.text();assert.ok(studio.url.endsWith('/studio-mash/login')||studioBody.includes('/studio-mash/login'));assert.equal(studioBody.includes('Nombre confirmado'),false);
     await get('/api/studio-media',401);
+    await get('/api/studio-translations',401);
+    const demo=await get('/__preview__/enter',404);
+    assert.equal(demo.headers.get('set-cookie'),null);
     backend.setUnavailable(true);await get('/es/productos/oasis-confirmado',503);
     const failed=await fetch(origin+'/es/productos');const failedBody=await failed.text();assert.equal(failedBody.includes('Oasis Set'),false);assert.equal(failedBody.includes('Rombois Set'),false);
     fs.mkdirSync(process.env.MASH_EVIDENCE_DIR||'docs/phase-2',{recursive:true});

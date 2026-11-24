@@ -50,7 +50,6 @@ export const studioNavigation: StudioNavItem[] = [
     label: "Traducciones",
     group: "Herramientas",
     icon: "translate",
-    pending: true,
   },
   {
     href: "/studio-mash/analitica",

@@ -13,6 +13,8 @@ type CollectionFormValue = {
   name_es?: string;
   name_en?: string;
   description_es?: string;
+  seo_title_es?: string;
+  seo_description_es?: string;
   description_en?: string;
   cover_image_path?: string;
   status?: string;
@@ -144,30 +146,46 @@ export function CollectionForm({
         {state.errors?.cover_image && <span>{state.errors.cover_image}</span>}
       </label>
 
-      <div className="studio-language-note">
-        <strong>Version en ingles</strong>
-        <p>
-          Si dejas un campo vacio, el sitio usara temporalmente el contenido en
-          espanol.
-        </p>
-      </div>
-      <div className="studio-form__grid">
+      <details className="studio-fieldset">
+        <summary>Buscadores</summary>
         <label>
-          Nombre en ingles
-          <input name="name_en" defaultValue={collection?.name_en} />
-        </label>
-        <label>
-          Descripcion en ingles
-          <textarea
-            name="description_en"
-            defaultValue={collection?.description_en}
-            rows={4}
+          Título SEO{" "}
+          <input
+            name="seo_title_es"
+            maxLength={70}
+            defaultValue={collection?.seo_title_es}
           />
         </label>
-      </div>
-
+        <label>
+          Descripción SEO{" "}
+          <textarea
+            name="seo_description_es"
+            rows={2}
+            maxLength={180}
+            defaultValue={collection?.seo_description_es}
+          />
+        </label>
+      </details>
+      <details className="studio-fieldset">
+        <summary>Traducción al inglés (opcional)</summary>
+        <div className="studio-form__grid">
+          <label>
+            Nombre en ingles
+            <input name="name_en" defaultValue={collection?.name_en} />
+          </label>
+          <label>
+            Descripcion en ingles
+            <textarea
+              name="description_en"
+              defaultValue={collection?.description_en}
+              rows={4}
+            />
+          </label>
+        </div>
+      </details>
       <FormActions
-        ok={state.ok} redirectTo={state.redirectTo}
+        ok={state.ok}
+        redirectTo={state.redirectTo}
         pending={pending}
         existing={!!collection?.id}
         message={state.message}

@@ -49,6 +49,8 @@ export const productSchema = z.object({
 });
 
 export const collectionSchema = z.object({
+  seo_title_es: z.string().trim().max(70).optional(),
+  seo_description_es: z.string().trim().max(180).optional(),
   id: z.string().optional(),
   slug: z
     .string()
@@ -69,6 +71,9 @@ export const collectionSchema = z.object({
 });
 
 export const projectSchema = z.object({
+  seo_title_es: z.string().trim().max(70).optional(),
+  seo_description_es: z.string().trim().max(180).optional(),
+  cover_alt_es: z.string().trim().max(600).optional(),
   id: z.string().optional(),
   slug: z
     .string()

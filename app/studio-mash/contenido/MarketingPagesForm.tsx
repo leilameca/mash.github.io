@@ -107,8 +107,12 @@ export function MarketingPagesForm({
   );
   const aboutImage = aboutEs.image ?? "/assets/images/yascari.jpeg";
   return (
-    <form action={action} className="studio-form">
+    <form action={action} className="studio-form studio-spanish-first">
       <PublicationFields />
+      <label className="studio-english-toggle studio-checkbox">
+        <input type="checkbox" />
+        Mostrar campos en inglés
+      </label>
       <PageFields prefix="about" label="Nosotros" es={aboutEs} en={aboutEn} />
       <label>
         Imagen de Nosotros

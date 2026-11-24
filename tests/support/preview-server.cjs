@@ -6,11 +6,17 @@ const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 const { dataApi } = require("./data-api.cjs");
 async function main() {
+  if (process.env.VERCEL || process.env.VERCEL_ENV) {
+    throw new Error("The synthetic Studio preview can only run locally.");
+  }
+  const port = Number(process.env.MASH_PREVIEW_PORT) || 3010;
+  if (!Number.isInteger(port) || port < 1024 || port > 65535) throw Error("Invalid preview port");
   const production = process.env.MASH_VERIFICATION_BUILD === "1";
   const backend = await dataApi({ adminMode: true, mediaTransport: true });
   Object.assign(process.env, {
     NODE_ENV: production ? "production" : "development",
-    MASH_LOCAL_PREVIEW: "1",
+    MASH_LOCAL_PREVIEW: String(port),
+    MASH_DEEPL_API_KEY: "",
     NEXT_PUBLIC_SUPABASE_URL: backend.url,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "fixture-key",
     NEXT_PUBLIC_SUPABASE_ANON_KEY: "",
@@ -19,7 +25,6 @@ async function main() {
   const config = (
     await import(pathToFileURL(path.resolve("next.config.mjs")).href)
   ).default;
-  const port = Number(process.env.MASH_PREVIEW_PORT) || 3010;
   const app = require("next")({
     dev: !production,
     dir: process.cwd(),

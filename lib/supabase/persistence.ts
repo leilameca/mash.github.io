@@ -34,7 +34,48 @@ export async function commitContent(
       !!error?.code && /^[0-9A-Z]{5}$/.test(error.code);
     throw failure;
   }
-  return data as Array<{ id: string; revision: number }>;
+  const saved = data as Array<{
+    id: string;
+    revision: number;
+    kind?: ContentKind;
+  }>;
+  if (
+    process.env.MASH_DEEPL_API_KEY?.trim() &&
+    changes.some(
+      (change) =>
+        ["save", "publish"].includes(change.intent) &&
+        (change.translations || change.images),
+    )
+  ) {
+    try {
+      const [{ after }, { runTranslation }] = await Promise.all([
+        import("next/server"),
+        import("@/lib/translation/run"),
+      ]);
+      after(async () => {
+        // These rows already committed. Unfinished jobs remain in the center.
+        for (const savedRow of saved) {
+          const kind =
+            savedRow.kind ??
+            changes.find((item) => item.id === savedRow.id)?.kind ??
+            (changes.length === 1 ? changes[0].kind : undefined);
+          if (kind)
+            await runTranslation(
+              client,
+              {
+                kind,
+                id: savedRow.id,
+                version: savedRow.revision,
+              },
+              { queued: true },
+            ).catch(() => {});
+        }
+      });
+    } catch {
+      // The editor's save result is independent of translation scheduling.
+    }
+  }
+  return saved;
 }
 export function canCleanupFailedSave(error: unknown): boolean {
   return (

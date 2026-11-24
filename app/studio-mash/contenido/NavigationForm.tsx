@@ -63,8 +63,12 @@ export function NavigationForm({ value }: { value: NavigationValue }) {
   };
 
   return (
-    <form action={action} className="studio-form">
+    <form action={action} className="studio-form studio-spanish-first">
       <PublicationFields />
+      <label className="studio-english-toggle studio-checkbox">
+        <input type="checkbox" />
+        Mostrar campos en inglés
+      </label>
       <input type="hidden" name="items_json" value={JSON.stringify(items)} />
       <div className="studio-nav-editor">
         {items.map((item, index) => (
@@ -79,7 +83,7 @@ export function NavigationForm({ value }: { value: NavigationValue }) {
                   }
                 />
               </label>
-              <label>
+              <label data-english-field>
                 Etiqueta EN
                 <input
                   value={item.label_en}

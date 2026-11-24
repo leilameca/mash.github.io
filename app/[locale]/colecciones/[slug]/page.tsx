@@ -22,8 +22,8 @@ export async function generateMetadata({
 
   return {
     alternates: routeAlternates(rawLocale, `/colecciones/${slug}`),
-    title: collection.label[rawLocale],
-    description: collection.description[rawLocale],
+    title: collection.seoTitle?.[rawLocale] || collection.label[rawLocale],
+    description: collection.seoDescription?.[rawLocale] || collection.description[rawLocale],
   };
 }
 

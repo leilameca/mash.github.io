@@ -48,6 +48,8 @@ export type Collection = {
   image: string;
   alt: LocalizedText;
   note: LocalizedText;
+  seoTitle?: LocalizedText;
+  seoDescription?: LocalizedText;
 };
 
 export type Project = {

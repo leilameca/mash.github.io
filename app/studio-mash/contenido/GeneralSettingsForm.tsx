@@ -78,7 +78,7 @@ export function GeneralSettingsForm({
   return (
     <form
       action={action}
-      className="studio-form"
+      className="studio-form studio-spanish-first"
       onInvalid={(event) => {
         const element = event.target as HTMLElement;
         const index = Number(
@@ -91,6 +91,10 @@ export function GeneralSettingsForm({
       }}
     >
       <PublicationFields />
+      <label className="studio-english-toggle studio-checkbox">
+        <input type="checkbox" />
+        Mostrar campos en inglés
+      </label>
       <div
         className="studio-settings-tabs"
         role="tablist"

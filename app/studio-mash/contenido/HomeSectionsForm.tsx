@@ -165,8 +165,12 @@ export function HomeSectionsForm({
     initialState,
   );
   return (
-    <form action={action} className="studio-form">
+    <form action={action} className="studio-form studio-spanish-first">
       <PublicationFields />
+      <label className="studio-english-toggle studio-checkbox">
+        <input type="checkbox" />
+        Mostrar campos en inglés
+      </label>
       <fieldset className="studio-fieldset">
         <legend>Secciones visibles</legend>
         <div className="studio-visibility-grid">
