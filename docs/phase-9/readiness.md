@@ -19,7 +19,7 @@ Base de la sesión: `78a63b13ff7ebeda09430d4152d47ac6c13fba24` en `feature/mash-
 | GTM y Search Console | Pendiente de acceso | La etiqueta directa cubre el envío previsto. Evaluar GTM al verificar las necesidades de la propiedad. Confirmar la propiedad de Search Console existente mediante cuenta autorizada. La propiedad y su verificación siguen pendientes. |
 | Analítica en Studio | Pendiente de acceso | Consulta del lado servidor a la Data API de GA4, autenticación de Studio y estados sin configurar, sin datos o con error. Validar resultados con una cuenta de servicio de solo lectura de la propiedad autorizada. |
 | QA independiente hospedado | Bloqueado | Falta un preview protegido operativo. Repetir flujo ES/EN, Studio, Multimedia y permisos en Chromium, Firefox y WebKit. |
-| Revisión visual de Yascari y fibra | Pendiente de aprobación | Se ajustó el encuadre del archivo de Yascari que ya usa el sitio. Se conservaron ambos recursos y falta la aprobación visual final del encuadre y de la fotografía de fibra. |
+| Revisión visual del sitio, Yascari y fibra | Aprobado en local | La titular aprobó la vista local, el retrato de Yascari en Nosotros y la fotografía original de fibra el 24 de noviembre de 2026. Queda la comprobación del encuadre de la fibra en la composición donde se publique. |
 | Lanzamiento | Bloqueado | Requiere QA hospedado, revisión de integraciones y autorización expresa. No se fusionó con `main`, modificó DNS ni promovió producción. |
 
 ## Orden de continuación
