@@ -42,7 +42,8 @@ async function main() {
     checks: [],
     viewports: [],
   };
-  const dir = "docs/phase-3/screenshots";
+  const evidenceDir = process.env.MASH_EVIDENCE_DIR || ".test-artifacts/studio-browser";
+  const dir = evidenceDir + "/screenshots";
   fs.mkdirSync(dir, { recursive: true });
   try {
     let ready = false;
@@ -262,6 +263,7 @@ async function main() {
       ])
     ).rows[0].revision;
     page.once("dialog", (d) => d.accept());
+    await page.locator(".studio-revision > details > summary").last().click();
     await page
       .getByRole("button", { name: "Restaurar como borrador" })
       .last()
@@ -378,12 +380,12 @@ async function main() {
     await capture("error");
     backend.setUnavailable(false);
     fs.writeFileSync(
-      "docs/phase-3/browser-evidence.json",
+      evidenceDir + "/browser-evidence.json",
       JSON.stringify(evidence, null, 2),
     );
     console.log(JSON.stringify(evidence, null, 2));
   } catch (e) {
-    fs.writeFileSync("docs/phase-3/browser-failure.log", logs);
+    fs.writeFileSync(evidenceDir + "/browser-failure.log", logs);
     throw e;
   } finally {
     await browser.close();

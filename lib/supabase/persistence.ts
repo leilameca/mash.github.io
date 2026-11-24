@@ -7,6 +7,7 @@ export type ContentChange = {
   id?: string;
   expected_version?: number;
   data: Record<string, unknown>;
+  collection_ids?: string[];
   translations?: TranslationRow[];
   images?: ImageRow[];
   intent: "save" | "publish" | "draft" | "hide" | "archive";

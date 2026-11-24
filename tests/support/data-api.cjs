@@ -2,7 +2,7 @@
 // PostgREST or a production runtime. SQL, snapshots and RLS execute in PostgreSQL.
 const http = require("node:http");
 const { database } = require("./database.cjs");
-async function dataApi({ adminMode = false } = {}) {
+async function dataApi({ adminMode = false, mediaTransport = false } = {}) {
   const f = await database({ seed: true });
   // Explicit isolated fixtures: the historical seed intentionally creates drafts.
   for (const kind of ["collection", "product", "project"]) {
@@ -165,19 +165,24 @@ async function dataApi({ adminMode = false } = {}) {
     value:
       "base64-" + Buffer.from(JSON.stringify(session)).toString("base64url"),
   };
+  let runtimeOrigin='';const objects=new Map();let storageRequests=0,storageFailureAt=0;
+  const rawOrigin='https://isolated.invalid';const mediaSuffix='/storage/v1/object/public/mash-media/';
+  const fromWire=value=>mediaTransport&&runtimeOrigin?value.replaceAll(runtimeOrigin+mediaSuffix,rawOrigin+mediaSuffix):value;
+  const wire=value=>{if(!mediaTransport||!runtimeOrigin)return value;const encoded=JSON.stringify(value);if(encoded===undefined)return value;return JSON.parse(encoded.replaceAll(rawOrigin+mediaSuffix,runtimeOrigin+mediaSuffix).replaceAll('"'+rawOrigin+'"','"'+runtimeOrigin+'"'));};
   async function adminRequest(req, url, service) {
     const table = url.pathname.replace("/rest/v1/", "");
     if (table.startsWith("rpc/")) {
-      if (req.method !== "POST" || service)
+      if (req.method !== "POST")
         throw Error("Unsupported fixture RPC");
       let body = "";
       for await (const chunk of req) body += chunk;
-      const args = JSON.parse(body);
+      const args = JSON.parse(fromWire(body));
       if (table === "rpc/save_mash_content") {
+        if(service)throw Error("Editorial writes require an administrator session");
         const result = await f.save(args.p_changes);
         return { rpc: result, rows: [] };
       }
-      if (table === "rpc/restore_mash_revision")
+      if (table === "rpc/restore_mash_revision"&&!service)
         return {
           rpc: await f.as(
             "authenticated",
@@ -197,9 +202,19 @@ async function dataApi({ adminMode = false } = {}) {
           ),
           rows: [],
         };
+      const rpcArgs={
+        'rpc/begin_mash_media':{role:'authenticated',sql:'select public.begin_mash_media($1,$2,$3) result',params:[args.p_id,args.p_lease,JSON.stringify(args.p_meta)]},
+        'rpc/complete_mash_media':{role:'service_role',sql:'select public.complete_mash_media($1,$2,$3,$4) result',params:[args.p_id,args.p_lease,args.p_original_path,JSON.stringify(args.p_variants)]},
+        'rpc/fail_mash_media':{role:'service_role',sql:'select public.fail_mash_media($1,$2,$3) result',params:[args.p_id,args.p_lease,args.p_code]},
+        'rpc/edit_mash_media':{role:'authenticated',sql:'select public.edit_mash_media($1,$2,$3) result',params:[JSON.stringify(args.p_assets),args.p_intent,args.p_name]},
+        'rpc/mash_media_origin':{role:'authenticated',sql:'select public.mash_media_origin() result',params:[]},
+      }[table];
+      if(rpcArgs){if(service!==(rpcArgs.role==='service_role'))throw Error('Wrong fixture role for RPC');return {rpc:await f.as(rpcArgs.role,service?'':f.ADMIN,async tx=>(await tx.query(rpcArgs.sql,rpcArgs.params)).rows[0].result),rows:[]};}
       throw Error("Unsupported RPC");
     }
     const allowed = [
+      "published_product_collections",
+      "media_assets","media_library","media_variants","media_asset_references","media_events","product_collections",
       "published_content",
       "published_redirects",
       "studio_entries",
@@ -226,15 +241,17 @@ async function dataApi({ adminMode = false } = {}) {
       throw Error("Unsupported authenticated fixture query");
     const columns = (
       await f.db.query(
-        "select column_name from information_schema.columns where table_schema=$1 and table_name=$2",
+        "select column_name,data_type from information_schema.columns where table_schema=$1 and table_name=$2",
         ["public", table],
       )
-    ).rows.map((r) => r.column_name);
+    ).rows;
+    const types=Object.fromEntries(columns.map(r=>[r.column_name,r.data_type]));
+    const columnNames=columns.map(r=>r.column_name);
     const clauses = [],
       params = [];
     for (const [key, value] of url.searchParams) {
       if (["select", "order", "offset", "limit"].includes(key)) continue;
-      if (!columns.includes(key)) throw Error("Unsupported column " + key);
+      if (!columnNames.includes(key)) throw Error("Unsupported column " + key);
       const dot = value.indexOf("."),
         op = value.slice(0, dot),
         v = value.slice(dot + 1);
@@ -246,15 +263,15 @@ async function dataApi({ adminMode = false } = {}) {
         });
         clauses.push(`"${key}" in (${list})`);
       } else {
-        if (!["eq", "neq", "ilike", "is"].includes(op))
+        if (!["eq", "neq", "ilike", "is", "gt", "gte", "lt", "lte"].includes(op))
           throw Error("Unsupported operation " + op);
         if (op === "is" && v === "null") {
           clauses.push(`"${key}" is null`);
           continue;
         }
-        params.push(v === "true" ? true : v === "false" ? false : v);
+        params.push(types[key]==="boolean"?v==="true":["integer","bigint","numeric"].includes(types[key])?Number(v):types[key]?.startsWith("timestamp")?new Date(v):v);
         clauses.push(
-          `"${key}" ${op === "eq" ? "=" : op === "neq" ? "<>" : op === "ilike" ? "ilike" : "="} $${params.length}`,
+          `"${key}" ${op === "eq" ? "=" : op === "neq" ? "<>" : op === "ilike" ? "ilike" : op==="gt"?">":op==="gte"?">=":op==="lt"?"<":op==="lte"?"<=":"="} $${params.length}`,
         );
       }
     }
@@ -269,7 +286,7 @@ async function dataApi({ adminMode = false } = {}) {
       .filter(Boolean)
       .map((v) => {
         const [key, direction] = v.split(".");
-        if (!columns.includes(key)) throw Error("Unsupported order");
+        if (!columnNames.includes(key)) throw Error("Unsupported order");
         return `"${key}" ${direction === "desc" ? "desc" : "asc"}`;
       });
     const perform = async (tx) => {
@@ -290,6 +307,7 @@ async function dataApi({ adminMode = false } = {}) {
         for (const [relation, parent] of [
           ["product_translations", "product"],
           ["product_images", "product"],
+          ["product_collections", "product"],
           ["collection_translations", "collection"],
           ["project_translations", "project"],
           ["project_images", "project"],
@@ -318,6 +336,7 @@ async function dataApi({ adminMode = false } = {}) {
   let unavailable = false;
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, "http://localhost");
+    for(const [key,value] of url.searchParams)url.searchParams.set(key,fromWire(value));
     res.setHeader("content-type", "application/json");
     if (
       unavailable &&
@@ -339,15 +358,18 @@ async function dataApi({ adminMode = false } = {}) {
       );
       return;
     }
-    // Storage transport is explicitly simulated; no hosted objects are read.
-    if (
-      adminMode &&
-      isAdmin &&
-      req.method === "POST" &&
-      url.pathname === "/storage/v1/object/list/mash-media"
-    ) {
-      res.end("[]");
-      return;
+    // Explicit simulated Storage with real processed bytes. No hosted objects.
+    if(adminMode&&url.pathname.startsWith('/storage/v1/object/')){
+      const isPublic=url.pathname.startsWith('/storage/v1/object/public/');
+      const key=decodeURIComponent(url.pathname.replace(/^\/storage\/v1\/object\/(public\/)?/,''));
+      if(req.method==='GET'&&(isService||isPublic&&key.startsWith('mash-media/'))){const object=objects.get(key);if(!object){res.writeHead(404);res.end(JSON.stringify({message:'Missing fixture object'}));return;}res.setHeader('content-type',object.mime);res.setHeader('access-control-allow-origin','*');res.end(object.bytes);return;}
+      if(req.method==='POST'&&key.startsWith('list/')&&(isAdmin||isService)){let body='';for await(const chunk of req)body+=chunk;const filter=JSON.parse(body);const bucket=key.slice(5);const prefix=bucket+'/'+filter.prefix.replace(/\/$/,'')+'/';const rows=[...objects.entries()].filter(([k])=>k.startsWith(prefix)&&(!filter.search||k.includes(filter.search))).map(([k,v])=>({id:v.id,name:k.slice(prefix.length),metadata:{size:v.bytes.length,mimetype:v.mime},created_at:'2026-11-24T12:00:00Z'}));res.end(JSON.stringify(rows.slice(filter.offset||0,(filter.offset||0)+(filter.limit||100))));return;}
+      if(req.method==='POST'&&isService&&/^(mash-media|mash-originals)\//.test(key)){
+        storageRequests++;if(storageRequests===storageFailureAt){res.writeHead(503);res.end(JSON.stringify({message:'Synthetic upload interruption',statusCode:'503'}));return;}
+        if(objects.has(key)){res.writeHead(409);res.end(JSON.stringify({message:'Already exists',statusCode:'409'}));return;}
+        const chunks=[];let size=0;for await(const chunk of req){size+=chunk.length;if(size>31*1024*1024)throw Error('Fixture upload limit');chunks.push(chunk);}const id=require('node:crypto').randomUUID();objects.set(key,{id,bytes:Buffer.concat(chunks),mime:req.headers['content-type']||'application/octet-stream'});res.end(JSON.stringify({Id:id,Key:key}));return;
+      }
+      res.writeHead(403);res.end(JSON.stringify({message:'Fixture Storage access denied'}));return;
     }
     if (
       adminMode &&
@@ -373,7 +395,7 @@ async function dataApi({ adminMode = false } = {}) {
           return;
         }
         res.end(
-          JSON.stringify(result.rpc ?? (object ? result.rows[0] : result.rows)),
+          JSON.stringify(wire(result.rpc ?? (object ? result.rows[0] : result.rows))),
         );
       } catch (error) {
         console.error("FIXTURE ERROR", error.message);
@@ -388,7 +410,7 @@ async function dataApi({ adminMode = false } = {}) {
       return;
     }
     const table = url.pathname.replace("/rest/v1/", "");
-    if (!["published_content", "published_redirects"].includes(table)) {
+    if (!["published_content", "published_redirects", "published_product_collections"].includes(table)) {
       res.writeHead(401);
       res.end(JSON.stringify({ message: "Unauthorized" }));
       return;
@@ -399,7 +421,7 @@ async function dataApi({ adminMode = false } = {}) {
       for (const [key, value] of url.searchParams) {
         if (["select", "order", "offset", "limit"].includes(key)) continue;
         if (
-          !/^(entity_kind|entity_id|status|slug|old_slug|snapshot->>collection_id)$/.test(
+          !/^(entity_kind|entity_id|status|slug|old_slug|collection_id|snapshot->>collection_id)$/.test(
             key,
           )
         )
@@ -453,15 +475,17 @@ async function dataApi({ adminMode = false } = {}) {
         );
         return;
       }
-      res.end(JSON.stringify(object ? result.rows[0] : result.rows));
+      res.end(JSON.stringify(wire(object ? result.rows[0] : result.rows)));
     } catch (error) {
       res.writeHead(500);
       res.end(JSON.stringify({ message: error.message }));
     }
   });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  runtimeOrigin=`http://127.0.0.1:${server.address().port}`;
   return {
     ...f,
+    objects,failStorageAfter:n=>{storageFailureAt=storageRequests+n;},
     cookie,
     fixtureToken,
     url: `http://127.0.0.1:${server.address().port}`,

@@ -12,8 +12,9 @@ import { PageHeader, EmptyState } from "./StudioPrimitives";
 export default async function Page() {
   const admin = await requireAdmin();
   const { summary, activity } = await studioOverview();
-  const total = (key: "pending" | "translations_pending" | "live_published") =>
-    summary.reduce((sum, s) => sum + Number(s[key]), 0);
+  const total = (
+    key: "pending" | "translations_pending" | "live_published" | "work_draft",
+  ) => summary.reduce((sum, s) => sum + Number(s[key]), 0);
   return (
     <StudioShell admin={admin}>
       <PageHeader
@@ -31,6 +32,39 @@ export default async function Page() {
           Editar sitio web
         </Link>
       </PageHeader>
+      <section
+        className="studio-card studio-attention"
+        aria-labelledby="studio-attention-title"
+      >
+        <h2 id="studio-attention-title">Necesitan atención</h2>
+        <div>
+          <div>
+            <strong>{total("work_draft")}</strong>
+            <span>Borradores</span>
+            <nav aria-label="Revisar borradores">
+              {summary
+                .filter(
+                  (entry) => entry.kind !== "site" && entry.work_draft > 0,
+                )
+                .map((entry) => (
+                  <Link
+                    key={entry.kind}
+                    href={`/studio-mash/${modulePaths[entry.kind]}?work=draft`}
+                  >
+                    {kindLabels[entry.kind]} ({entry.work_draft})
+                  </Link>
+                ))}
+              {summary.some(
+                (entry) => entry.kind === "site" && entry.work_draft > 0,
+              ) && <Link href="/studio-mash/contenido">Sitio web</Link>}
+            </nav>
+          </div>
+          <Link href="/studio-mash/traducciones">
+            <strong>{total("translations_pending")}</strong>
+            <span>Traducciones pendientes →</span>
+          </Link>
+        </div>
+      </section>
       <nav className="studio-quick-links" aria-label="Acciones rápidas">
         <Link href="/studio-mash/colecciones/nueva">+ Crear colección</Link>
         <Link href="/studio-mash/proyectos/nuevo">+ Crear proyecto</Link>
@@ -97,13 +131,6 @@ export default async function Page() {
               />
             </div>
           ))}
-          <div className="studio-notice">
-            <strong>
-              {total("translations_pending")} contenidos con inglés pendiente
-            </strong>
-            <p>Revisa las traducciones manualmente antes de publicar.</p>
-            <Link href="/studio-mash/traducciones">Revisar traducciones →</Link>
-          </div>
         </section>
         <section className="studio-card">
           <div className="studio-section-heading">

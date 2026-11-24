@@ -35,7 +35,7 @@ export default async function EditProductPage({
       admin
         .from("products")
         .select(
-          "id,revision,slug,collection_id,status,featured,dimensions,finishes,product_translations(locale,name,description,materials,care),product_images(storage_path,alt_es,alt_en,is_primary,sort_order)",
+          "id,revision,slug,collection_id,status,featured,dimensions,finishes,product_collections(collection_id,sort_order),product_translations(locale,name,description,materials,care,seo_title,seo_description,translation_status),product_images(storage_path,alt_es,alt_en,is_primary,sort_order)",
         )
         .eq("id", id)
         .maybeSingle(),
@@ -69,7 +69,10 @@ export default async function EditProductPage({
             id: (product as any).id,
             revision: (product as any).revision,
             slug: (product as any).slug,
-            collection_id: (product as any).collection_id,
+            collection_id: product.collection_id,
+            collection_ids: [...product.product_collections]
+              .sort((a, b) => a.sort_order - b.sort_order)
+              .map((membership) => membership.collection_id),
             status: (product as any).status,
             featured: (product as any).featured,
             hero_image_path:
@@ -89,6 +92,8 @@ export default async function EditProductPage({
               )
               .map((image: any) => image.storage_path),
             name_es: es?.name,
+            seo_title_es: es?.seo_title,
+            seo_description_es: es?.seo_description,
             description_es: es?.description,
             materials_es: es?.materials,
             dimensions_es: (product as any).dimensions,
@@ -96,6 +101,7 @@ export default async function EditProductPage({
             care_es: es?.care,
             name_en: en?.name,
             description_en: en?.description,
+            translation_status: en?.translation_status,
           }}
         />
       </section>

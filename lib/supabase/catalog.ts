@@ -39,10 +39,18 @@ export function mapProduct(
     slug: row.slug!,
     name: text.name,
     collectionSlug: collection?.slug ?? "",
+    collectionSlugs: collections
+      .filter((entry) =>
+        (row.collection_ids ?? [row.collection_id]).includes(entry.entity_id),
+      )
+      .map((entry) => entry.slug),
     collectionLabel: pair(ct?.name ?? ""),
     image: images[0].storage_path,
     gallery: images.map((i) => i.storage_path),
     galleryAlts: alts,
+    galleryVariants: images.map((image) => image.variants ?? {}),
+    seoTitle: text.seo_title,
+    seoDescription: text.seo_description,
     alt: pair(alts[0]),
     description: pair(original?.description ?? "", english?.description ?? ""),
     materials: pair(original?.materials ?? "", english?.materials ?? ""),
@@ -92,11 +100,9 @@ export async function getRelatedProducts(
   if (!collection) return [];
   const client = await publicContentClient();
   const { data, error } = await client
-    .from("published_content")
+    .from("published_product_collections")
     .select("snapshot")
-    .eq("entity_kind", "product")
-    .eq("status", "published")
-    .eq("snapshot->>collection_id", collection.entity_id)
+    .eq("collection_id", collection.entity_id)
     .neq("slug", slug)
     .order("sort_order")
     .order("entity_id")
@@ -114,8 +120,8 @@ export async function getCatalogProductsByCollection(
   locale: Locale,
   slug: string,
 ) {
-  return (await getCatalogProducts(locale)).filter(
-    (p) => p.collectionSlug === slug,
+  return (await getCatalogProducts(locale)).filter((p) =>
+    (p.collectionSlugs ?? [p.collectionSlug]).includes(slug),
   );
 }
 export const getCatalogCollections = cache(async (): Promise<Collection[]> => {
@@ -143,8 +149,8 @@ export async function getCatalogProjects(locale: Locale): Promise<Project[]> {
   return (await readPublished("project"))
     .map(({ snapshot: r, slug }) => {
       const { text } = localizedTranslation(r.translations, locale);
-      const original=localizedTranslation(r.translations,"es").text;
-      const english=localizedTranslation(r.translations,"en").text;
+      const original = localizedTranslation(r.translations, "es").text;
+      const english = localizedTranslation(r.translations, "en").text;
       if (!text?.title || !r.cover_image_path) return null;
       const cover =
         r.images.find((i) => i.storage_path === r.cover_image_path) ??

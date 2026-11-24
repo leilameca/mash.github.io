@@ -25,13 +25,16 @@ export async function generateMetadata({
   const product = await getCatalogProduct(rawLocale, slug);
   if (!product) notFound();
 
+  const title = product.seoTitle || product.name;
+  const description = product.seoDescription || product.description[rawLocale];
+
   return {
     alternates: routeAlternates(rawLocale, `/productos/${slug}`),
-    title: product.name,
-    description: product.description[rawLocale],
+    title,
+    description,
     openGraph: {
-      title: product.name,
-      description: product.description[rawLocale],
+      title,
+      description,
       images: [{ url: product.image, alt: product.alt[rawLocale] }],
     },
   };
@@ -77,6 +80,7 @@ export default async function ProductDetailPage({
           images={product.gallery}
           name={product.name}
           alts={product.galleryAlts}
+          variants={product.galleryVariants}
           locale={locale}
         />
         <div className="product-detail__content">

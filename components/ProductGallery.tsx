@@ -1,20 +1,24 @@
 "use client";
 import Image from "next/image";
+import type { Product } from "@/lib/content";
 import { useRef, useState } from "react";
 export function ProductGallery({
   images,
   name,
   locale,
   alts,
+  variants,
 }: {
   images: string[];
   name: string;
   locale: string;
   alts?: string[];
+  variants?: Product["galleryVariants"];
 }) {
   const [selected, setSelected] = useState(0);
   const dialog = useRef<HTMLDialogElement>(null);
   const es = locale === "es";
+  const active = variants?.[selected];
   const move = (direction: number) =>
     setSelected((index) => (index + direction + images.length) % images.length);
   return (
@@ -27,7 +31,8 @@ export function ProductGallery({
         }
       >
         <Image
-          src={images[selected]}
+          src={active?.gallery ?? images[selected]}
+          unoptimized={Boolean(active?.gallery)}
           alt={alts?.[selected] || `${name} · ${selected + 1}`}
           fill
           priority
@@ -47,7 +52,13 @@ export function ProductGallery({
               aria-label={`${es ? "Ver imagen" : "View image"} ${index + 1}`}
               onClick={() => setSelected(index)}
             >
-              <Image src={src} alt="" fill sizes="96px" />
+              <Image
+                src={variants?.[index]?.thumbnail ?? src}
+                unoptimized={Boolean(variants?.[index]?.thumbnail)}
+                alt=""
+                fill
+                sizes="96px"
+              />
             </button>
           ))}
         </div>
@@ -69,7 +80,8 @@ export function ProductGallery({
         </button>
         <div className="product-lightbox__image">
           <Image
-            src={images[selected]}
+            src={active?.large ?? images[selected]}
+            unoptimized={Boolean(active?.large)}
             alt={alts?.[selected] || name}
             fill
             sizes="90vw"

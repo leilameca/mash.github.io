@@ -17,7 +17,10 @@
     "test:phase2:http": "node tests/phase2-http.cjs",
     "test:phase3": "node --test tests/studio-security.test.cjs",
     "test:phase3:browser": "node tests/studio-browser.cjs",
-    "test:all": "npm run test:admin && npm run test:pwa && npm run test:phase2 && npm run test:phase3"
+    "preview:studio": "node tests/support/preview-server.cjs",
+    "test:phase4": "node --test tests/media-processing.test.cjs tests/media-db.test.cjs tests/media-upload.test.cjs",
+    "test:phase4:browser": "node tests/phase4-browser.cjs",
+    "test:all": "npm run test:admin && npm run test:pwa && npm run test:phase2 && npm run test:phase3 && npm run test:phase4"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

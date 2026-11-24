@@ -1,0 +1,154 @@
+> mash-frontend@2.0.0 test:all
+> npm run test:admin && npm run test:pwa && npm run test:phase2 && npm run test:phase3 && npm run test:phase4
+
+
+> mash-frontend@2.0.0 test:admin
+> node --test tests/admin-content.test.cjs tests/catalog.test.cjs tests/media-library.test.cjs tests/site-content.test.cjs
+
+✔ trash keeps the product and all shared image files recoverable (136.5161ms)
+✔ trash failure does not report success (27.543ms)
+✔ verified library images are reusable and preserve gallery order (21.4602ms)
+✔ unverified library URLs are rejected before saving (27.8196ms)
+✔ duplicate copies descriptions and images into an unpublished draft (19.0701ms)
+✔ failed duplication rolls back the new draft without deleting shared files (16.8334ms)
+✔ editing English text without uploads saves unique images and the selected primary (21.5366ms)
+✔ removing the old primary deletes its gallery record and keeps exactly one primary (16.377ms)
+✔ a new image can replace every existing image and become primary (21.8934ms)
+✔ an empty gallery cannot silently restore a removed primary (17.1909ms)
+✔ malformed galleries and images belonging to another product are rejected (51.7736ms)
+✔ a failed image save does not delete existing images or clear their primary flag (13.9566ms)
+✔ hero support images can both be replaced while preserving the background (21.1703ms)
+✔ saving hero text preserves all three existing images (13.8586ms)
+✔ missing hero support images are not silently restored from legacy (12.8517ms)
+✔ invalid hero support images report the corresponding field before any changes (12.4795ms)
+✔ status updates refresh all public pages in both languages (27.5426ms)
+✔ failed status updates return an error without confirming success (28.5595ms)
+✔ a translation failure rolls back hero content and cleans up unlinked upload (13.3827ms)
+✔ individual benefits, FAQ answers and section visibility survive saving (25.1356ms)
+✔ saving text from a stale section form preserves the latest published images (16.8601ms)
+✔ each visual strip image can be replaced without restoring the other old images (45.0454ms)
+✔ saving institutional page text cannot restore a stale about image (13.5381ms)
+✔ a failed section transaction cleans up its unlinked upload (21.5412ms)
+✔ uploads are cleaned up when the section record itself cannot be saved (14.4668ms)
+✔ collection and project translation failures roll back and clean up unlinked covers (27.1484ms)
+✔ text-only collection and project edits cannot restore stale covers (25.6568ms)
+✔ an intentionally empty public catalog never restores old products, collections or projects (46.7707ms)
+✔ saved product specifications and primary image are read into the public catalog (17.2178ms)
+✔ products without gallery images are not replaced by old catalog content (18.7314ms)
+✔ product details query only the requested published slug (15.4187ms)
+✔ related products are filtered and limited in the database (12.9683ms)
+✔ catalog pagination requests only twelve database rows (11.2595ms)
+✔ library accepts only existing images in the managed bucket (1.0316ms)
+✔ library rejects external origins, unsupported folders and malformed paths (0.3769ms)
+✔ public home reads every saved section image in both languages (49.6386ms)
+✔ missing section images stay empty and never restore legacy defaults (23.1127ms)
+✔ public hero and about page use the stored image URLs (25.6297ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1026.0364
+
+> mash-frontend@2.0.0 test:pwa
+> node --test tests/pwa.test.cjs
+
+✔ public pages always use fresh network content and are never added to the offline cache (18.5638ms)
+✔ offline navigation shows the notice in the requested language (1.6924ms)
+✔ the worker never intercepts admin, APIs, server actions or Next RSC requests (0.7796ms)
+✔ installation only precaches offline notices and icons (1.8299ms)
+✔ worker updates only remove old MASH PWA caches (1.1882ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.1535
+
+> mash-frontend@2.0.0 test:phase2
+> node --test tests/publication-db.test.cjs tests/action-db.test.cjs tests/security-content.test.cjs tests/auth-regression.test.cjs tests/middleware-auth.test.cjs
+
+✔ real server action -> persistence RPC -> PostgreSQL: create, edit draft and publish (1704.9298ms)
+✔ OTP request preserves allowlist and does not disclose unauthorized address (331.9914ms)
+✔ OTP remains eight digits; six digits are rejected before verification (99.9818ms)
+✔ valid OTP cannot authorize an account outside the administrative allowlist (95.0426ms)
+✔ administrative session refresh forwards fresh cookies to the render and browser (117.7577ms)
+▶ real PostgreSQL: atomic publication, draft isolation, translations, concurrency, history and RLS
+  ✔ published product is visible anonymously; working copy is private (6.9786ms)
+  ✔ Spanish save preserves English materials and care; live snapshot is unchanged (11.005ms)
+  ✔ stale version rolls back before overwriting (7.0994ms)
+  ✔ invalid gallery rolls back parent and translations together (6.3593ms)
+  ✔ explicit publication changes name, photos, alts, date and creator (14.4599ms)
+  ✔ hidden, archived and draft states are excluded for visitors (29.1946ms)
+  ✔ restore creates a new draft revision without publishing (11.0148ms)
+  ✔ unauthorized authenticated user and anonymous role cannot write (5.1795ms)
+  ✔ multi-page form failure rolls back every block (7.4266ms)
+  ✔ exactly one primary image is required before publishing (4.9589ms)
+  ✔ even an administrator cannot mutate historical revisions (1.5837ms)
+✔ real PostgreSQL: atomic publication, draft isolation, translations, concurrency, history and RLS (1334.4908ms)
+✔ unchanged reviewed English survives saving the unchanged Spanish original (623.8303ms)
+✔ site English survives empty inputs and an older published revision restores privately (587.359ms)
+✔ JSON-LD neutralizes script termination, markup and Unicode line separators (62.5448ms)
+✔ URL policy rejects script/data/http schemes, credentials and network paths (6.3872ms)
+✔ missing configuration, connection failure and valid empty result remain distinct; never legacy (63.1897ms)
+✔ pending English uses Spanish explicitly and never claims completion (78.2981ms)
+✔ a transport failure never claims rollback or authorizes deleting uploaded files (12.6153ms)
+✔ all navigation links can be hidden without restoring the old menu (25.6329ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2674.6059
+
+> mash-frontend@2.0.0 test:phase3
+> node --test tests/studio-security.test.cjs
+
+▶ Phase 3 real SQL privilege boundary, projection, origin, restore and slug ownership
+  ✔ authenticated administrators cannot bypass revision contract with direct DML (8.1916ms)
+  ✔ anonymous callers cannot retrieve complete publication snapshots or revision actors (6.9433ms)
+  ✔ untrusted project origins and encoded traversal are denied (11.3125ms)
+  ✔ exact configured origin is accepted; later shared and translated CMS properties disappear on restore (17.7291ms)
+  ✔ historical slug is reserved for its original entity (22.6494ms)
+✔ Phase 3 real SQL privilege boundary, projection, origin, restore and slug ownership (982.5462ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1068.8789
+
+> mash-frontend@2.0.0 test:phase4
+> node --test tests/media-processing.test.cjs tests/media-db.test.cjs tests/media-upload.test.cjs
+
+▶ real PostgreSQL media lifecycle, usage protection, RLS and multi-collection snapshots
+  ✔ admin reserves idempotently; outsider and direct client finalization cannot bypass the server (33.8779ms)
+  ✔ one product can publish in two collections with registered variants and no original disclosure (48.4038ms)
+  ✔ draft memberships stay private, stale versions roll back, and restore recreates the full selection (23.0578ms)
+  ✔ published and historical usage prevent archive even after removing the current gallery reference (11.6054ms)
+  ✔ failed partial jobs can resume, old leases are fenced, and unused assets archive with optimistic versions (18.1136ms)
+✔ real PostgreSQL media lifecycle, usage protection, RLS and multi-collection snapshots (1192.8423ms)
+✔ Storage policies restrict writing even with an overlapping permissive policy (631.6699ms)
+✔ Sharp generates four real WebP derivatives, rotates EXIF, strips metadata and keeps the original (113.6541ms)
+✔ small images are never enlarged and declared MIME/extension are not trusted (10.4061ms)
+✔ invalid content, SVG, oversized bytes, excessive dimensions and animated files are rejected (7.6513ms)
+✔ admission limit rejects a third concurrent job and releases slots after failures (0.8388ms)
+✔ upload coordinates real Sharp and PostgreSQL; partial Storage writes resume without duplicate or deleted files (1280.0885ms)
+✔ a lost completion response after COMMIT is verified as success, never failed or compensated (685.5013ms)
+✔ invalid image content cannot create a reservation or any Storage object (588.6766ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2939.9753

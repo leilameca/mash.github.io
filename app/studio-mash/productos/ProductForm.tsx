@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { ConflictHelp, SubmissionIntent } from "../FormSafety";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   useActionState,
@@ -12,7 +11,9 @@ import {
   type ChangeEvent,
 } from "react";
 import { deleteProduct, upsertProduct, type ActionState } from "../actions";
-import { ImageManager } from "./ImageManager";
+import { GalleryEditor } from "./GalleryEditor";
+import type { MediaAsset } from "@/lib/media/types";
+import { MediaImage } from "../multimedia/MediaImage";
 
 type CollectionOption = {
   id: string;
@@ -24,11 +25,15 @@ type ProductFormValue = {
   revision?: number;
   image_alts?: Record<string, { alt_es?: string; alt_en?: string }>;
   slug?: string;
+  seo_title_es?: string;
+  seo_description_es?: string;
   collection_id?: string;
+  collection_ids?: string[];
   name_es?: string;
   name_en?: string;
   description_es?: string;
   description_en?: string;
+  translation_status?: string;
   hero_image_path?: string;
   image_paths?: string[];
   materials_es?: string;
@@ -53,20 +58,57 @@ export function ProductForm({
     status: "draft",
     ...product,
   });
+  const manualSlug = useRef(Boolean(product?.id));
   const field = (name: keyof ProductFormValue) => ({
     value: String(values[name] ?? ""),
     onChange: (
       event: ChangeEvent<
         HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
       >,
-    ) => setValues((current) => ({ ...current, [name]: event.target.value })),
+    ) => {
+      const value = event.target.value;
+      if (name === "slug") manualSlug.current = true;
+      const suggestedSlug =
+        name === "name_es" && !manualSlug.current
+          ? value
+              .normalize("NFD")
+              .replace(/[̀-ͯ]/g, "")
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-|-$/g, "")
+              .slice(0, 80)
+              .replace(/-$/, "")
+          : undefined;
+      setValues((current) => ({
+        ...current,
+        [name]: value,
+        ...(suggestedSlug !== undefined ? { slug: suggestedSlug } : {}),
+      }));
+    },
   });
+  const englishComplete =
+    product?.translation_status === "complete" &&
+    values.name_es === product.name_es &&
+    values.description_es === product.description_es &&
+    values.name_en === product.name_en &&
+    values.description_en === product.description_en;
+  const [collectionIds, setCollectionIds] = useState(
+    product?.collection_ids?.length
+      ? product.collection_ids
+      : product?.collection_id
+        ? [product.collection_id]
+        : [],
+  );
+  const primaryCollection =
+    values.collection_id && collectionIds.includes(values.collection_id)
+      ? values.collection_id
+      : (collectionIds[0] ?? "");
   const formRef = useRef<HTMLFormElement>(null);
   const submitting = useRef(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [dirty, setDirty] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [dragged, setDragged] = useState<string | null>(null);
+  const [assets, setAssets] = useState<Record<string, MediaAsset>>({});
   const [preview, setPreview] = useState({
     name: "",
     description: "",
@@ -115,6 +157,7 @@ export function ProductForm({
       if (
         !link ||
         link.target === "_blank" ||
+        link.hasAttribute("download") ||
         event.ctrlKey ||
         event.metaKey ||
         link.getAttribute("href")?.startsWith("#")
@@ -164,6 +207,10 @@ export function ProductForm({
           submitting.current = true;
         }}
         onChange={() => setDirty(true)}
+        onInvalid={(event) => {
+          const details = (event.target as HTMLElement).closest("details");
+          if (details) details.open = true;
+        }}
       >
         <input type="hidden" name="status" value={product?.status ?? "draft"} />
         {product?.id && (
@@ -206,7 +253,7 @@ export function ProductForm({
           </span>
           <button
             type="button"
-            className="studio-edit-link"
+            className="admin-button admin-button--secondary"
             disabled={pending || deleting}
             onClick={() => {
               if (!formRef.current) return;
@@ -222,7 +269,7 @@ export function ProductForm({
             Vista previa
           </button>
           <button
-            className="admin-button"
+            className="admin-button admin-button--secondary"
             type="submit"
             disabled={pending || deleting || uploading}
           >
@@ -264,9 +311,232 @@ export function ProductForm({
           disabled={pending || deleting}
           className="studio-editor-fields"
         >
-          <fieldset className="studio-fieldset">
-            <legend>01 · Publicación</legend>
-            <div className="studio-form__grid">
+          <div className="studio-product-main">
+            <fieldset className="studio-fieldset">
+              <legend>Información del producto</legend>
+              <label>
+                Nombre en español
+                <input name="name_es" {...field("name_es")} required />
+                {state.errors?.name_es && <span>{state.errors.name_es}</span>}
+              </label>
+              <label>
+                Descripción en español
+                <textarea
+                  name="description_es"
+                  {...field("description_es")}
+                  rows={5}
+                  required
+                />
+                {state.errors?.description_es && (
+                  <span>{state.errors.description_es}</span>
+                )}
+              </label>
+            </fieldset>
+            <input
+              type="hidden"
+              name="existing_image_paths"
+              value={JSON.stringify(images)}
+            />
+            <input
+              type="hidden"
+              name="primary_image_path"
+              value={images.includes(primaryImage) ? primaryImage : ""}
+            />
+            <GalleryEditor
+              images={images}
+              primary={primaryImage}
+              alts={imageAlts}
+              assets={assets}
+              disabled={pending || deleting}
+              onBusy={setUploading}
+              onAdd={(url, asset) => {
+                setImages((current) =>
+                  [...new Set([...current, url])].slice(0, 20),
+                );
+                if (asset)
+                  setAssets((current) => ({ ...current, [url]: asset }));
+                setPrimaryImage((current) => current || url);
+                setDirty(true);
+              }}
+              onRemove={removeImage}
+              onMove={moveImage}
+              onPrimary={(url) => {
+                setPrimaryImage(url);
+                setDirty(true);
+              }}
+              onAlts={(url, alt) => {
+                setImageAlts((current) => ({ ...current, [url]: alt }));
+                setDirty(true);
+              }}
+              onReplace={(oldUrl, url, asset) => {
+                if (images.includes(url)) return;
+                setImages((current) =>
+                  current.map((path) => (path === oldUrl ? url : path)),
+                );
+                setPrimaryImage((current) =>
+                  current === oldUrl ? url : current,
+                );
+                setImageAlts((current) => ({
+                  ...current,
+                  [url]: current[oldUrl] ?? {},
+                }));
+                if (asset)
+                  setAssets((current) => ({ ...current, [url]: asset }));
+                setDirty(true);
+              }}
+            />
+            {state.errors?.hero_image && (
+              <p role="alert">{state.errors.hero_image}</p>
+            )}
+            <fieldset className="studio-fieldset">
+              <legend>Materiales y cuidados</legend>
+              <div className="studio-form__grid">
+                <label>
+                  Materiales
+                  <input name="materials_es" {...field("materials_es")} />
+                </label>
+                <label>
+                  Dimensiones
+                  <input name="dimensions_es" {...field("dimensions_es")} />
+                </label>
+                <label>
+                  Acabados
+                  <input name="finishes_es" {...field("finishes_es")} />
+                </label>
+                <label>
+                  Cuidados
+                  <input name="care_es" {...field("care_es")} />
+                </label>
+              </div>
+            </fieldset>
+            <details className="studio-fieldset">
+              <summary>Traducción al inglés (opcional)</summary>
+              <div className="studio-language-note">
+                <strong>
+                  {englishComplete
+                    ? "Inglés revisado"
+                    : "Inglés pendiente de revisión"}
+                </strong>
+                <p>
+                  Estos campos quedan opcionales para evitar publicar
+                  traducciones inventadas.
+                </p>
+              </div>
+              <div className="studio-form__grid">
+                <label>
+                  Nombre en inglés
+                  <input name="name_en" {...field("name_en")} />
+                </label>
+                <label>
+                  Descripción en inglés
+                  <textarea
+                    name="description_en"
+                    {...field("description_en")}
+                    rows={3}
+                  />
+                </label>
+              </div>
+            </details>
+          </div>
+          <aside className="studio-product-sidebar">
+            <fieldset className="studio-fieldset">
+              <legend>Publicación</legend>
+              <div className="studio-form__grid">
+                <fieldset className="studio-product-memberships">
+                  <legend>Colecciones</legend>
+                  <input
+                    type="hidden"
+                    name="collection_ids"
+                    value={JSON.stringify(collectionIds)}
+                  />
+                  {collections.map((collection) => (
+                    <label className="studio-checkbox" key={collection.id}>
+                      <input
+                        type="checkbox"
+                        checked={collectionIds.includes(collection.id)}
+                        disabled={
+                          !collectionIds.includes(collection.id) &&
+                          collectionIds.length >= 20
+                        }
+                        onChange={(event) => {
+                          const checked = event.target.checked;
+                          setCollectionIds((current) =>
+                            checked
+                              ? [...current, collection.id]
+                              : current.filter((id) => id !== collection.id),
+                          );
+                        }}
+                      />
+                      {collection.label}
+                    </label>
+                  ))}
+                </fieldset>
+                <label>
+                  Colección principal
+                  <select
+                    name="collection_id"
+                    value={primaryCollection}
+                    required
+                    onChange={(event) =>
+                      setValues((current) => ({
+                        ...current,
+                        collection_id: event.target.value,
+                      }))
+                    }
+                  >
+                    <option value="">Selecciona una colección</option>
+                    {collections
+                      .filter((collection) =>
+                        collectionIds.includes(collection.id),
+                      )
+                      .map((collection) => (
+                        <option key={collection.id} value={collection.id}>
+                          {collection.label}
+                        </option>
+                      ))}
+                  </select>
+                  {state.errors?.collection_id && (
+                    <span role="alert">{state.errors.collection_id}</span>
+                  )}
+                </label>
+                <label>
+                  Estado
+                  <select name="display_status" disabled {...field("status")}>
+                    <option value="draft">Borrador</option>
+                    <option value="published">Publicado</option>
+                    <option value="hidden">Oculto</option>
+                    <option value="archived">Papelera</option>
+                  </select>
+                </label>
+                <label className="studio-checkbox">
+                  <input
+                    type="checkbox"
+                    name="featured"
+                    checked={Boolean(values.featured)}
+                    onChange={(event) =>
+                      setValues((current) => ({
+                        ...current,
+                        featured: event.target.checked,
+                      }))
+                    }
+                  />
+                  Destacado en inicio
+                </label>
+              </div>
+            </fieldset>
+            <details
+              className="studio-fieldset"
+              open={
+                !product?.id ||
+                Boolean(
+                  state.errors?.slug ||
+                    state.errors?.seo_title_es ||
+                    state.errors?.seo_description_es,
+                ) ||
+                undefined
+              }
+            >
+              <summary>URL y buscadores</summary>
               <label>
                 Slug
                 <input
@@ -278,242 +548,30 @@ export function ProductForm({
                 {state.errors?.slug && <span>{state.errors.slug}</span>}
               </label>
               <label>
-                Colección
-                <select
-                  name="collection_id"
-                  {...field("collection_id")}
-                  required
-                >
-                  <option value="">Selecciona</option>
-                  {collections.map((collection) => (
-                    <option key={collection.id} value={collection.id}>
-                      {collection.label}
-                    </option>
-                  ))}
-                </select>
-                {state.errors?.collection_id && (
-                  <span>{state.errors.collection_id}</span>
+                Título SEO
+                <input
+                  name="seo_title_es"
+                  {...field("seo_title_es")}
+                  maxLength={70}
+                />
+                {state.errors?.seo_title_es && (
+                  <span>{state.errors.seo_title_es}</span>
                 )}
               </label>
               <label>
-                Estado
-                <select name="display_status" disabled {...field("status")}>
-                  <option value="draft">Borrador</option>
-                  <option value="published">Publicado</option>
-                  <option value="hidden">Oculto</option>
-                  <option value="archived">Papelera</option>
-                </select>
-              </label>
-              <label className="studio-checkbox">
-                <input
-                  type="checkbox"
-                  name="featured"
-                  checked={Boolean(values.featured)}
-                  onChange={(event) =>
-                    setValues((current) => ({
-                      ...current,
-                      featured: event.target.checked,
-                    }))
-                  }
-                />
-                Destacado en inicio
-              </label>
-            </div>
-          </fieldset>
-          <fieldset className="studio-fieldset">
-            <legend>02 · Información del producto</legend>
-            <label>
-              Nombre en español
-              <input name="name_es" {...field("name_es")} required />
-              {state.errors?.name_es && <span>{state.errors.name_es}</span>}
-            </label>
-            <label>
-              Descripción en español
-              <textarea
-                name="description_es"
-                {...field("description_es")}
-                rows={5}
-                required
-              />
-              {state.errors?.description_es && (
-                <span>{state.errors.description_es}</span>
-              )}
-            </label>
-          </fieldset>
-          <fieldset className="studio-fieldset">
-            <legend>03 · Fotografías</legend>
-            <div className="studio-form__gallery">
-              Galería de imágenes
-              <input
-                type="hidden"
-                name="existing_image_paths"
-                value={JSON.stringify(images)}
-              />
-              <input
-                type="hidden"
-                name="primary_image_path"
-                value={images.includes(primaryImage) ? primaryImage : ""}
-              />
-              <div className="studio-product-gallery">
-                {images.map((path, index) => (
-                  <div
-                    className="studio-product-gallery__item"
-                    key={path}
-                    draggable={!pending && !deleting && !uploading}
-                    onDragStart={() => setDragged(path)}
-                    onDragEnd={() => setDragged(null)}
-                    onDragOver={(event) => event.preventDefault()}
-                    onDrop={(event) => {
-                      event.preventDefault();
-                      if (dragged) moveImage(dragged, index);
-                      setDragged(null);
-                    }}
-                  >
-                    <label className="studio-product-gallery__primary">
-                      <span className="studio-image-preview">
-                        <Image
-                          src={path}
-                          alt={`Imagen ${index + 1}`}
-                          fill
-                          sizes="150px"
-                          unoptimized={path.startsWith("blob:")}
-                        />
-                      </span>
-                      <span>
-                        <input
-                          type="radio"
-                          name="gallery_primary"
-                          value={path}
-                          checked={path === primaryImage}
-                          onChange={() => setPrimaryImage(path)}
-                          disabled={pending}
-                        />{" "}
-                        {path === primaryImage
-                          ? "★ Principal"
-                          : "Elegir principal"}
-                      </span>
-                    </label>
-                    <label>
-                      Texto alternativo ES
-                      <input
-                        value={imageAlts[path]?.alt_es ?? ""}
-                        onChange={(e) =>
-                          setImageAlts((v) => ({
-                            ...v,
-                            [path]: { ...v[path], alt_es: e.target.value },
-                          }))
-                        }
-                      />
-                    </label>
-                    <label>
-                      Texto alternativo EN
-                      <input
-                        value={imageAlts[path]?.alt_en ?? ""}
-                        onChange={(e) =>
-                          setImageAlts((v) => ({
-                            ...v,
-                            [path]: { ...v[path], alt_en: e.target.value },
-                          }))
-                        }
-                      />
-                    </label>
-                    <button
-                      type="button"
-                      className="studio-product-gallery__remove"
-                      onClick={() => removeImage(path)}
-                      disabled={pending}
-                      aria-label={`Eliminar imagen ${index + 1}`}
-                    >
-                      Eliminar
-                    </button>
-                    <div className="studio-inline-actions">
-                      <button
-                        type="button"
-                        disabled={index === 0 || pending}
-                        aria-label={`Mover imagen ${index + 1} antes`}
-                        onClick={() => moveImage(path, index - 1)}
-                      >
-                        ←
-                      </button>
-                      <button
-                        type="button"
-                        disabled={index === images.length - 1 || pending}
-                        aria-label={`Mover imagen ${index + 1} después`}
-                        onClick={() => moveImage(path, index + 1)}
-                      >
-                        →
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <ImageManager
-                disabled={pending || deleting}
-                onBusy={(busy) => {
-                  setUploading(busy);
-                  if (busy) setDirty(true);
-                }}
-                onAdd={(url) => {
-                  setImages((current) => [...new Set([...current, url])]);
-                  setPrimaryImage((current) => current || url);
-                  setDirty(true);
-                }}
-              />
-              <small>
-                Arrastra para ordenar o usa las flechas. Marca la principal con
-                la estrella. Máximo 20 imágenes; los cambios se hacen visibles
-                al guardar.
-              </small>
-              {state.errors?.hero_image && (
-                <span>{state.errors.hero_image}</span>
-              )}
-            </div>
-          </fieldset>
-          <fieldset className="studio-fieldset">
-            <legend>04 · Materiales y cuidados</legend>
-            <div className="studio-form__grid">
-              <label>
-                Materiales
-                <input name="materials_es" {...field("materials_es")} />
-              </label>
-              <label>
-                Dimensiones
-                <input name="dimensions_es" {...field("dimensions_es")} />
-              </label>
-              <label>
-                Acabados
-                <input name="finishes_es" {...field("finishes_es")} />
-              </label>
-              <label>
-                Cuidados
-                <input name="care_es" {...field("care_es")} />
-              </label>
-            </div>
-          </fieldset>
-          <details className="studio-fieldset">
-            <summary>05 · Traducción al inglés (opcional)</summary>
-            <div className="studio-language-note">
-              <strong>Inglés pendiente de revisión</strong>
-              <p>
-                Estos campos quedan opcionales para evitar publicar traducciones
-                inventadas.
-              </p>
-            </div>
-            <div className="studio-form__grid">
-              <label>
-                Nombre en inglés
-                <input name="name_en" {...field("name_en")} />
-              </label>
-              <label>
-                Descripción en inglés
+                Descripción SEO
                 <textarea
-                  name="description_en"
-                  {...field("description_en")}
+                  name="seo_description_es"
+                  {...field("seo_description_es")}
+                  maxLength={180}
                   rows={3}
                 />
+                {state.errors?.seo_description_es && (
+                  <span>{state.errors.seo_description_es}</span>
+                )}
               </label>
-            </div>
-          </details>
+            </details>
+          </aside>
         </fieldset>
         {product?.id && (
           <Link href={`/studio-mash/revisiones?kind=product&id=${product.id}`}>
@@ -538,13 +596,7 @@ export function ProductForm({
         </div>
         {primaryImage && (
           <div className="studio-preview-image">
-            <Image
-              src={primaryImage}
-              alt={preview.name}
-              fill
-              sizes="(max-width: 640px) 90vw, 640px"
-              unoptimized={primaryImage.startsWith("blob:")}
-            />
+            <MediaImage src={primaryImage} alt={preview.name} />
           </div>
         )}
         <h2>{preview.name}</h2>

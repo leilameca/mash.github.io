@@ -213,6 +213,8 @@ export async function upsertProduct(
     id: formData.get("id")?.toString() || undefined,
     slug: formData.get("slug"),
     collection_id: formData.get("collection_id"),
+    seo_title_es: formData.get("seo_title_es")?.toString(),
+    seo_description_es: formData.get("seo_description_es")?.toString(),
     name_es: formData.get("name_es"),
     name_en: formData.get("name_en")?.toString() || undefined,
     description_es: formData.get("description_es"),
@@ -233,6 +235,36 @@ export async function upsertProduct(
 
   if (!parsed.success)
     return { ok: false, errors: flattenErrors(parsed.error) };
+
+  let collectionIds: string[] | undefined;
+  const memberships = formData.get("collection_ids");
+  if (memberships !== null) {
+    try {
+      const ids: unknown = JSON.parse(String(memberships));
+      if (
+        !Array.isArray(ids) ||
+        ids.length < 1 ||
+        ids.length > 20 ||
+        ids.some(
+          (id) =>
+            typeof id !== "string" ||
+            !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(id),
+        ) ||
+        new Set(ids).size !== ids.length ||
+        !ids.includes(parsed.data.collection_id)
+      )
+        throw new Error("Invalid memberships");
+      collectionIds = ids;
+    } catch {
+      return {
+        ok: false,
+        errors: {
+          collection_id:
+            "Selecciona entre 1 y 20 colecciones y elige la principal.",
+        },
+      };
+    }
+  }
 
   const admin = await authenticatedContentClient();
   const imageFiles = formData
@@ -370,6 +402,12 @@ export async function upsertProduct(
       description: parsed.data.description_es,
       materials: parsed.data.materials_es,
       care: parsed.data.care_es,
+      ...(parsed.data.seo_title_es !== undefined
+        ? { seo_title: parsed.data.seo_title_es || null }
+        : {}),
+      ...(parsed.data.seo_description_es !== undefined
+        ? { seo_description: parsed.data.seo_description_es || null }
+        : {}),
     },
   ];
   const en = {
@@ -404,6 +442,7 @@ export async function upsertProduct(
               }
             : {}),
         },
+        ...(collectionIds ? { collection_ids: collectionIds } : {}),
         translations: [...translations, en],
         images: allPaths.map((path, index) => ({
           storage_path: path,

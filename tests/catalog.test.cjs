@@ -75,7 +75,7 @@ test("related products are filtered and limited in the database", async () => {
   const { catalog, queries } = catalogFixture([{slug:"source",collection_id:"c1",collections:{slug:"dining"}}]);
   await catalog.getRelatedProducts("es", "dining", "candor");
   assert.ok(queries.some((query) => query.limit === 3));
-  assert.ok(queries.some((query) => query.field === "snapshot->>collection_id" && query.value === "c1"));
+  assert.ok(queries.some((query) => query.field === "collection_id" && query.value === "c1"));
   assert.ok(queries.some((query) => query.field === "slug" && query.comparison === "neq"));
 });
 

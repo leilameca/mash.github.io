@@ -23,8 +23,8 @@ function bundle(id, raw) {
     if (mocks[name]) return `require(${bundle(name, mocks[name])})`;
     if (name.endsWith('/actions')) return `require(${bundle('actions', mocks.actions)})`;
     let resolved;
-    if (name.startsWith('.')) {
-      const base = path.resolve(path.dirname(id), name);
+    if (name.startsWith('.') || name.startsWith('@/')) {
+      const base = name.startsWith("@/") ? path.resolve(root, name.slice(2)) : path.resolve(path.dirname(id), name);
       resolved = [base, base + '.tsx', base + '.ts', base + '.js'].find(file => fs.existsSync(file) && fs.statSync(file).isFile());
     } else resolved = require.resolve(name, { paths: [root] });
     if (!resolved) throw new Error(`Cannot bundle ${name} from ${id}`);
@@ -110,11 +110,12 @@ const css = fs.readFileSync(path.join(root,'app/globals.css'),'utf8') + fs.readF
     await page.getByRole('button',{name:'Mover imagen 2 antes',exact:true}).click();
     assert.equal(JSON.parse(await page.locator('[name=existing_image_paths]').inputValue())[0],imageB);
     await page.getByRole('button',{name:'Elegir de Multimedia'}).click();
-    await page.getByRole('button',{name:'Oasis reutilizable'}).waitFor();
+    await page.getByText('Oasis reutilizable',{exact:true}).waitFor();
+    await page.keyboard.press('Escape');
     await page.locator('input[type=file]').setInputFiles(path.join(root,'public/assets/images/oasis-set.jpg'));
     await page.getByRole('button',{name:'Reintentar',exact:true}).waitFor();
     await page.getByRole('button',{name:'Reintentar',exact:true}).click();
-    await page.getByText('Lista para guardar en el producto',{exact:true}).waitFor();
+    await page.locator('[data-upload-state=done]').waitFor();
     assert.equal(await page.locator('form.studio-product-editor').evaluate(form=>new FormData(form).get('status')),'draft');
     await page.getByRole('button',{name:'Guardar cambios',exact:true}).click();
     await page.getByText('Prueba aislada: no se guardaron datos.',{exact:true}).waitFor();

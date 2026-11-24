@@ -1,0 +1,51 @@
+{
+  "capturedAt": "2026-11-24T18:19:51.554526+00:00",
+  "phase": 4,
+  "branch": "feature/mash-3",
+  "phaseBaseCommit": "df58cbd232cd76ae219b9d1ad0d1ee2878f1aa90",
+  "mainAtValidation": "fc2a2b499afc2db4f46d0bac12c65104683090ec",
+  "execution": "Local with synthetic writes only",
+  "productionModified": false,
+  "typecheck": {
+    "passed": true,
+    "command": "npm run typecheck"
+  },
+  "build": {
+    "passed": true,
+    "command": "MASH_VERIFICATION_BUILD=1 npm run build",
+    "next": "15.5.29"
+  },
+  "automatedTests": {
+    "passed": 88,
+    "failed": 0,
+    "preserved": 74,
+    "phase4": 14,
+    "evidence": "unit-results.txt"
+  },
+  "browser": {
+    "passed": true,
+    "checkGroups": 5,
+    "screenshots": 10,
+    "evidence": "phase4-browser.json",
+    "testBrowser": "Chrome",
+    "nextProductionBuild": true
+  },
+  "regressions": {
+    "studioBrowser": "regression/browser-evidence.json",
+    "publicHttp": "regression/http-evidence.json",
+    "publicResponsiveGalleryQuote": true,
+    "pwaInstallOfflineAndRecovery": true,
+    "checkCount": 15
+  },
+  "boundaries": {
+    "realSharp": true,
+    "realPostgreSQL": true,
+    "localStoragePolicySQL": true,
+    "simulatedHostedAuthAndStorageTransport": true,
+    "hostedIntegrationVerified": false
+  },
+  "migrations": [
+    "20261124170921_mash_media_catalog.sql",
+    "20261124170923_mash_media_storage.sql"
+  ]
+}

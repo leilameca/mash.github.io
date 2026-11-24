@@ -3,7 +3,7 @@ const path = require('node:path');
 const { PGlite } = require('@electric-sql/pglite');
 const ADMIN = '11111111-1111-4111-8111-111111111111';
 const OUTSIDER = '22222222-2222-4222-8222-222222222222';
-async function database({ seed = false, beforeIntegrity } = {}) {
+async function database({ seed = false, beforeIntegrity, storage = false } = {}) {
   const db = new PGlite();
   // Real PostgreSQL/WASM. Only Supabase's external Auth/extension bootstrap is
   // represented locally; transactions, constraints, SQL functions and RLS are real.
@@ -13,8 +13,16 @@ async function database({ seed = false, beforeIntegrity } = {}) {
     create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
     grant usage on schema auth to authenticated;
     grant execute on function auth.uid() to authenticated;`);
+  if (storage) await db.exec(`
+    create schema storage;
+    create table storage.buckets (id text primary key, name text, public boolean, file_size_limit bigint, allowed_mime_types text[]);
+    create table storage.objects (id uuid primary key default gen_random_uuid(), bucket_id text references storage.buckets(id), name text);
+    alter table storage.objects enable row level security;
+    grant usage on schema storage to anon, authenticated;
+    grant select, insert, update, delete on storage.objects to anon, authenticated;
+  `);
   for (const file of fs.readdirSync(path.join(__dirname, '../../supabase/migrations')).sort()) {
-    if (file.includes('storage') || (!seed && file.includes('seed'))) continue;
+    if ((!storage && file.includes('storage')) || (!seed && file.includes('seed'))) continue;
     if(file.includes('mash_publication_integrity') && beforeIntegrity) await beforeIntegrity(db);
     const sql = fs.readFileSync(path.join(__dirname, '../../supabase/migrations', file), 'utf8')
       .replace(/create extension if not exists pgcrypto;/, '')

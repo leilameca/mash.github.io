@@ -3,6 +3,8 @@ const supabaseHostname = supabaseUrl ? new URL(supabaseUrl).hostname : null;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  ...(process.env.MASH_VERIFICATION_BUILD === "1" ? { distDir: ".next-verify" }
+    : process.env.MASH_LOCAL_PREVIEW === "1" ? { distDir: ".next-preview" } : {}),
   poweredByHeader: false,
   // PWA metadata must be in the initial head so browsers can discover the manifest and Apple icons.
   htmlLimitedBots: /.*/,

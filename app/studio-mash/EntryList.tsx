@@ -1,5 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
+import { MediaImage } from "./multimedia/MediaImage";
+import { StudioIcon } from "./StudioIcon";
 import {
   entryHref,
   stateLabels,
@@ -94,6 +95,16 @@ export async function EntryList({
             </select>
           </label>
           <label>
+            Trabajo
+            <select name="work" defaultValue={query.work ?? ""}>
+              <option value="">Todos</option>
+              <option value="draft">Borradores</option>
+              <option value="published">Listos para publicar</option>
+              <option value="hidden">Ocultos</option>
+              <option value="archived">Archivados</option>
+            </select>
+          </label>
+          <label>
             Ordenar
             <select name="sort" defaultValue={query.sort ?? "recent"}>
               <option value="recent">Última actualización</option>
@@ -104,7 +115,7 @@ export async function EntryList({
           <button className="admin-button admin-button--secondary">
             Filtrar
           </button>
-          {(query.q || query.state) && (
+          {(query.q || query.state || query.work) && (
             <Link href={`/studio-mash/${module.path}`}>Limpiar</Link>
           )}
         </form>
@@ -134,7 +145,7 @@ export async function EntryList({
                     aria-hidden="true"
                   >
                     {entry.image ? (
-                      <Image src={entry.image} alt="" fill sizes="48px" />
+                      <MediaImage src={entry.image} alt="" />
                     ) : (
                       <span>—</span>
                     )}
@@ -165,14 +176,16 @@ export async function EntryList({
                 </time>
                 <details className="studio-entry-menu">
                   <summary aria-label={`Acciones de ${entry.name}`}>
-                    Acciones ⋯
+                    <span aria-hidden="true">⋯</span>
                   </summary>
                   <div>
-                    <Link href={entryHref(entry)}>Editar</Link>
+                    <Link href={entryHref(entry)}>
+                      <StudioIcon name="content" /> Editar
+                    </Link>
                     <Link
                       href={`/studio-mash/revisiones?kind=${kind}&id=${entry.id}`}
                     >
-                      Historial
+                      <StudioIcon name="history" /> Historial
                     </Link>
                     {entry.live_status === "published" &&
                       entry.published_slug && (
@@ -185,7 +198,7 @@ export async function EntryList({
                               : `/es/${module.path}/${entry.published_slug}`
                           }
                         >
-                          Ver publicado ↗
+                          <StudioIcon name="external" /> Ver publicado
                         </Link>
                       )}
                     <StatusForm
@@ -193,6 +206,7 @@ export async function EntryList({
                       revision={entry.revision}
                       status={entry.work_status}
                       label={`Estado de ${entry.name}`}
+                      menu
                       action={
                         {
                           product: updateProductStatus,

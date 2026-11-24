@@ -22,8 +22,12 @@ export type Product = {
   slug: string;
   name: string;
   collectionSlug: string;
+  collectionSlugs?: string[];
   collectionLabel?: LocalizedText;
   galleryAlts?: string[];
+  galleryVariants?: Partial<Record<"thumbnail" | "catalog" | "gallery" | "large", string>>[];
+  seoTitle?: string | null;
+  seoDescription?: string | null;
   translationPending?: boolean;
   image: string;
   gallery: string[];

@@ -145,17 +145,15 @@ export async function ContentWorkspace({
         {settings && (
           <>
             <section className="studio-card">
-              <h2>Preferencias de interfaz</h2>
-              <p>
-                El tema del sistema se utiliza inicialmente. Tu elección se
-                conserva en este navegador.
-              </p>
-              <ThemePreferences />
-            </section>
-            <section className="studio-card">
-              <p className="studio-kicker">Marca y contacto</p>
-              <h2>Datos generales y footer</h2>
               <GeneralSettingsForm
+                preferences={
+                  <div id="cuenta">
+                    <h2>Preferencias de interfaz</h2>
+                    <ThemePreferences />
+                    <h3>Cuenta</h3>
+                    <p>Sesión: {currentAdmin.email}</p>
+                  </div>
+                }
                 value={{
                   full_name:
                     settingsRow?.value?.full_name ?? fallbackEs.fullName,
@@ -189,14 +187,6 @@ export async function ContentWorkspace({
                   copyright_en: footerEn.copyright ?? fallbackEn.copyright,
                 }}
               />
-            </section>
-            <section className="studio-card" id="cuenta">
-              <h2>Cuenta y seguridad</h2>
-              <p>Sesión: {currentAdmin.email}</p>
-              <p>
-                Acceso restringido a administradores autorizados mediante código
-                de un solo uso. Cierra la sesión desde el menú de cuenta.
-              </p>
             </section>
           </>
         )}

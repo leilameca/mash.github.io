@@ -19,6 +19,16 @@ export const productSchema = z.object({
     .trim()
     .min(2, "El slug es requerido.")
     .regex(/^[a-z0-9-]+$/, "Usa minusculas, numeros y guiones."),
+  seo_title_es: z
+    .string()
+    .trim()
+    .max(70, "Usa hasta 70 caracteres.")
+    .optional(),
+  seo_description_es: z
+    .string()
+    .trim()
+    .max(180, "Usa hasta 180 caracteres.")
+    .optional(),
   collection_id: z.string().trim().min(1, "Selecciona una coleccion."),
   name_es: z.string().trim().min(2, "El nombre en espanol es requerido."),
   name_en: z.string().trim().optional(),
@@ -143,10 +153,7 @@ const navigationItemSchema = z.object({
   href: z
     .string()
     .trim()
-    .refine(
-      isInternalPath,
-      "Usa una ruta interna valida.",
-    ),
+    .refine(isInternalPath, "Usa una ruta interna valida."),
   label_es: z.string().trim().min(1, "Agrega la etiqueta en espanol."),
   label_en: z
     .string()

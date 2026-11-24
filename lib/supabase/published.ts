@@ -11,6 +11,8 @@ export type TranslationRow = {
   materials?: string | null;
   care?: string | null;
   translation_status?: string;
+  seo_title?: string | null;
+  seo_description?: string | null;
   value?: Record<string, any>;
 };
 export type ImageRow = {
@@ -20,6 +22,9 @@ export type ImageRow = {
   sort_order: number;
   is_primary?: boolean;
   is_cover?: boolean;
+  variants?: Partial<
+    Record<"thumbnail" | "catalog" | "gallery" | "large", string>
+  >;
 };
 export type ContentSnapshot = {
   id?: string;
@@ -28,6 +33,7 @@ export type ContentSnapshot = {
   status?: string;
   value?: Record<string, any>;
   collection_id?: string | null;
+  collection_ids?: string[];
   featured?: boolean;
   dimensions?: string;
   finishes?: string[];
