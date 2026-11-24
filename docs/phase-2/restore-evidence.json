@@ -1,0 +1,21 @@
+{
+  "capturedAt": "2026-11-24T15:03:00.776Z",
+  "environment": "Isolated PostgreSQL/WASM; Auth identities are FK placeholders, not restored Auth accounts",
+  "catalogRestored": true,
+  "additiveMigrationApplied": true,
+  "publicMapperVerified": true,
+  "dynamicCollectionLabelsVerified": true,
+  "publishedProducts": [
+    "candor-clasico",
+    "candor-collection",
+    "candor-mix-collection",
+    "candor-set",
+    "daybed-trap",
+    "dulce-luna",
+    "furniture-daybed",
+    "trap-set"
+  ],
+  "productCount": 9,
+  "originalAdminRowsPreserved": 2,
+  "productionModified": false
+}

@@ -1,19 +1,26 @@
 import { notFound } from "next/navigation";
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { authenticatedContentClient } from "@/lib/supabase/persistence";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { StudioShell } from "../../StudioShell";
 import { CollectionForm } from "../CollectionForm";
 
-export default async function EditCollectionPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditCollectionPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const currentAdmin = await requireAdmin();
   const { id } = await params;
-  const admin = createSupabaseAdminClient();
-  const { data: collection } = await admin
+  const admin = await authenticatedContentClient();
+  const { data: collection, error } = await admin
     .from("collections")
-    .select("id,slug,status,featured,sort_order,cover_image_path,collection_translations(locale,name,description)")
+    .select(
+      "id,revision,slug,status,featured,sort_order,cover_image_path,collection_translations(locale,name,description)",
+    )
     .eq("id", id)
     .maybeSingle();
 
+  if(error)throw new Error("No pudimos consultar el contenido. Intenta de nuevo.");
   if (!collection) notFound();
   const translations = (collection as any).collection_translations ?? [];
   const es = translations.find((item: any) => item.locale === "es");
@@ -31,6 +38,7 @@ export default async function EditCollectionPage({ params }: { params: Promise<{
         <CollectionForm
           collection={{
             id: (collection as any).id,
+            revision: (collection as any).revision,
             slug: (collection as any).slug,
             status: (collection as any).status,
             featured: (collection as any).featured,
@@ -39,7 +47,7 @@ export default async function EditCollectionPage({ params }: { params: Promise<{
             name_es: es?.name,
             description_es: es?.description,
             name_en: en?.name,
-            description_en: en?.description
+            description_en: en?.description,
           }}
         />
       </section>

@@ -1,10 +1,76 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { getSupabasePublicConfig } from "@/lib/supabase/env";
 
 export async function middleware(request: NextRequest) {
   const config = getSupabasePublicConfig();
-  let response = NextResponse.next({ request });
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(
+    "x-mash-locale",
+    request.nextUrl.pathname.split("/")[1] === "en" ? "en" : "es",
+  );
+  const next = () =>
+    NextResponse.next({ request: { headers: requestHeaders } });
+  let response = next();
+  const detail = request.nextUrl.pathname.match(
+    /^\/(es|en)\/(productos|colecciones)\/([^/]+)\/?$/,
+  );
+  if (detail) {
+    if (!config)
+      return new NextResponse("Contenido temporalmente no disponible", {
+        status: 503,
+      });
+    const client = createClient(config.url, config.anonKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+      global: {
+        fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+      },
+    });
+    const kind = detail[2] === "productos" ? "product" : "collection";
+    const { data, error } = await client
+      .from("content_publications")
+      .select("slug")
+      .eq("entity_kind", kind)
+      .eq("status", "published")
+      .eq("slug", detail[3])
+      .maybeSingle();
+    if (error)
+      return new NextResponse("Contenido temporalmente no disponible", {
+        status: 503,
+      });
+    if (!data) {
+      const { data: redirect, error: redirectError } = await client
+        .from("content_redirects")
+        .select("entity_id")
+        .eq("entity_kind", kind)
+        .eq("old_slug", detail[3])
+        .maybeSingle();
+      if (redirectError)
+        return new NextResponse("Contenido temporalmente no disponible", {
+          status: 503,
+        });
+      if (redirect) {
+        const { data: target } = await client
+          .from("content_publications")
+          .select("slug")
+          .eq("entity_kind", kind)
+          .eq("entity_id", redirect.entity_id)
+          .eq("status", "published")
+          .maybeSingle();
+        if (target && target.slug !== detail[3])
+          return NextResponse.redirect(
+            new URL(`/${detail[1]}/${detail[2]}/${target.slug}`, request.url),
+            308,
+          );
+      }
+      return NextResponse.rewrite(new URL("/_missing", request.url), {
+        status: 404,
+        request: { headers: requestHeaders },
+      });
+    }
+  }
+  if (!request.nextUrl.pathname.startsWith("/studio-mash")) return response;
 
   if (!config) return response;
 
@@ -14,11 +80,17 @@ export async function middleware(request: NextRequest) {
         return request.cookies.getAll();
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
-        cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
-      }
-    }
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value),
+        );
+        // Forward the refreshed cookie to this render as well as to the browser.
+        requestHeaders.set("cookie", request.headers.get("cookie") ?? "");
+        response = next();
+        cookiesToSet.forEach(({ name, value, options }) =>
+          response.cookies.set(name, value, options),
+        );
+      },
+    },
   });
 
   await supabase.auth.getUser();
@@ -27,5 +99,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/studio-mash/:path*"]
+  matcher: ["/studio-mash/:path*", "/es/:path*", "/en/:path*"],
 };

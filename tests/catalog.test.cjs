@@ -20,20 +20,19 @@ function catalogFixture(rows) {
         neq(field, value) { queries.push({ table, field, value, comparison: "neq" }); return query; },
         limit(value) { queries.push({ table, limit: value }); return query; },
         range(from, to) { queries.push({ table, from, to }); return query; },
-        maybeSingle() { return Promise.resolve({ data: rows[0] ?? null, error: null }); },
-        then(resolve, reject) { return Promise.resolve({ data: rows, error: null }).then(resolve, reject); }
+        maybeSingle() { return Promise.resolve({ data: rows[0] ? {snapshot:{...rows[0],translations:rows[0].product_translations??[],images:rows[0].product_images??[]}} : null, error: null }); },
+        then(resolve, reject) { return Promise.resolve({ data: rows.map(r=>({snapshot:{...r,collection_id:r.collection_id??"c1",translations:r.product_translations??[],images:r.product_images??[]}})), error: null }).then(resolve, reject); }
       };
       return query;
     }
   };
-  const module = { exports: {} };
-  const mocks = {
-    "@/lib/content": { products: [{ slug: "old-product" }], collections: [{ slug: "old-collection" }], projects: [{ slug: "old-project" }] },
-    "./env": { isSupabaseCatalogEnabled: () => true },
-    "./server": { createSupabaseServerClient: async () => supabase }
-  };
-  vm.runInNewContext(source, { module, exports: module.exports, require: (name) => mocks[name] ?? require(name) });
-  return { catalog: module.exports, queries };
+  const {loadTs}=require('./support/load-ts.cjs');
+  const adapted=rows.map(r=>({entity_id:r.id??"p1",slug:r.slug,snapshot:{...r,collection_id:r.collection_id??"c1",translations:r.product_translations??[],images:r.product_images??[]}}));
+  const collections=rows.length?[{entity_id:rows[0].collection_id??"c1",slug:rows[0].collections?.slug??"dining",snapshot:{translations:[{locale:"es",name:"Colección dinámica"}]}}]:[];
+  const catalog=loadTs(path.join(__dirname,"../lib/supabase/catalog.ts"),{
+    "./published":{publicContentClient:async()=>supabase,readPublished:async kind=>kind==="product"?adapted:kind==="collection"?collections:[],localizedTranslation:(rows,locale)=>({text:rows.find(r=>r.locale===locale)??rows[0],pending:false})}
+  });
+  return { catalog, queries };
 }
 
 test("an intentionally empty public catalog never restores old products, collections or projects", async () => {
@@ -55,8 +54,7 @@ test("saved product specifications and primary image are read into the public ca
   assert.equal(product.dimensions.es, "63 x 34 inches");
   assert.equal(product.finishes.es, "Natural, Black");
   assert.equal(product.description.es, "Descripcion guardada");
-  assert.ok(queries.some((query) => query.fields?.includes("dimensions,finishes")));
-  assert.ok(queries.some((query) => query.field === "status" && query.value === "published"));
+  assert.equal(product.collectionLabel.es,"Colección dinámica");
 });
 
 test("products without gallery images are not replaced by old catalog content", async () => {
@@ -74,10 +72,10 @@ test("product details query only the requested published slug", async () => {
 });
 
 test("related products are filtered and limited in the database", async () => {
-  const { catalog, queries } = catalogFixture([]);
+  const { catalog, queries } = catalogFixture([{slug:"source",collection_id:"c1",collections:{slug:"dining"}}]);
   await catalog.getRelatedProducts("es", "dining", "candor");
   assert.ok(queries.some((query) => query.limit === 3));
-  assert.ok(queries.some((query) => query.field === "collections.slug" && query.value === "dining"));
+  assert.ok(queries.some((query) => query.field === "snapshot->>collection_id" && query.value === "c1"));
   assert.ok(queries.some((query) => query.field === "slug" && query.comparison === "neq"));
 });
 

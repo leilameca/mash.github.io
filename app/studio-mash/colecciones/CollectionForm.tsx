@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import Image from "next/image";
 import { useActionState } from "react";
@@ -6,6 +7,7 @@ import { upsertCollection, type ActionState } from "../actions";
 
 type CollectionFormValue = {
   id?: string;
+  revision?: number;
   slug?: string;
   name_es?: string;
   name_en?: string;
@@ -19,26 +21,75 @@ type CollectionFormValue = {
 
 const initialState: ActionState = {};
 
-export function CollectionForm({ collection }: { collection?: CollectionFormValue }) {
-  const [state, action, pending] = useActionState(upsertCollection, initialState);
+export function CollectionForm({
+  collection,
+}: {
+  collection?: CollectionFormValue;
+}) {
+  const [state, action, pending] = useActionState(
+    upsertCollection,
+    initialState,
+  );
 
   return (
     <form action={action} className="studio-form">
-      {collection?.id && <input type="hidden" name="id" value={collection.id} />}
+      <input
+        type="hidden"
+        name="status"
+        value={collection?.status ?? "draft"}
+      />
+      <p>
+        Guardar conserva la publicación actual. El estado se cambia desde el
+        listado.
+      </p>
+      <input
+        type="hidden"
+        name="status"
+        value={collection?.status ?? "draft"}
+      />
+      <p>
+        El estado se cambia explícitamente desde el listado. Guardar no publica.
+      </p>
+      {collection?.id && (
+        <>
+          <input type="hidden" name="id" value={collection.id} />
+          <input
+            type="hidden"
+            name="revision"
+            value={collection.revision ?? 0}
+          />
+        </>
+      )}
       <div className="studio-form__grid">
         <label>
           Slug
-          <input name="slug" defaultValue={collection?.slug} placeholder="comedores" required />
+          <input
+            name="slug"
+            defaultValue={collection?.slug}
+            placeholder="comedores"
+            required
+          />
           {state.errors?.slug && <span>{state.errors.slug}</span>}
         </label>
         <label>
           Orden
-          <input name="sort_order" type="number" min="0" max="9999" defaultValue={collection?.sort_order ?? 0} required />
+          <input
+            name="sort_order"
+            type="number"
+            min="0"
+            max="9999"
+            defaultValue={collection?.sort_order ?? 0}
+            required
+          />
           {state.errors?.sort_order && <span>{state.errors.sort_order}</span>}
         </label>
         <label>
           Estado
-          <select name="status" defaultValue={collection?.status ?? "draft"}>
+          <select
+            name="display_status"
+            disabled
+            defaultValue={collection?.status ?? "draft"}
+          >
             <option value="draft">Borrador</option>
             <option value="published">Publicado</option>
             <option value="hidden">Oculto</option>
@@ -46,7 +97,11 @@ export function CollectionForm({ collection }: { collection?: CollectionFormValu
           </select>
         </label>
         <label className="studio-checkbox">
-          <input type="checkbox" name="featured" defaultChecked={collection?.featured} />
+          <input
+            type="checkbox"
+            name="featured"
+            defaultChecked={collection?.featured}
+          />
           Coleccion destacada
         </label>
       </div>
@@ -58,26 +113,50 @@ export function CollectionForm({ collection }: { collection?: CollectionFormValu
       </label>
       <label>
         Descripcion en espanol
-        <textarea name="description_es" defaultValue={collection?.description_es} rows={4} required />
-        {state.errors?.description_es && <span>{state.errors.description_es}</span>}
+        <textarea
+          name="description_es"
+          defaultValue={collection?.description_es}
+          rows={4}
+          required
+        />
+        {state.errors?.description_es && (
+          <span>{state.errors.description_es}</span>
+        )}
       </label>
 
       <label>
         Imagen de portada
         {collection?.cover_image_path && (
           <span className="studio-image-preview studio-image-preview--wide">
-            <Image src={collection.cover_image_path} alt="Portada actual" fill sizes="360px" />
+            <Image
+              src={collection.cover_image_path}
+              alt="Portada actual"
+              fill
+              sizes="360px"
+            />
           </span>
         )}
-        <input type="hidden" name="existing_image_path" value={collection?.cover_image_path ?? ""} />
-        <input name="cover_image" type="file" accept="image/jpeg,image/png,image/webp,image/avif" required={!collection?.cover_image_path} />
+        <input
+          type="hidden"
+          name="existing_image_path"
+          value={collection?.cover_image_path ?? ""}
+        />
+        <input
+          name="cover_image"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/avif"
+          required={!collection?.cover_image_path}
+        />
         <small>JPG, PNG, WebP o AVIF. Maximo 6 MB.</small>
         {state.errors?.cover_image && <span>{state.errors.cover_image}</span>}
       </label>
 
       <div className="studio-language-note">
         <strong>Version en ingles</strong>
-        <p>Si dejas un campo vacio, el sitio usara temporalmente el contenido en espanol.</p>
+        <p>
+          Si dejas un campo vacio, el sitio usara temporalmente el contenido en
+          espanol.
+        </p>
       </div>
       <div className="studio-form__grid">
         <label>
@@ -86,7 +165,11 @@ export function CollectionForm({ collection }: { collection?: CollectionFormValu
         </label>
         <label>
           Descripcion en ingles
-          <textarea name="description_en" defaultValue={collection?.description_en} rows={4} />
+          <textarea
+            name="description_en"
+            defaultValue={collection?.description_en}
+            rows={4}
+          />
         </label>
       </div>
 
@@ -94,6 +177,23 @@ export function CollectionForm({ collection }: { collection?: CollectionFormValu
       <button className="admin-button" type="submit" disabled={pending}>
         {pending ? "Guardando..." : "Guardar coleccion"}
       </button>
+      <button
+        className="admin-button"
+        type="submit"
+        name="intent"
+        value="publish"
+        disabled={pending}
+      >
+        Publicar cambios
+      </button>
+      <p>Guardar conserva la versión pública actual.</p>
+      {collection?.id && (
+        <Link
+          href={`/studio-mash/revisiones?kind=collection&id=${collection.id}`}
+        >
+          Historial de revisiones
+        </Link>
+      )}
     </form>
   );
 }

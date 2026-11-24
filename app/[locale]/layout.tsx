@@ -16,7 +16,11 @@ export function generateStaticParams() {
   return [{ locale: "es" }, { locale: "en" }];
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
@@ -29,8 +33,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       canonical: `/${locale}`,
       languages: {
         es: "/es",
-        en: "/en"
-      }
+        en: "/en",
+      },
     },
     openGraph: {
       title: meta.homeTitle,
@@ -44,16 +48,19 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
           url: "/assets/images/oasis-hero-v2.jpg",
           width: 1672,
           height: 941,
-          alt: locale === "es" ? "Muebles de exterior MASH" : "MASH outdoor furniture"
-        }
-      ]
-    }
+          alt:
+            locale === "es"
+              ? "Muebles de exterior MASH"
+              : "MASH outdoor furniture",
+        },
+      ],
+    },
   };
 }
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -66,16 +73,26 @@ export default async function LocaleLayout({
   return (
     <SiteSettingsProvider value={{ whatsapp: siteContent.whatsapp }}>
       <QuoteSelectionProvider locale={locale}>
-      <a href="#main-content" className="skip-link">
-        {locale === "es" ? "Saltar al contenido" : "Skip to content"}
-      </a>
-      <Header locale={locale} content={siteContent} />
-      <main id="main-content" className="page-shell">
-        {children}
-      </main>
-      <Footer locale={locale} content={siteContent} />
-      <WhatsAppFloat locale={locale} href={siteContent.whatsapp} label={siteContent.requestQuoteLabel} />
-      <MotionEnhancer />
+        <a href="#main-content" className="skip-link">
+          {locale === "es" ? "Saltar al contenido" : "Skip to content"}
+        </a>
+        <Header locale={locale} content={siteContent} />
+        {siteContent.translationPending && (
+          <p role="status" className="section-shell">
+            English translation pending review. Showing the Spanish original
+            where needed.
+          </p>
+        )}
+        <main id="main-content" className="page-shell">
+          {children}
+        </main>
+        <Footer locale={locale} content={siteContent} />
+        <WhatsAppFloat
+          locale={locale}
+          href={siteContent.whatsapp}
+          label={siteContent.requestQuoteLabel}
+        />
+        <MotionEnhancer />
       </QuoteSelectionProvider>
     </SiteSettingsProvider>
   );

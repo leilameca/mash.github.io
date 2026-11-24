@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { authenticatedContentClient } from "@/lib/supabase/persistence";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { MEDIA_BUCKET, type MediaFolder } from "@/lib/supabase/media";
 import { StudioShell } from "../StudioShell";
@@ -9,23 +9,26 @@ const folders: MediaFolder[] = ["products", "collections", "projects", "site"];
 
 export default async function StudioMediaPage() {
   const currentAdmin = await requireAdmin();
-  const admin = createSupabaseAdminClient();
+  const admin = await authenticatedContentClient();
   const mediaGroups = await Promise.all(
     folders.map(async (folder) => {
-      const { data } = await admin.storage.from(MEDIA_BUCKET).list(folder, {
+      const { data, error } = await admin.storage.from(MEDIA_BUCKET).list(folder, {
         limit: 24,
-        sortBy: { column: "created_at", order: "desc" }
+        sortBy: { column: "created_at", order: "desc" },
       });
+      if(error)throw new Error("No pudimos consultar la biblioteca. Intenta de nuevo.");
       return {
         folder,
         items: (data ?? [])
           .filter((item) => item.id)
           .map((item) => ({
             name: item.name,
-            url: admin.storage.from(MEDIA_BUCKET).getPublicUrl(`${folder}/${item.name}`).data.publicUrl
-          }))
+            url: admin.storage
+              .from(MEDIA_BUCKET)
+              .getPublicUrl(`${folder}/${item.name}`).data.publicUrl,
+          })),
       };
-    })
+    }),
   );
 
   return (
@@ -39,7 +42,10 @@ export default async function StudioMediaPage() {
       <section className="studio-card">
         <p className="studio-kicker">Nueva imagen</p>
         <h2>Cargar desde el dispositivo</h2>
-        <p>Las imagenes quedan guardadas en el bucket privado de administracion y se sirven publicamente en el sitio.</p>
+        <p>
+          Las imagenes quedan guardadas en el bucket privado de administracion y
+          se sirven publicamente en el sitio.
+        </p>
         <MediaUploadForm />
       </section>
       {mediaGroups.map((group) => (
@@ -50,7 +56,9 @@ export default async function StudioMediaPage() {
             <div className="studio-media-grid">
               {group.items.map((item) => (
                 <figure key={item.url}>
-                  <span><Image src={item.url} alt="" fill sizes="180px" /></span>
+                  <span>
+                    <Image src={item.url} alt="" fill sizes="180px" />
+                  </span>
                   <figcaption title={item.name}>{item.name}</figcaption>
                 </figure>
               ))}

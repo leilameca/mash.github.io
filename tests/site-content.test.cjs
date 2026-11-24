@@ -14,13 +14,11 @@ function contentFixture(value, translations = []) {
     select() { return query; }, eq() { return query; },
     maybeSingle: async () => ({ data: { value, site_content_translations: translations }, error: null })
   };
-  const module = { exports: {} };
-  const mocks = {
-    "@/lib/content": {},
-    "./server": { createSupabaseServerClient: async () => ({ from: () => query }) }
-  };
-  vm.runInNewContext(source, { module, exports: module.exports, require: (name) => mocks[name] ?? require(name) });
-  return module.exports;
+  const {loadTs}=require('./support/load-ts.cjs');
+  return loadTs(path.join(__dirname,"../lib/supabase/site-content.ts"),{
+    "@/lib/content":{},"./persistence":{},
+    "./published":{readPublishedSite:async()=>({value,translations}),localizedTranslation:(rows,locale)=>({text:rows.find(r=>r.locale===locale)??rows.find(r=>r.locale==="es"),pending:false})}
+  });
 }
 
 test("public home reads every saved section image in both languages", async () => {
@@ -34,12 +32,12 @@ test("public home reads every saved section image in both languages", async () =
   assert.equal((await content.getHomeSectionsContent("es")).lifestyleLabels[0], "Patios nuevos");
 });
 
-test("legacy sections keep defaults only for images that have never been replaced", async () => {
+test("missing section images stay empty and never restore legacy defaults", async () => {
   const content = contentFixture({ introImage: "/new-intro.jpg", lifestyleImageTwo: "" });
   const actual = await content.getHomeSectionsContent("es");
-  const defaults = content.getFallbackHomeSections("es");
+
   assert.equal(actual.introImage, "/new-intro.jpg");
-  for (const key of ["lifestyleImageOne", "lifestyleImageTwo", "lifestyleImageThree"]) assert.equal(actual[key], defaults[key]);
+  for (const key of ["lifestyleImageOne", "lifestyleImageTwo", "lifestyleImageThree"]) assert.equal(actual[key], "");
 });
 
 test("public hero and about page use the stored image URLs", async () => {

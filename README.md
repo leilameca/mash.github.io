@@ -1,5 +1,7 @@
 # MASH | Martinez Star Home
 
+**Fase 2 (rama de trabajo):** requiere la migración `20261124141948_mash_publication_integrity.sql` antes de ejecutar esta versión. No está desplegada en Production. Ver `docs/phase-2/implementation.txt`, el inventario JSON y la tabla CSV de conciliación. Guardar crea un borrador; **Publicar cambios** actualiza la revisión pública. No hay fallback al catálogo estático.
+
 Sitio bilingue de catalogo para MASH, construido con Next.js y un panel privado conectado a Supabase.
 
 ## Desarrollo local
@@ -17,12 +19,12 @@ Crea un archivo `.env.local` sin subirlo al repositorio:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-NEXT_PUBLIC_ENABLE_SUPABASE_CATALOG=true
+
 ```
 
-La clave `SUPABASE_SERVICE_ROLE_KEY` solo se utiliza en acciones del servidor protegidas por la sesion administrativa. Nunca debe exponerse en el navegador ni guardarse en Git.
+La clave `SUPABASE_SERVICE_ROLE_KEY` se conserva para la allowlist y vinculación del login OTP. El contenido y Storage utilizan la sesión administrativa con RLS. Nunca debe exponerse en el navegador ni guardarse en Git.
 
 ## Supabase
 
@@ -54,11 +56,11 @@ Importa el repositorio en Vercel con framework `Next.js`, deja los comandos por 
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-NEXT_PUBLIC_ENABLE_SUPABASE_CATALOG=true
+
 NEXT_PUBLIC_SITE_URL=https://tu-dominio.com
-MASH_ADMIN_ROUTE=studio-mash
+
 ```
 
 Después de publicar, aplica las migraciones de Supabase, confirma que el bucket `mash-media` sea público para lectura y agrega el correo de la clienta a `public.admin_users`. No agregues `SUPABASE_SERVICE_ROLE_KEY` a variables expuestas al cliente.
@@ -93,3 +95,24 @@ La prueba de navegador levanta temporalmente el servidor de producción y compru
 npm run typecheck
 npm run build
 ```
+
+## Contrato de entornos en Fase 2
+
+Configura `NEXT_PUBLIC_SUPABASE_URL` y una sola clave pública: preferiblemente `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, o la alias legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY`. La clave pública elegida debe pertenecer al mismo proyecto que la URL. El servidor conserva `SUPABASE_SERVICE_ROLE_KEY` para el login existente. No uses el proyecto real para pruebas de escritura.
+
+La bandera `NEXT_PUBLIC_ENABLE_SUPABASE_CATALOG` ya no decide la fuente del catálogo. `NEXT_PUBLIC_SITE_URL` controla canonical, hreflang y sitemap. Los cambios de Production y el despliegue requieren aprobación separada.
+
+## Verificación de Fase 2
+
+```bash
+npm run typecheck
+npm run test:admin
+npm run test:pwa
+npm run test:phase2
+npm run build
+npm run test:ux
+npm run test:pwa:browser
+npm run test:phase2:http
+```
+
+Las pruebas SQL usan PostgreSQL aislado con PGlite. Las pruebas HTTP usan el build real y una fachada Data API exclusivamente de pruebas sobre esa base. Auth y las pruebas de componentes son simuladas: no acreditan entrega OTP por Resend ni equivalencia completa con PostgREST hosted.

@@ -22,6 +22,9 @@ export type Product = {
   slug: string;
   name: string;
   collectionSlug: string;
+  collectionLabel?: LocalizedText;
+  galleryAlts?: string[];
+  translationPending?: boolean;
   image: string;
   gallery: string[];
   alt: LocalizedText;
@@ -359,5 +362,5 @@ export function getProductsByCollection(collectionSlug: string) {
 }
 
 export function getCollectionLabel(product: Product, locale: Locale) {
-  return getCollection(product.collectionSlug)?.label[locale] ?? product.collectionSlug;
+  return product.collectionLabel?.[locale] ?? product.collectionSlug;
 }

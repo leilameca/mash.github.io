@@ -11,7 +11,9 @@ const { chromium } = require('playwright');
   await new Promise(resolve => probe.listen(0, '127.0.0.1', resolve));
   const port = probe.address().port;
   await new Promise(resolve => probe.close(resolve));
-  const server = spawn(process.execPath, [require.resolve('next/dist/bin/next'), 'start', '--port', String(port)], { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+  const backend=await require('./support/data-api.cjs').dataApi();
+  const isolatedEnv={...process.env,NEXT_PUBLIC_SUPABASE_URL:backend.url,NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:'isolated-test-key',NEXT_PUBLIC_SUPABASE_ANON_KEY:'',SUPABASE_SERVICE_ROLE_KEY:''};
+  const server = spawn(process.execPath, [require.resolve('next/dist/bin/next'), 'start', '--port', String(port)], { env:isolatedEnv, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
   const origin = `http://localhost:${port}`;
   let output = ''; server.stdout.on('data', data => output += data); server.stderr.on('data', data => output += data);
   let browser;
@@ -47,5 +49,5 @@ const { chromium } = require('playwright');
     assert.equal((await page.request.post(`${origin}/api/studio-media`, { headers: { origin: 'https://untrusted.example' } })).status(), 403);
     assert.deepEqual(errors, []);
     console.log(`PASS: desktop/tablet/mobile, gallery dialog, product WhatsApp, quote persistence and upload authorization. Screenshots: ${screenshots}`);
-  } finally { await browser?.close(); server.kill(); }
+  } finally { await browser?.close(); server.kill(); await backend.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

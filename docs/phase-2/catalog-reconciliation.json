@@ -1,0 +1,1964 @@
+{
+  "capturedAt": "2026-11-24T14:33:28.716Z",
+  "project": "guzuqitvzkenzsvcuttg",
+  "sourceOfTruth": "Supabase",
+  "products": [
+    {
+      "id": "69df4651-893d-4adc-94ae-4b512b021b09",
+      "slug": "oculus-mare",
+      "status": "draft",
+      "featured": true,
+      "finishes": [
+        "Acabados segun disponibilidad."
+      ],
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "dimensions": "Consultar configuracion y medidas.",
+      "sort_order": 40,
+      "updated_at": "2026-09-24T21:44:27.380894+00:00",
+      "availability": null,
+      "published_at": null,
+      "collection_id": "1643ed9b-c888-46be-8233-04e40af98ac2",
+      "translations": [
+        {
+          "id": "d19db5cc-945a-428e-9ce7-7620bbd81b3f",
+          "care": "Limpiar despues de lluvia fuerte y dejar secar al aire.",
+          "name": "Oculus Mare",
+          "locale": "es",
+          "materials": "Estructura preparada para exterior y acabado tejido.",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "69df4651-893d-4adc-94ae-4b512b021b09",
+          "updated_at": "2026-09-24T21:44:27.380894+00:00",
+          "description": "Una mesa con presencia moderna para quienes quieren un comedor exterior con caracter y gran valor visual.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "02b68204-a517-4e8e-b079-4bc572b2449c",
+          "care": "Clean after heavy rain and let air dry.",
+          "name": "Oculus Mare",
+          "locale": "en",
+          "materials": "Outdoor-ready structure and woven finish.",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "69df4651-893d-4adc-94ae-4b512b021b09",
+          "updated_at": "2026-09-24T21:44:27.380894+00:00",
+          "description": "A table with modern presence for outdoor dining spaces with character and visual value.",
+          "seo_description": null,
+          "translation_status": "complete"
+        }
+      ],
+      "images": [
+        {
+          "id": "240ca7e6-c16a-43c8-95be-b288332f9957",
+          "alt_en": "Oculus Mare compact dining set",
+          "alt_es": "Comedor compacto Oculus Mare",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "is_primary": false,
+          "product_id": "69df4651-893d-4adc-94ae-4b512b021b09",
+          "sort_order": 1,
+          "updated_at": "2026-09-24T21:44:27.380894+00:00",
+          "storage_path": "/assets/images/oculus-mare-compacto.jpg"
+        },
+        {
+          "id": "668d00ba-5105-4872-b69c-6526799ee055",
+          "alt_en": "Oculus Mare outdoor dining set",
+          "alt_es": "Comedor exterior Oculus Mare",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "is_primary": true,
+          "product_id": "69df4651-893d-4adc-94ae-4b512b021b09",
+          "sort_order": 0,
+          "updated_at": "2026-09-24T21:44:27.380894+00:00",
+          "storage_path": "/assets/images/oculus-mare-dining.jpg"
+        }
+      ]
+    },
+    {
+      "id": "0a3cf7c8-4d92-426b-967a-95c08aabbb60",
+      "slug": "candor-set",
+      "status": "published",
+      "featured": false,
+      "finishes": [
+        "Acabados neutros sujetos a disponibilidad."
+      ],
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "dimensions": "Espacio que ocupan; mesa: 63x34”,  sillas: 22x22”",
+      "sort_order": 50,
+      "updated_at": "2026-11-03T23:35:33.513431+00:00",
+      "availability": null,
+      "published_at": null,
+      "collection_id": "1643ed9b-c888-46be-8233-04e40af98ac2",
+      "translations": [
+        {
+          "id": "fd9fd2ee-3988-4745-83e2-c8c140b7bb8f",
+          "care": "Usar jabon neutro y paño humedo.",
+          "name": "Set de comedor Candor",
+          "locale": "es",
+          "materials": "Ratán sintetica con estructura firme en acero galvanizado",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "0a3cf7c8-4d92-426b-967a-95c08aabbb60",
+          "updated_at": "2026-10-02T13:25:34.885447+00:00",
+          "description": "Cálido, elegante y muy acogedor para cenas en familia o reuniones en ambientes de hospitalidad.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "b93969a6-4b19-4dd9-b004-4475be07d95e",
+          "care": null,
+          "name": "Candor dining table set",
+          "locale": "en",
+          "materials": null,
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "0a3cf7c8-4d92-426b-967a-95c08aabbb60",
+          "updated_at": "2026-10-02T13:25:34.885447+00:00",
+          "description": "Warm, elegant and welcoming for family dinners or hospitality spaces.",
+          "seo_description": null,
+          "translation_status": "needs_review"
+        }
+      ],
+      "images": [
+        {
+          "id": "2a997170-d498-401b-a12b-93c32ea580cf",
+          "alt_en": null,
+          "alt_es": "Set de comedor Candor",
+          "created_at": "2026-10-02T12:54:22.268948+00:00",
+          "is_primary": true,
+          "product_id": "0a3cf7c8-4d92-426b-967a-95c08aabbb60",
+          "sort_order": 0,
+          "updated_at": "2026-10-02T13:25:35.203847+00:00",
+          "storage_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/products/1790945660072-img-6661-fed76220.png"
+        }
+      ]
+    },
+    {
+      "id": "2e278259-7646-49ab-91a0-7110a761693e",
+      "slug": "candor-clasico",
+      "status": "published",
+      "featured": true,
+      "finishes": [
+        "Tonos neutros y acabados segun disponibilidad."
+      ],
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "dimensions": "Espacio que ocupan; butaca: 27x30”;         mesa 1: 22”;        mesa 2: 30”",
+      "sort_order": 20,
+      "updated_at": "2026-11-03T23:35:40.293087+00:00",
+      "availability": null,
+      "published_at": null,
+      "collection_id": "2291e695-8cfe-44b2-abf2-5d9165f5285f",
+      "translations": [
+        {
+          "id": "1ad079a0-cad1-40c3-821a-06e824066aef",
+          "care": "Evitar detergentes  abrasivos o en polvos . Lavar cojineria en ciclo delicado.",
+          "name": "Candor Clasico",
+          "locale": "es",
+          "materials": "Ratán sintético y estructura acero galvanizado.",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "2e278259-7646-49ab-91a0-7110a761693e",
+          "updated_at": "2026-10-02T19:33:43.817414+00:00",
+          "description": "Un set sobrio y facil de combinar para patios, balcones  o espacios reducidos  que necesitan un look limpio y acogedor.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "04012fe3-7d0d-466f-99db-de3a5609f7ec",
+          "care": null,
+          "name": "Candor Classic",
+          "locale": "en",
+          "materials": null,
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "2e278259-7646-49ab-91a0-7110a761693e",
+          "updated_at": "2026-10-02T19:33:43.817414+00:00",
+          "description": "A calm, easy-to-pair set for patios, generous balconies or terraces that need a clean, welcoming look.",
+          "seo_description": null,
+          "translation_status": "needs_review"
+        }
+      ],
+      "images": [
+        {
+          "id": "1039fbe0-377a-4b30-8310-5249d0e5e02f",
+          "alt_en": "Candor Classic patio furniture",
+          "alt_es": "Candor Clasico",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "is_primary": true,
+          "product_id": "2e278259-7646-49ab-91a0-7110a761693e",
+          "sort_order": 0,
+          "updated_at": "2026-10-02T19:33:43.919792+00:00",
+          "storage_path": "/assets/images/candor-clasico.jpg"
+        },
+        {
+          "id": "99648645-d3bd-42fd-973d-c08aed8b2e33",
+          "alt_en": null,
+          "alt_es": "Candor Clasico",
+          "created_at": "2026-10-02T19:33:43.919792+00:00",
+          "is_primary": false,
+          "product_id": "2e278259-7646-49ab-91a0-7110a761693e",
+          "sort_order": 1,
+          "updated_at": "2026-10-02T19:33:43.919792+00:00",
+          "storage_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/products/1790969622844-9b1c2406-0571-4ff5-a2f1-c8f069800cdb-1c44b428.png"
+        }
+      ]
+    },
+    {
+      "id": "45eb6b18-2f1d-4615-9068-903a7cc3dce8",
+      "slug": "furniture-daybed",
+      "status": "published",
+      "featured": false,
+      "finishes": [
+        "Tonos neutros segun disponibilidad."
+      ],
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "dimensions": "Consultar medidas disponibles.",
+      "sort_order": 70,
+      "updated_at": "2026-11-03T23:35:45.15108+00:00",
+      "availability": null,
+      "published_at": null,
+      "collection_id": "2f582c8c-968b-4b7a-adf3-1a14de9933ac",
+      "translations": [
+        {
+          "id": "9aba9d23-f7fd-4c63-b812-ec6253488164",
+          "care": "Limpiar estructura con paño humedo y jabon neutro.",
+          "name": "Set de muebles + daybed",
+          "locale": "es",
+          "materials": "Materiales pensados para sol, humedad y uso constante como el acero galvanizado y ratan sintético PE",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "45eb6b18-2f1d-4615-9068-903a7cc3dce8",
+          "updated_at": "2026-10-02T13:23:30.232883+00:00",
+          "description": "Un conjunto que combina presencia, confort y sofisticación. Incluye una daybed diseñada para tomar el sol, leer o simplemente relajarse con total comodidad.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "79fb51ea-5f60-4375-8120-c51238e6b9e6",
+          "care": null,
+          "name": "Outdoor furniture + Daybed",
+          "locale": "en",
+          "materials": null,
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "45eb6b18-2f1d-4615-9068-903a7cc3dce8",
+          "updated_at": "2026-10-02T13:23:30.232883+00:00",
+          "description": "A statement set that blends comfort, style, and effortless sophistication. Featuring a daybed designed for sunbathing, reading, or simply unwinding in comfort.",
+          "seo_description": null,
+          "translation_status": "needs_review"
+        }
+      ],
+      "images": [
+        {
+          "id": "6628d7cd-373e-4596-955c-9460d85798d0",
+          "alt_en": "Outdoor chaise for sunny areas",
+          "alt_es": "Set de muebles + daybed",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "is_primary": true,
+          "product_id": "45eb6b18-2f1d-4615-9068-903a7cc3dce8",
+          "sort_order": 0,
+          "updated_at": "2026-10-02T13:23:30.499488+00:00",
+          "storage_path": "/assets/images/chaise-candor.jpg"
+        },
+        {
+          "id": "787bc953-8bdd-4640-9ae4-4472098b6a4f",
+          "alt_en": "Oculus outdoor chaise",
+          "alt_es": "Set de muebles + daybed",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "is_primary": false,
+          "product_id": "45eb6b18-2f1d-4615-9068-903a7cc3dce8",
+          "sort_order": 1,
+          "updated_at": "2026-10-02T13:23:30.499488+00:00",
+          "storage_path": "/assets/images/oculus-chaise.jpg"
+        }
+      ]
+    },
+    {
+      "id": "32ac2f2a-cf54-473a-bc52-491755de7586",
+      "slug": "candor-mix-collection",
+      "status": "published",
+      "featured": true,
+      "finishes": [
+        "Acabados sujetos a disponibilidad."
+      ],
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "dimensions": "Consultar composicion y medidas.",
+      "sort_order": 80,
+      "updated_at": "2026-11-03T23:35:52.020047+00:00",
+      "availability": null,
+      "published_at": null,
+      "collection_id": "2291e695-8cfe-44b2-abf2-5d9165f5285f",
+      "translations": [
+        {
+          "id": "37eff7a8-9dde-4c2c-9056-5259bb60aee0",
+          "care": "Rutina simple con paño húmedo, jabon neutro y secado natural.",
+          "name": "Candor Mix Collection",
+          "locale": "es",
+          "materials": "Acero galvanizado y ratan sintético PE",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "32ac2f2a-cf54-473a-bc52-491755de7586",
+          "updated_at": "2026-10-02T19:39:34.851816+00:00",
+          "description": "Un set completo que equilibra confort, elegancia y materiales de calidad para crear un ambiente exterior que invita a quedarse. Ideal para espacios techados.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "0ae9f24b-d715-477e-909f-a69e0a8c1e2f",
+          "care": null,
+          "name": "Candor Mix Collection",
+          "locale": "en",
+          "materials": null,
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "32ac2f2a-cf54-473a-bc52-491755de7586",
+          "updated_at": "2026-10-02T19:39:34.851816+00:00",
+          "description": "A complete set balancing comfort, elegance and quality materials for an outdoor setting that invites people to stay.",
+          "seo_description": null,
+          "translation_status": "needs_review"
+        }
+      ],
+      "images": [
+        {
+          "id": "74211435-95a2-4ad6-a57b-ff11234cde8e",
+          "alt_en": "Candor Mix Collection for a premium terrace",
+          "alt_es": "Candor Mix Collection",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "is_primary": true,
+          "product_id": "32ac2f2a-cf54-473a-bc52-491755de7586",
+          "sort_order": 0,
+          "updated_at": "2026-10-02T19:39:35.210621+00:00",
+          "storage_path": "/assets/images/candor-mix-collection.jpeg"
+        }
+      ]
+    },
+    {
+      "id": "e793d60f-a78f-4617-a34b-458caea85c27",
+      "slug": "candor-collection",
+      "status": "published",
+      "featured": true,
+      "finishes": [
+        "Tonos neutros sujetos a disponibilidad"
+      ],
+      "created_at": "2026-10-02T21:31:11.295018+00:00",
+      "dimensions": "Sofá: 78x30”;  butaca: 27x30”;  mesa: 20x30”",
+      "sort_order": 0,
+      "updated_at": "2026-11-03T23:35:58.022024+00:00",
+      "availability": null,
+      "published_at": null,
+      "collection_id": "2291e695-8cfe-44b2-abf2-5d9165f5285f",
+      "translations": [
+        {
+          "id": "2c5d114e-3cd0-45e8-b6b8-be27765814e4",
+          "care": "No se recomiendan detergentes en polvos ni abrasivos, utiliza jabón neutro y paño húmedo o cepillado suave y secado natural",
+          "name": "Colección Candor",
+          "locale": "es",
+          "materials": "Acero galvanizado y Ratán sintético PE importado",
+          "seo_title": null,
+          "created_at": "2026-10-02T21:31:11.692983+00:00",
+          "product_id": "e793d60f-a78f-4617-a34b-458caea85c27",
+          "updated_at": "2026-10-02T21:31:11.692983+00:00",
+          "description": "Un espacio que no necesita llamar la atención para convertirse en el centro de todas las miradas.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "9c2ab682-8f6f-4aec-bf36-82cd6e7703dc",
+          "care": null,
+          "name": "Candor Collection",
+          "locale": "en",
+          "materials": null,
+          "seo_title": null,
+          "created_at": "2026-10-02T21:31:11.692983+00:00",
+          "product_id": "e793d60f-a78f-4617-a34b-458caea85c27",
+          "updated_at": "2026-10-02T21:31:11.692983+00:00",
+          "description": "A space that never needs to demand attention to become the center of it.",
+          "seo_description": null,
+          "translation_status": "needs_review"
+        }
+      ],
+      "images": [
+        {
+          "id": "ea338aa0-c202-40fe-baf7-8e8074240376",
+          "alt_en": null,
+          "alt_es": "Colección Candor",
+          "created_at": "2026-10-02T21:31:11.968889+00:00",
+          "is_primary": true,
+          "product_id": "e793d60f-a78f-4617-a34b-458caea85c27",
+          "sort_order": 0,
+          "updated_at": "2026-10-02T21:31:11.968889+00:00",
+          "storage_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/products/1790976670492-mash-8ff32389.png"
+        }
+      ]
+    },
+    {
+      "id": "110a586d-72e9-4735-91d6-17ac6bc0a3eb",
+      "slug": "daybed-trap",
+      "status": "published",
+      "featured": true,
+      "finishes": [
+        "Acabados por disponibilidad."
+      ],
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "dimensions": "60x80”",
+      "sort_order": 60,
+      "updated_at": "2026-11-03T23:36:03.890937+00:00",
+      "availability": null,
+      "published_at": null,
+      "collection_id": "2f582c8c-968b-4b7a-adf3-1a14de9933ac",
+      "translations": [
+        {
+          "id": "f207ab87-1c98-44bc-9e24-ebc4c515113d",
+          "care": "Lavar con paño húmedo o cepillar suave en casos de suciedad más extremas. No utilizar detergentes en polvos.",
+          "name": "Cama lounge, colección trap",
+          "locale": "es",
+          "materials": "Ratan  sintetico PE y perfiles de acero galvanizado.",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "110a586d-72e9-4735-91d6-17ac6bc0a3eb",
+          "updated_at": "2026-10-26T13:49:44.872939+00:00",
+          "description": "Una cama amplia  que transforma cualquier area de piscina en un espacio de descanso premium.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "cc648a1b-71af-4789-a60e-78266e971c75",
+          "care": null,
+          "name": "Trap Collection, day bed",
+          "locale": "en",
+          "materials": null,
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "110a586d-72e9-4735-91d6-17ac6bc0a3eb",
+          "updated_at": "2026-10-26T13:49:44.872939+00:00",
+          "description": "An outdoor daybed that turns any pool area into a premium rest space.",
+          "seo_description": null,
+          "translation_status": "needs_review"
+        }
+      ],
+      "images": [
+        {
+          "id": "994b1783-227e-4a68-8fe8-fd9880234150",
+          "alt_en": "Trap outdoor daybed set",
+          "alt_es": "Cama lounge, colección trap",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "is_primary": true,
+          "product_id": "110a586d-72e9-4735-91d6-17ac6bc0a3eb",
+          "sort_order": 0,
+          "updated_at": "2026-10-26T13:49:45.211156+00:00",
+          "storage_path": "/assets/images/set-cama-trap.jpeg"
+        }
+      ]
+    },
+    {
+      "id": "fe749a92-dbf9-47dd-9893-8673a2b1787b",
+      "slug": "trap-set",
+      "status": "published",
+      "featured": true,
+      "finishes": [
+        "Acabados sujetos a disponibilidad."
+      ],
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "dimensions": "Dimensiones por confirmar segun composicion.",
+      "sort_order": 10,
+      "updated_at": "2026-11-03T23:36:10.959058+00:00",
+      "availability": null,
+      "published_at": null,
+      "collection_id": "2291e695-8cfe-44b2-abf2-5d9165f5285f",
+      "translations": [
+        {
+          "id": "47ec3c67-e78f-48c7-b3ca-14610fd4cdc2",
+          "care": "Limpiar con pano humedo, jabon neutro y secado al aire.",
+          "name": "Colección Trap",
+          "locale": "es",
+          "materials": "Ratan sintético pe y acero galvanizado.",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "fe749a92-dbf9-47dd-9893-8673a2b1787b",
+          "updated_at": "2026-10-02T13:25:00.422843+00:00",
+          "description": "Un juego de sala exterior amplio y sofisticado, diseñado para transformar tu terraza en un espacio donde recibir se convierte en toda una experiencia.\r\n\r\nComodidad, elegancia y presencia impecable en cada detalle, para crear un ambiente que habla de buen gusto y estilo.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "c7c86f44-d8fc-4e4e-9556-8121589fe686",
+          "care": null,
+          "name": "Trap collection",
+          "locale": "en",
+          "materials": null,
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "fe749a92-dbf9-47dd-9893-8673a2b1787b",
+          "updated_at": "2026-10-02T13:25:00.422843+00:00",
+          "description": "A spacious and sophisticated outdoor lounge set, designed to transform your terrace into a space where entertaining becomes an experience.\r\n\r\nComfort, elegance, and impeccable presence in every detail, creating an atmosphere that speaks to refined taste and effortless style.",
+          "seo_description": null,
+          "translation_status": "needs_review"
+        }
+      ],
+      "images": [
+        {
+          "id": "da65038c-cd6d-45eb-8950-6553b1e73ab4",
+          "alt_en": "Oasis terrace set for a spacious patio",
+          "alt_es": "Colección Trap",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "is_primary": false,
+          "product_id": "fe749a92-dbf9-47dd-9893-8673a2b1787b",
+          "sort_order": 0,
+          "updated_at": "2026-10-02T13:25:00.682557+00:00",
+          "storage_path": "/assets/images/oasis-set.jpg"
+        },
+        {
+          "id": "7cf941be-cd4a-4e2c-bdc5-0fa95d5884d8",
+          "alt_en": null,
+          "alt_es": "Colección Trap",
+          "created_at": "2026-09-25T21:42:09.469209+00:00",
+          "is_primary": false,
+          "product_id": "fe749a92-dbf9-47dd-9893-8673a2b1787b",
+          "sort_order": 1,
+          "updated_at": "2026-10-02T13:25:00.682557+00:00",
+          "storage_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/products/1790372527727-mash-5-8ed82725.png"
+        },
+        {
+          "id": "03e53d04-8ab4-48e1-8a01-679dab63961c",
+          "alt_en": null,
+          "alt_es": "Colección Trap",
+          "created_at": "2026-10-02T13:01:39.22064+00:00",
+          "is_primary": true,
+          "product_id": "fe749a92-dbf9-47dd-9893-8673a2b1787b",
+          "sort_order": 2,
+          "updated_at": "2026-10-02T13:25:00.682557+00:00",
+          "storage_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/products/1790946097869-mash-4-de274fcf.png"
+        }
+      ]
+    },
+    {
+      "id": "c13b478c-240c-478a-9b31-2dbd7a09719a",
+      "slug": "dulce-luna",
+      "status": "published",
+      "featured": false,
+      "finishes": [
+        "Acabados por disponibilidad."
+      ],
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "dimensions": "Ocupa un espacio de 140” sin embargo dicha medida está sujeta a personalización",
+      "sort_order": 30,
+      "updated_at": "2026-11-03T23:36:15.270021+00:00",
+      "availability": null,
+      "published_at": null,
+      "collection_id": "2291e695-8cfe-44b2-abf2-5d9165f5285f",
+      "translations": [
+        {
+          "id": "5c710a23-60b2-4c65-9d6a-23220d751c0a",
+          "care": "Cepillo suave, agua y shampoo neutro para el tejido como nuevo por más tiempo.",
+          "name": "Dulce  Luna",
+          "locale": "es",
+          "materials": "Ratan sintético apta para exterior y acero galvanizado",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "c13b478c-240c-478a-9b31-2dbd7a09719a",
+          "updated_at": "2026-09-25T21:53:17.306962+00:00",
+          "description": "Una opcion con personalidad para proyectos que quieren un punto focal diferente y elegante en exterior.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "6e3dd7d1-a3f4-4ef5-a726-29977efc7f3a",
+          "care": null,
+          "name": "Sweet Moon",
+          "locale": "en",
+          "materials": null,
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "product_id": "c13b478c-240c-478a-9b31-2dbd7a09719a",
+          "updated_at": "2026-09-25T21:53:17.306962+00:00",
+          "description": "A distinctive option for projects that want a different and elegant outdoor focal point.",
+          "seo_description": null,
+          "translation_status": "needs_review"
+        }
+      ],
+      "images": [
+        {
+          "id": "071387a7-0793-42f8-85c2-4b92224c8a78",
+          "alt_en": "Outdoor set on a Santiago patio",
+          "alt_es": "Set exterior en patio de Santiago",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "is_primary": false,
+          "product_id": "c13b478c-240c-478a-9b31-2dbd7a09719a",
+          "sort_order": 1,
+          "updated_at": "2026-09-25T21:53:17.403787+00:00",
+          "storage_path": "/assets/images/area-set-patio-terraza-santiago.jpeg"
+        },
+        {
+          "id": "2b9b902e-d796-4ce8-a678-9594e11d67fe",
+          "alt_en": "Media Luna terrace set",
+          "alt_es": "Dulce  Luna",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "is_primary": true,
+          "product_id": "c13b478c-240c-478a-9b31-2dbd7a09719a",
+          "sort_order": 0,
+          "updated_at": "2026-09-25T21:53:17.499497+00:00",
+          "storage_path": "/assets/images/media-luna.jpg"
+        }
+      ]
+    }
+  ],
+  "collections": [
+    {
+      "id": "1643ed9b-c888-46be-8233-04e40af98ac2",
+      "slug": "balcones",
+      "status": "published",
+      "featured": true,
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "sort_order": 20,
+      "updated_at": "2026-11-03T22:00:12.273196+00:00",
+      "published_at": null,
+      "cover_image_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/collections/1793743131292-mash-5d07fff3.png",
+      "translations": [
+        {
+          "id": "54785e18-ca0c-4ab8-b28f-c715fc2b55c3",
+          "name": "Mash retreat/ Majestik set",
+          "locale": "es",
+          "seo_title": "Dining exterior MASH",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "updated_at": "2026-11-03T22:00:12.657888+00:00",
+          "description": "Ideal para crear espacios con carácter y personalidad, donde la extravagancia se expresa con elegancia, sin saturar ni romper la armonía del ambiente.",
+          "collection_id": "1643ed9b-c888-46be-8233-04e40af98ac2",
+          "seo_description": "Comedores exteriores para balcones, rooftops, hoteles y restaurantes."
+        },
+        {
+          "id": "b7e18356-97cf-4c03-914b-91ddab47c323",
+          "name": "Majestik",
+          "locale": "en",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "updated_at": "2026-11-03T22:00:12.657888+00:00",
+          "description": "MASH RETREAT, Perfect for creating spaces with character and personality, where extravagance meets elegance without overwhelming the atmosphere.",
+          "collection_id": "1643ed9b-c888-46be-8233-04e40af98ac2",
+          "seo_description": null
+        }
+      ]
+    },
+    {
+      "id": "2f582c8c-968b-4b7a-adf3-1a14de9933ac",
+      "slug": "piscina",
+      "status": "published",
+      "featured": true,
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "sort_order": 30,
+      "updated_at": "2026-11-03T23:41:23.455055+00:00",
+      "published_at": null,
+      "cover_image_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/collections/1793743822326-mueble-redondo-domo-tipo-u-6839a1c9.png",
+      "translations": [
+        {
+          "id": "b2157274-8906-4b09-9579-7d147d9666d9",
+          "name": "Day bed + Domo",
+          "locale": "es",
+          "seo_title": "Muebles para piscina MASH",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "updated_at": "2026-11-03T23:41:23.775654+00:00",
+          "description": "Una pieza diseñada para convertirse en el centro de atención del espacio. Su formato circular de generosas dimensiones, estilo cama y acompañado de un elegante domo, crea un refugio de confort y privacidad, ideal para descansar, desconectar y disfrutar del exterior con un toque de exclusividad.",
+          "collection_id": "2f582c8c-968b-4b7a-adf3-1a14de9933ac",
+          "seo_description": "Muebles exteriores para piscina, jardin, villas y zonas de descanso."
+        },
+        {
+          "id": "cb43cd9e-612f-4921-97fd-4a1a7b49450f",
+          "name": "Day bed + Domo",
+          "locale": "en",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "updated_at": "2026-11-03T23:41:23.775654+00:00",
+          "description": "A statement piece designed to become the focal point of any outdoor space. Its generous circular design, daybed-style comfort, and elegant canopy create a private retreat, perfect for relaxing, unwinding, and enjoying the outdoors in exceptional style.",
+          "collection_id": "2f582c8c-968b-4b7a-adf3-1a14de9933ac",
+          "seo_description": null
+        }
+      ]
+    },
+    {
+      "id": "0dded531-e12c-4b14-92de-c7ad0c6bb659",
+      "slug": "oasis-collection",
+      "status": "published",
+      "featured": true,
+      "created_at": "2026-10-02T22:05:24.077335+00:00",
+      "sort_order": 1,
+      "updated_at": "2026-11-04T15:03:11.829093+00:00",
+      "published_at": null,
+      "cover_image_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/collections/1790978722569-mash-551c8b51.png",
+      "translations": [
+        {
+          "id": "a0d661f4-d0ae-47c2-bfe3-a94c7ae197f9",
+          "name": "Colección Oasis",
+          "locale": "es",
+          "seo_title": null,
+          "created_at": "2026-10-02T22:05:24.482728+00:00",
+          "updated_at": "2026-11-04T15:03:12.183526+00:00",
+          "description": "Diseñado para momentos que se disfrutan sin prisa, espacios que elevan la experiencia y una comodidad que te invita a quedarte un poco más.",
+          "collection_id": "0dded531-e12c-4b14-92de-c7ad0c6bb659",
+          "seo_description": null
+        },
+        {
+          "id": "8bf742e2-cb8c-47d3-87e5-b750bb76894b",
+          "name": "Oasis Collection",
+          "locale": "en",
+          "seo_title": null,
+          "created_at": "2026-10-02T22:05:24.482728+00:00",
+          "updated_at": "2026-11-04T15:03:12.183526+00:00",
+          "description": "Designed for unhurried moments, elevated spaces, and a level of comfort that invites you to stay a little longer.",
+          "collection_id": "0dded531-e12c-4b14-92de-c7ad0c6bb659",
+          "seo_description": null
+        }
+      ]
+    },
+    {
+      "id": "2291e695-8cfe-44b2-abf2-5d9165f5285f",
+      "slug": "terraza",
+      "status": "published",
+      "featured": true,
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "sort_order": 10,
+      "updated_at": "2026-11-04T15:03:27.697009+00:00",
+      "published_at": null,
+      "cover_image_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/collections/1790374027190-mash-971af580.png",
+      "translations": [
+        {
+          "id": "5a453e0d-bca4-49dc-83e6-6a2b99b9053d",
+          "name": "Terraza",
+          "locale": "es",
+          "seo_title": "Muebles de terraza MASH",
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "updated_at": "2026-11-04T15:03:28.017377+00:00",
+          "description": "Sets diseñados para patios, terrazas sociales y villas donde el confort se encuentra con la elegancia, y cada detalle está pensado para perdurar.\r\n\r\nPiezas que aportan presencia, sofisticación y resistencia, creando exteriores tan acogedores como memorables.",
+          "collection_id": "2291e695-8cfe-44b2-abf2-5d9165f5285f",
+          "seo_description": "Coleccion de muebles para terraza, patios y areas sociales exteriores."
+        },
+        {
+          "id": "cd8a5666-f4e9-4b7c-b943-e0567bb3c569",
+          "name": "Terrace",
+          "locale": "en",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "updated_at": "2026-11-04T15:03:28.017377+00:00",
+          "description": "Outdoor furniture sets designed for patios, social terraces, and villas where comfort, visual presence, and lasting durability matter equally.\r\n\r\nThoughtfully crafted to bring sophistication, effortless comfort, and timeless appeal to every outdoor space.",
+          "collection_id": "2291e695-8cfe-44b2-abf2-5d9165f5285f",
+          "seo_description": null
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "e6aa65a0-7af5-43a4-98de-78dc06d84b8a",
+      "slug": "piscina-villa",
+      "status": "published",
+      "featured": false,
+      "location": "Republica Dominicana",
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "sort_order": 10,
+      "updated_at": "2026-11-04T11:15:19.078279+00:00",
+      "project_date": null,
+      "published_at": null,
+      "cover_image_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/projects/1790978263484-df611b36-2770-49ad-89dd-c71bf73cc784-c9d464ab.png",
+      "translations": [
+        {
+          "id": "876b2c4a-e96d-450a-bf02-73ef54f5800c",
+          "title": "Áreas de piscinas",
+          "locale": "es",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "project_id": "e6aa65a0-7af5-43a4-98de-78dc06d84b8a",
+          "updated_at": "2026-10-02T21:57:44.514337+00:00",
+          "description": "Espacio de descanso junto a piscina presentado como referencia visual. Personalizamos colores, diseño y tamaño.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "6df16942-b74d-424e-aeda-e388e2574ab4",
+          "title": "Villa and Pool areas",
+          "locale": "en",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "project_id": "e6aa65a0-7af5-43a4-98de-78dc06d84b8a",
+          "updated_at": "2026-10-02T21:57:44.514337+00:00",
+          "description": "Poolside lounge setting shown as a visual reference. We customize each piece in color, design, and size.",
+          "seo_description": null,
+          "translation_status": "complete"
+        }
+      ],
+      "images": [
+        {
+          "id": "35a74f6e-b543-49fb-9678-303e87628672",
+          "alt_en": "Villa and Pool areas",
+          "alt_es": "Áreas de piscinas",
+          "is_cover": true,
+          "created_at": "2026-10-02T21:57:44.644081+00:00",
+          "project_id": "e6aa65a0-7af5-43a4-98de-78dc06d84b8a",
+          "sort_order": 0,
+          "updated_at": "2026-10-02T21:57:44.644081+00:00",
+          "storage_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/projects/1790978263484-df611b36-2770-49ad-89dd-c71bf73cc784-c9d464ab.png"
+        },
+        {
+          "id": "e1a1c645-3579-4a41-8b62-96267150acdb",
+          "alt_en": "Villa pool",
+          "alt_es": "Piscina de villa",
+          "is_cover": false,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "project_id": "e6aa65a0-7af5-43a4-98de-78dc06d84b8a",
+          "sort_order": 0,
+          "updated_at": "2026-10-02T21:57:44.796566+00:00",
+          "storage_path": "/assets/images/oculus-descanso-piscina-villa-rd.jpeg"
+        }
+      ]
+    },
+    {
+      "id": "1d309fef-4783-419e-9992-89243de1cada",
+      "slug": "terraza-social",
+      "status": "published",
+      "featured": false,
+      "location": "Santiago",
+      "created_at": "2026-09-24T21:44:27.380894+00:00",
+      "sort_order": 20,
+      "updated_at": "2026-11-04T11:15:23.571068+00:00",
+      "project_date": null,
+      "published_at": null,
+      "cover_image_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/projects/1793022656977-45a67e6f-3f2e-451e-893c-35a64ad2b39b-dd4266ed.png",
+      "translations": [
+        {
+          "id": "a6fe8147-3e64-4ab2-805b-bf7f27db03bc",
+          "title": "Terraza social",
+          "locale": "es",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "project_id": "1d309fef-4783-419e-9992-89243de1cada",
+          "updated_at": "2026-10-26T13:50:58.276245+00:00",
+          "description": "Ambiente exterior residencial presentado como referencia visual.",
+          "seo_description": null,
+          "translation_status": "complete"
+        },
+        {
+          "id": "4f5bc9fd-96a0-4680-abac-03d9c329cdc0",
+          "title": "Social terrace",
+          "locale": "en",
+          "seo_title": null,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "project_id": "1d309fef-4783-419e-9992-89243de1cada",
+          "updated_at": "2026-10-26T13:50:58.276245+00:00",
+          "description": "Residential outdoor setting shown as a visual reference.",
+          "seo_description": null,
+          "translation_status": "complete"
+        }
+      ],
+      "images": [
+        {
+          "id": "5a7fba8f-0a83-4154-a1b4-86917e85ec2b",
+          "alt_en": "Social terrace",
+          "alt_es": "Terraza social",
+          "is_cover": true,
+          "created_at": "2026-10-26T13:50:58.566127+00:00",
+          "project_id": "1d309fef-4783-419e-9992-89243de1cada",
+          "sort_order": 0,
+          "updated_at": "2026-10-26T13:50:58.566127+00:00",
+          "storage_path": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/projects/1793022656977-45a67e6f-3f2e-451e-893c-35a64ad2b39b-dd4266ed.png"
+        },
+        {
+          "id": "747b96d9-4373-4cc6-8f2e-a1608cf6c971",
+          "alt_en": "Social terrace",
+          "alt_es": "Terraza social",
+          "is_cover": false,
+          "created_at": "2026-09-24T21:44:27.380894+00:00",
+          "project_id": "1d309fef-4783-419e-9992-89243de1cada",
+          "sort_order": 0,
+          "updated_at": "2026-10-26T13:50:58.884967+00:00",
+          "storage_path": "/assets/images/area-set-patio-terraza-santiago.jpeg"
+        }
+      ]
+    }
+  ],
+  "siteContentKeys": [
+    {
+      "key": "site.settings",
+      "is_public": true,
+      "translationLocales": [
+        "es",
+        "en"
+      ]
+    },
+    {
+      "key": "site.navigation",
+      "is_public": true,
+      "translationLocales": [
+        "es",
+        "en"
+      ]
+    },
+    {
+      "key": "site.footer",
+      "is_public": true,
+      "translationLocales": [
+        "es",
+        "en"
+      ]
+    },
+    {
+      "key": "page.about",
+      "is_public": true,
+      "translationLocales": [
+        "es",
+        "en"
+      ]
+    },
+    {
+      "key": "page.contact",
+      "is_public": true,
+      "translationLocales": [
+        "es",
+        "en"
+      ]
+    },
+    {
+      "key": "page.projects",
+      "is_public": true,
+      "translationLocales": [
+        "es",
+        "en"
+      ]
+    },
+    {
+      "key": "home.sections",
+      "is_public": true,
+      "translationLocales": [
+        "es",
+        "en"
+      ]
+    },
+    {
+      "key": "home.hero",
+      "is_public": true,
+      "translationLocales": [
+        "es",
+        "en"
+      ]
+    }
+  ],
+  "legacy": {
+    "products": [
+      {
+        "slug": "oasis-set",
+        "name": "Oasis Set",
+        "collectionSlug": "terraza",
+        "image": "/assets/images/oasis-set.jpg",
+        "gallery": [
+          "/assets/images/oasis-set.jpg",
+          "/assets/images/oasis-hero.jpg",
+          "/assets/images/oasis-op.jpg"
+        ],
+        "alt": {
+          "es": "Juego de terraza Oasis para patio amplio",
+          "en": "Oasis terrace set for a spacious patio"
+        },
+        "description": {
+          "es": "Un juego de sala exterior amplio y elegante para terrazas donde quieres recibir con estilo, comodidad y una presencia impecable.",
+          "en": "A spacious and elegant outdoor lounge set for terraces where style, comfort and presence matter."
+        },
+        "materials": {
+          "es": "Fibra sintetica y perfiles galvanizados.",
+          "en": "Synthetic fiber and galvanized profiles."
+        },
+        "dimensions": {
+          "es": "Dimensiones por confirmar segun composicion.",
+          "en": "Dimensions to be confirmed according to composition."
+        },
+        "finishes": {
+          "es": "Acabados sujetos a disponibilidad.",
+          "en": "Finishes subject to availability."
+        },
+        "care": {
+          "es": "Limpiar con pano humedo, jabon neutro y secado al aire.",
+          "en": "Clean with a damp cloth, mild soap and air drying."
+        },
+        "featured": true
+      },
+      {
+        "slug": "candor-clasico",
+        "name": "Candor Clasico",
+        "collectionSlug": "terraza",
+        "image": "/assets/images/candor-clasico.jpg",
+        "gallery": [
+          "/assets/images/candor-clasico.jpg",
+          "/assets/images/candor-l.jpg"
+        ],
+        "alt": {
+          "es": "Muebles para patio Candor Clasico",
+          "en": "Candor Clasico patio furniture"
+        },
+        "description": {
+          "es": "Un set sobrio y facil de combinar para patios, balcones amplios o terrazas que necesitan un look limpio y acogedor.",
+          "en": "A calm, easy-to-pair set for patios, generous balconies or terraces that need a clean, welcoming look."
+        },
+        "materials": {
+          "es": "Fibra sintetica y estructura galvanizada.",
+          "en": "Synthetic fiber and galvanized structure."
+        },
+        "dimensions": {
+          "es": "Consultar medidas disponibles.",
+          "en": "Ask for available dimensions."
+        },
+        "finishes": {
+          "es": "Tonos neutros y acabados segun disponibilidad.",
+          "en": "Neutral tones and finishes according to availability."
+        },
+        "care": {
+          "es": "Evitar productos abrasivos. Lavar cojineria en ciclo delicado.",
+          "en": "Avoid abrasive products. Wash cushion covers on delicate cycle."
+        },
+        "featured": true
+      },
+      {
+        "slug": "media-luna",
+        "name": "Media Luna",
+        "collectionSlug": "terraza",
+        "image": "/assets/images/media-luna.jpg",
+        "gallery": [
+          "/assets/images/media-luna.jpg",
+          "/assets/images/area-set-patio-terraza-santiago.jpeg"
+        ],
+        "alt": {
+          "es": "Set Media Luna para terraza moderna",
+          "en": "Media Luna set for a modern terrace"
+        },
+        "description": {
+          "es": "Una opcion con personalidad para proyectos que quieren un punto focal diferente y elegante en exterior.",
+          "en": "A distinctive option for projects that want a different and elegant outdoor focal point."
+        },
+        "materials": {
+          "es": "Fibra sintetica apta para exterior.",
+          "en": "Outdoor-ready synthetic fiber."
+        },
+        "dimensions": {
+          "es": "Consultar medidas disponibles.",
+          "en": "Ask for available dimensions."
+        },
+        "finishes": {
+          "es": "Acabados por disponibilidad.",
+          "en": "Finishes by availability."
+        },
+        "care": {
+          "es": "Cepillo suave, agua y shampoo delicado para la fibra.",
+          "en": "Soft brush, water and gentle shampoo for the fiber."
+        }
+      },
+      {
+        "slug": "oculus-mare",
+        "name": "Oculus Mare",
+        "collectionSlug": "dining",
+        "image": "/assets/images/oculus-mare-dining.jpg",
+        "gallery": [
+          "/assets/images/oculus-mare-dining.jpg",
+          "/assets/images/oculus-mare-compacto.jpg"
+        ],
+        "alt": {
+          "es": "Comedor exterior Oculus Mare",
+          "en": "Oculus Mare outdoor dining set"
+        },
+        "description": {
+          "es": "Una mesa con presencia moderna para quienes quieren un comedor exterior con caracter y gran valor visual.",
+          "en": "A table with modern presence for outdoor dining spaces with character and visual value."
+        },
+        "materials": {
+          "es": "Estructura preparada para exterior y acabado tejido.",
+          "en": "Outdoor-ready structure and woven finish."
+        },
+        "dimensions": {
+          "es": "Consultar configuracion y medidas.",
+          "en": "Ask for configuration and dimensions."
+        },
+        "finishes": {
+          "es": "Acabados segun disponibilidad.",
+          "en": "Finishes according to availability."
+        },
+        "care": {
+          "es": "Limpiar despues de lluvia fuerte y dejar secar al aire.",
+          "en": "Clean after heavy rain and let air dry."
+        },
+        "featured": true
+      },
+      {
+        "slug": "rombois-set",
+        "name": "Rombois Set",
+        "collectionSlug": "dining",
+        "image": "/assets/images/rombois-set.jpg",
+        "gallery": [
+          "/assets/images/rombois-set.jpg",
+          "/assets/images/candor-combinado.jpg"
+        ],
+        "alt": {
+          "es": "Rombois Set para restaurante o balcon",
+          "en": "Rombois Set for restaurant or balcony"
+        },
+        "description": {
+          "es": "Calido, elegante y muy acogedor para cenas en familia o reuniones en ambientes de hospitalidad.",
+          "en": "Warm, elegant and welcoming for family dinners or hospitality spaces."
+        },
+        "materials": {
+          "es": "Fibra sintetica con estructura firme.",
+          "en": "Synthetic fiber with a firm structure."
+        },
+        "dimensions": {
+          "es": "Consultar medidas disponibles.",
+          "en": "Ask for available dimensions."
+        },
+        "finishes": {
+          "es": "Acabados neutros sujetos a disponibilidad.",
+          "en": "Neutral finishes subject to availability."
+        },
+        "care": {
+          "es": "Usar jabon neutro y pano humedo.",
+          "en": "Use mild soap and a damp cloth."
+        }
+      },
+      {
+        "slug": "balinesa-trap",
+        "name": "Balinesa Trap",
+        "collectionSlug": "piscina",
+        "image": "/assets/images/cama-balinesa-trap.jpg",
+        "gallery": [
+          "/assets/images/cama-balinesa-trap.jpg",
+          "/assets/images/set-cama-trap.jpeg"
+        ],
+        "alt": {
+          "es": "Cama balinesa para piscina y villa",
+          "en": "Outdoor daybed for pool and villa"
+        },
+        "description": {
+          "es": "Una cama balinesa que transforma cualquier area de piscina en un espacio de descanso premium.",
+          "en": "An outdoor daybed that turns any pool area into a premium rest space."
+        },
+        "materials": {
+          "es": "Fibra sintetica y perfiles galvanizados.",
+          "en": "Synthetic fiber and galvanized profiles."
+        },
+        "dimensions": {
+          "es": "Consultar medidas y composicion.",
+          "en": "Ask for dimensions and composition."
+        },
+        "finishes": {
+          "es": "Acabados por disponibilidad.",
+          "en": "Finishes by availability."
+        },
+        "care": {
+          "es": "Secar cojines al aire si se humedecen.",
+          "en": "Air dry cushions if they become wet."
+        },
+        "featured": true
+      },
+      {
+        "slug": "chaise-candor",
+        "name": "Chaise Candor",
+        "collectionSlug": "piscina",
+        "image": "/assets/images/chaise-candor.jpg",
+        "gallery": [
+          "/assets/images/chaise-candor.jpg",
+          "/assets/images/oculus-chaise.jpg"
+        ],
+        "alt": {
+          "es": "Chaise exterior resistente al sol",
+          "en": "Outdoor chaise resistant to sun exposure"
+        },
+        "description": {
+          "es": "Una chaise comoda y bonita para tomar sol, leer o simplemente descansar mejor.",
+          "en": "A comfortable chaise for sun, reading or quiet rest."
+        },
+        "materials": {
+          "es": "Materiales pensados para sol, humedad y uso constante.",
+          "en": "Materials chosen for sun, humidity and frequent use."
+        },
+        "dimensions": {
+          "es": "Consultar medidas disponibles.",
+          "en": "Ask for available dimensions."
+        },
+        "finishes": {
+          "es": "Tonos neutros segun disponibilidad.",
+          "en": "Neutral tones according to availability."
+        },
+        "care": {
+          "es": "Limpiar estructura con pano humedo y jabon neutro.",
+          "en": "Clean structure with a damp cloth and mild soap."
+        }
+      },
+      {
+        "slug": "candor-mix-collection",
+        "name": "Candor Mix Collection",
+        "collectionSlug": "terraza",
+        "image": "/assets/images/candor-mix-collection.jpeg",
+        "gallery": [
+          "/assets/images/candor-mix-collection.jpeg",
+          "/assets/images/candor-collection.jpeg"
+        ],
+        "alt": {
+          "es": "Candor Mix Collection para terraza premium",
+          "en": "Candor Mix Collection for a premium terrace"
+        },
+        "description": {
+          "es": "Un set completo que equilibra confort, elegancia y materiales de calidad para crear un ambiente exterior que invita a quedarse.",
+          "en": "A complete set balancing comfort, elegance and quality materials for an outdoor setting that invites people to stay."
+        },
+        "materials": {
+          "es": "Fibra sintetica y estructura galvanizada.",
+          "en": "Synthetic fiber and galvanized structure."
+        },
+        "dimensions": {
+          "es": "Consultar composicion y medidas.",
+          "en": "Ask for composition and dimensions."
+        },
+        "finishes": {
+          "es": "Acabados sujetos a disponibilidad.",
+          "en": "Finishes subject to availability."
+        },
+        "care": {
+          "es": "Rutina simple con pano humedo, jabon neutro y secado natural.",
+          "en": "Simple routine with damp cloth, mild soap and natural drying."
+        },
+        "featured": true
+      }
+    ],
+    "collections": [
+      {
+        "slug": "terraza",
+        "label": {
+          "es": "Terraza",
+          "en": "Terrace"
+        },
+        "title": {
+          "es": "Juegos de exterior para recibir con comodidad",
+          "en": "Outdoor lounge sets made for hosting"
+        },
+        "description": {
+          "es": "Sets para patios, terrazas sociales y villas donde la comodidad, la presencia visual y la resistencia importan por igual.",
+          "en": "Sets for patios, social terraces and villas where comfort, visual presence and durability matter equally."
+        },
+        "image": "/assets/images/oasis-set.jpg",
+        "alt": {
+          "es": "Juego de terraza Oasis para patio amplio en Santiago",
+          "en": "Oasis terrace set for a spacious patio in Santiago"
+        },
+        "note": {
+          "es": "Ideal para terrazas sociales, patios amplios y areas de reunion al aire libre.",
+          "en": "Ideal for social terraces, spacious patios and open-air gathering areas."
+        }
+      },
+      {
+        "slug": "dining",
+        "label": {
+          "es": "Dining",
+          "en": "Dining"
+        },
+        "title": {
+          "es": "Comedores exteriores para balcones, rooftops y restaurantes",
+          "en": "Outdoor dining for balconies, rooftops and restaurants"
+        },
+        "description": {
+          "es": "Mesas y sillas con presencia moderna para comer, conversar y recibir en espacios exteriores residenciales o comerciales.",
+          "en": "Tables and chairs with a modern presence for dining, gathering and hosting in residential or commercial outdoor spaces."
+        },
+        "image": "/assets/images/oculus-mare-dining.jpg",
+        "alt": {
+          "es": "Comedor exterior Oculus Mare para terraza en Republica Dominicana",
+          "en": "Oculus Mare outdoor dining set for a Dominican Republic terrace"
+        },
+        "note": {
+          "es": "Pensado para balcones, terrazas, restaurantes, hoteles y comedores al aire libre.",
+          "en": "Designed for balconies, terraces, restaurants, hotels and open-air dining spaces."
+        }
+      },
+      {
+        "slug": "piscina",
+        "label": {
+          "es": "Piscina",
+          "en": "Pool"
+        },
+        "title": {
+          "es": "Piezas de descanso para piscina, jardin y villas",
+          "en": "Relaxation pieces for pools, gardens and villas"
+        },
+        "description": {
+          "es": "Camas balinesas, chaise lounges y piezas de descanso para crear un ambiente tipo resort en casa o en proyectos de hospitalidad.",
+          "en": "Daybeds, chaise lounges and relaxation pieces for a resort-like atmosphere at home or in hospitality projects."
+        },
+        "image": "/assets/images/cama-balinesa-trap.jpg",
+        "alt": {
+          "es": "Cama balinesa para piscina y villa en Republica Dominicana",
+          "en": "Outdoor daybed for pool and villa spaces in the Dominican Republic"
+        },
+        "note": {
+          "es": "Perfecto para piscinas, jardines, villas, hoteles y espacios de descanso exterior.",
+          "en": "Perfect for pools, gardens, villas, hotels and outdoor relaxation spaces."
+        }
+      }
+    ],
+    "projects": [
+      {
+        "slug": "terraza-social",
+        "title": {
+          "es": "Terraza social",
+          "en": "Social terrace"
+        },
+        "location": {
+          "es": "Santiago",
+          "en": "Santiago"
+        },
+        "description": {
+          "es": "Base visual temporal para futuras instalaciones completadas, usando fotografia existente hasta conectar el contenido real.",
+          "en": "Temporary visual foundation for future completed installations, using existing photography until real content is connected."
+        },
+        "image": "/assets/images/area-set-patio-terraza-santiago.jpeg",
+        "alt": {
+          "es": "Area exterior amueblada para proyecto residencial",
+          "en": "Furnished outdoor area for a residential project"
+        }
+      },
+      {
+        "slug": "piscina-villa",
+        "title": {
+          "es": "Piscina de villa",
+          "en": "Villa pool"
+        },
+        "location": {
+          "es": "Republica Dominicana",
+          "en": "Dominican Republic"
+        },
+        "description": {
+          "es": "Una estructura preparada para mostrar galerias de instalaciones reales en la proxima fase.",
+          "en": "A structure prepared to show real installation galleries in the next phase."
+        },
+        "image": "/assets/images/oculus-descanso-piscina-villa-rd.jpeg",
+        "alt": {
+          "es": "Mueble de descanso exterior junto a piscina",
+          "en": "Outdoor lounge piece by a pool"
+        }
+      }
+    ],
+    "jsonCollections": [
+      {
+        "badge": "7 referencias",
+        "products": [
+          {
+            "name": "Oasis Set",
+            "image": "assets/images/oasis-set.jpg",
+            "alt": "Juego de terraza Oasis para patio amplio en Santiago",
+            "description": "Un juego de sala exterior amplio y elegante para terrazas donde quieres recibir con estilo, comodidad y una presencia impecable."
+          },
+          {
+            "name": "Candor Clasico",
+            "image": "assets/images/candor-clasico.jpg",
+            "alt": "Muebles para patio Candor Clasico en Republica Dominicana",
+            "description": "Un set sobrio y facil de combinar para patios, balcones amplios o terrazas que necesitan un look limpio y acogedor."
+          },
+          {
+            "name": "Candor L",
+            "image": "assets/images/candor-l.jpg",
+            "alt": "Set en L para terraza exterior en Santiago de los Caballeros",
+            "description": "Ideal para aprovechar esquinas y crear una terraza social mas amplia, funcional y comoda."
+          },
+          {
+            "name": "Media Luna",
+            "image": "assets/images/media-luna.jpg",
+            "alt": "Set Media Luna para terraza moderna y area social exterior",
+            "description": "Una opcion con personalidad para proyectos que quieren un punto focal diferente y elegante en exterior."
+          },
+          {
+            "name": "Tar Set",
+            "image": "assets/images/tar-set-terraza-moderna-santiago.jpeg",
+            "alt": "Tar Set de exterior para muebles de terraza modernos en Santiago",
+            "description": "Ligero a la vista, practico y muy funcional para terrazas modernas de estilo limpio."
+          },
+          {
+            "name": "Butacas Clasicas",
+            "image": "assets/images/set-butacas-clasicas.jpeg",
+            "alt": "Butacas clasicas para balcon y terraza exterior en RD",
+            "description": "El rincon ideal para conversar, relajarte y elevar balcones o patios con una composicion mas intima."
+          },
+          {
+            "name": "Area Set",
+            "image": "assets/images/area-set-patio-terraza-santiago.jpeg",
+            "alt": "Area Set para patio y terraza de proyecto residencial o comercial",
+            "description": "Una propuesta versatil para hogares y proyectos que buscan muebles duraderos para intemperie sin recargar el ambiente."
+          }
+        ],
+        "note_label": "Perfecto para",
+        "meta_text": "Si ves uno que encaja con tu espacio, escribenos por WhatsApp y te ayudamos a cotizar medidas, estilo y disponibilidad.",
+        "featured": false,
+        "style": "default",
+        "label": "Terrazas y patios",
+        "title": "Juegos de terraza y sets de exterior para recibir con <em>comodidad</em>",
+        "note_text": "Terrazas sociales, patios amplios, villas y areas de reunion al aire libre.",
+        "id": "momentos",
+        "description": "Esta coleccion esta pensada para quienes buscan muebles para patio en Santiago, muebles de terraza modernos y sets de exterior que ayuden a crear un ambiente social comodo, elegante y facil de disfrutar todos los dias."
+      },
+      {
+        "badge": "5 referencias",
+        "products": [
+          {
+            "name": "Oculus Mare",
+            "image": "assets/images/oculus-mare-dining.jpg",
+            "alt": "Comedor exterior Oculus Mare para terraza en Republica Dominicana",
+            "description": "Una mesa con presencia moderna para quienes quieren un comedor exterior con caracter y gran valor visual."
+          },
+          {
+            "name": "Rombois Set",
+            "image": "assets/images/rombois-set.jpg",
+            "alt": "Rombois Set para restaurante, balcon o comedor exterior",
+            "description": "Calido, elegante y muy acogedor para cenas en familia o reuniones en ambientes de hospitalidad."
+          },
+          {
+            "name": "Candor Combinado",
+            "image": "assets/images/candor-combinado.jpg",
+            "alt": "Candor Combinado para comedor y sala exterior en Santiago",
+            "description": "Una opcion flexible para espacios donde quieres comer, conversar y relajarte en un mismo ambiente."
+          },
+          {
+            "name": "Candor Collection",
+            "image": "assets/images/candor-collection.jpeg",
+            "alt": "Candor Collection para balcon exterior elegante en Santiago",
+            "description": "Convierte tu balcon en un espacio de lujo con un comedor de exterior elegante, comodo y facil de integrar."
+          },
+          {
+            "name": "Oculus Compacto",
+            "image": "assets/images/oculus-mare-compacto.jpg",
+            "alt": "Oculus Compacto para balcon pequeno o terraza funcional",
+            "description": "Ideal para espacios mas pequenos sin perder estilo, funcionalidad ni una presencia bien lograda."
+          }
+        ],
+        "note_label": "Perfecto para",
+        "meta_text": "Te mostramos opciones reales para que visualices mejor un comedor exterior moderno en tu hogar o negocio.",
+        "featured": false,
+        "style": "alt",
+        "label": "Balcones y dining",
+        "title": "Muebles para balcon y comedor exterior que hacen cada comida <em>mejor</em>",
+        "note_text": "Balcones, terrazas, restaurantes, hoteles y comedores al aire libre.",
+        "id": "cenas",
+        "description": "Aqui encuentras muebles para balcon en Santiago, comedores para terraza y opciones funcionales para restaurantes, rooftops y areas sociales donde la imagen del espacio importa tanto como la comodidad."
+      },
+      {
+        "badge": "7 referencias",
+        "products": [
+          {
+            "name": "Balinesa Trap",
+            "image": "assets/images/cama-balinesa-trap.jpg",
+            "alt": "Cama balinesa para piscina y villa en Republica Dominicana",
+            "description": "Una cama balinesa que transforma cualquier area de piscina en un espacio de descanso premium."
+          },
+          {
+            "name": "Balinesa Candor",
+            "image": "assets/images/cama-balinesa-candor.jpg",
+            "alt": "Cama balinesa Candor para terraza o jardin exterior",
+            "description": "Elegante, limpia y acogedora para quienes quieren un espacio relajado y bien montado."
+          },
+          {
+            "name": "Chaise Candor",
+            "image": "assets/images/chaise-candor.jpg",
+            "alt": "Chaise exterior resistente al sol para piscina en Santiago",
+            "description": "Una chaise comoda y bonita para tomar sol, leer o simplemente descansar mejor."
+          },
+          {
+            "name": "Cama Balinesa",
+            "image": "assets/images/cama-balinesa.jpeg",
+            "alt": "Cama balinesa de exterior para zona de descanso y piscina",
+            "description": "Tu propio rincon de descanso con estilo resort, pensado para exterior y para disfrutar mas tiempo."
+          },
+          {
+            "name": "Set de cama Trap",
+            "image": "assets/images/set-cama-trap.jpeg",
+            "alt": "Set premium de exterior para villa o area de piscina",
+            "description": "Una propuesta comoda y visualmente impactante para zonas de descanso exteriores de alto nivel."
+          },
+          {
+            "name": "Oculus Chaise",
+            "image": "assets/images/oculus-chaise.jpg",
+            "alt": "Oculus Chaise para terraza y piscina en Republica Dominicana",
+            "description": "Diseno con mucha presencia para un ambiente exterior que quiere verse diferente y mas exclusivo."
+          },
+          {
+            "name": "Oculus Descanso",
+            "image": "assets/images/oculus-descanso-piscina-villa-rd.jpeg",
+            "alt": "Mueble de descanso exterior para jardin o villa en RD",
+            "description": "Una pieza pensada para relajarte con comodidad y darle valor visual a tu area exterior."
+          }
+        ],
+        "note_label": "Perfecto para",
+        "meta_text": "Si buscas un look tipo resort en casa o en un proyecto, esta es la coleccion por donde empezar.",
+        "featured": false,
+        "style": "default",
+        "label": "Piscina y relax",
+        "title": "Muebles para piscina, villas y areas de descanso que se sienten <em>exclusivos</em>",
+        "note_text": "Piscinas, jardines, villas, hoteles y espacios de descanso exterior.",
+        "id": "oasis",
+        "description": "Seleccionamos piezas para crear un rincon de calma junto a la piscina, en un jardin o en una villa, con muebles resistentes a lluvia y sol que mantienen una imagen premium en exterior."
+      },
+      {
+        "badge": "Producto destacado",
+        "products": [
+          {
+            "name": "Candor Mix Collection",
+            "image": "assets/images/candor-mix-collection.jpeg",
+            "alt": "Candor Mix Collection para terraza premium en Santiago",
+            "description": "Un set completo que equilibra confort, elegancia y materiales de calidad para crear un ambiente exterior que invita a quedarse."
+          }
+        ],
+        "note_label": "Recomendado para",
+        "meta_text": "Si te interesa este set, escribenos y te ayudamos a cotizarlo segun el espacio donde lo quieres instalar.",
+        "featured": true,
+        "style": "default",
+        "label": "Destacado",
+        "title": "Una coleccion completa para terrazas de alto impacto <em>visual</em>",
+        "note_text": "Terrazas modernas, patios amplios, villas y proyectos premium.",
+        "id": "destacado",
+        "description": "Este set combina comodidad, diseno y presencia en una sola propuesta. Es ideal si quieres muebles de terraza modernos con materiales duraderos y una composicion elegante desde el primer vistazo."
+      }
+    ]
+  },
+  "differences": [
+    {
+      "slug": "oculus-mare",
+      "source": "supabase",
+      "status": "draft",
+      "legacySlugExists": true,
+      "decision": "Use Supabase status; do not merge by name"
+    },
+    {
+      "slug": "candor-set",
+      "source": "supabase",
+      "status": "published",
+      "legacySlugExists": false,
+      "decision": "Use Supabase status; do not merge by name"
+    },
+    {
+      "slug": "candor-clasico",
+      "source": "supabase",
+      "status": "published",
+      "legacySlugExists": true,
+      "decision": "Use Supabase status; do not merge by name"
+    },
+    {
+      "slug": "furniture-daybed",
+      "source": "supabase",
+      "status": "published",
+      "legacySlugExists": false,
+      "decision": "Use Supabase status; do not merge by name"
+    },
+    {
+      "slug": "candor-mix-collection",
+      "source": "supabase",
+      "status": "published",
+      "legacySlugExists": true,
+      "decision": "Use Supabase status; do not merge by name"
+    },
+    {
+      "slug": "candor-collection",
+      "source": "supabase",
+      "status": "published",
+      "legacySlugExists": false,
+      "decision": "Use Supabase status; do not merge by name"
+    },
+    {
+      "slug": "daybed-trap",
+      "source": "supabase",
+      "status": "published",
+      "legacySlugExists": false,
+      "decision": "Use Supabase status; do not merge by name"
+    },
+    {
+      "slug": "trap-set",
+      "source": "supabase",
+      "status": "published",
+      "legacySlugExists": false,
+      "decision": "Use Supabase status; do not merge by name"
+    },
+    {
+      "slug": "dulce-luna",
+      "source": "supabase",
+      "status": "published",
+      "legacySlugExists": false,
+      "decision": "Use Supabase status; do not merge by name"
+    },
+    {
+      "slug": "oasis-set",
+      "source": "lib/content.ts",
+      "status": "pending_editorial_approval",
+      "decision": "Preserved only; do not import or publish"
+    },
+    {
+      "slug": "media-luna",
+      "source": "lib/content.ts",
+      "status": "pending_editorial_approval",
+      "decision": "Preserved only; do not import or publish"
+    },
+    {
+      "slug": "rombois-set",
+      "source": "lib/content.ts",
+      "status": "pending_editorial_approval",
+      "decision": "Preserved only; do not import or publish"
+    },
+    {
+      "slug": "balinesa-trap",
+      "source": "lib/content.ts",
+      "status": "pending_editorial_approval",
+      "decision": "Preserved only; do not import or publish"
+    },
+    {
+      "slug": "chaise-candor",
+      "source": "lib/content.ts",
+      "status": "pending_editorial_approval",
+      "decision": "Preserved only; do not import or publish"
+    }
+  ],
+  "imageReferences": [
+    {
+      "owner": "product:oculus-mare",
+      "url": "/assets/images/oculus-mare-compacto.jpg"
+    },
+    {
+      "owner": "product:oculus-mare",
+      "url": "/assets/images/oculus-mare-dining.jpg"
+    },
+    {
+      "owner": "product:candor-set",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/products/1790945660072-img-6661-fed76220.png"
+    },
+    {
+      "owner": "product:candor-clasico",
+      "url": "/assets/images/candor-clasico.jpg"
+    },
+    {
+      "owner": "product:candor-clasico",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/products/1790969622844-9b1c2406-0571-4ff5-a2f1-c8f069800cdb-1c44b428.png"
+    },
+    {
+      "owner": "product:furniture-daybed",
+      "url": "/assets/images/chaise-candor.jpg"
+    },
+    {
+      "owner": "product:furniture-daybed",
+      "url": "/assets/images/oculus-chaise.jpg"
+    },
+    {
+      "owner": "product:candor-mix-collection",
+      "url": "/assets/images/candor-mix-collection.jpeg"
+    },
+    {
+      "owner": "product:candor-collection",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/products/1790976670492-mash-8ff32389.png"
+    },
+    {
+      "owner": "product:daybed-trap",
+      "url": "/assets/images/set-cama-trap.jpeg"
+    },
+    {
+      "owner": "product:trap-set",
+      "url": "/assets/images/oasis-set.jpg"
+    },
+    {
+      "owner": "product:trap-set",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/products/1790372527727-mash-5-8ed82725.png"
+    },
+    {
+      "owner": "product:trap-set",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/products/1790946097869-mash-4-de274fcf.png"
+    },
+    {
+      "owner": "product:dulce-luna",
+      "url": "/assets/images/area-set-patio-terraza-santiago.jpeg"
+    },
+    {
+      "owner": "product:dulce-luna",
+      "url": "/assets/images/media-luna.jpg"
+    },
+    {
+      "owner": "collection:balcones",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/collections/1793743131292-mash-5d07fff3.png"
+    },
+    {
+      "owner": "collection:piscina",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/collections/1793743822326-mueble-redondo-domo-tipo-u-6839a1c9.png"
+    },
+    {
+      "owner": "collection:oasis-collection",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/collections/1790978722569-mash-551c8b51.png"
+    },
+    {
+      "owner": "collection:terraza",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/collections/1790374027190-mash-971af580.png"
+    },
+    {
+      "owner": "project:piscina-villa",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/projects/1790978263484-df611b36-2770-49ad-89dd-c71bf73cc784-c9d464ab.png"
+    },
+    {
+      "owner": "project:piscina-villa",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/projects/1790978263484-df611b36-2770-49ad-89dd-c71bf73cc784-c9d464ab.png"
+    },
+    {
+      "owner": "project:piscina-villa",
+      "url": "/assets/images/oculus-descanso-piscina-villa-rd.jpeg"
+    },
+    {
+      "owner": "project:terraza-social",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/projects/1793022656977-45a67e6f-3f2e-451e-893c-35a64ad2b39b-dd4266ed.png"
+    },
+    {
+      "owner": "project:terraza-social",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/projects/1793022656977-45a67e6f-3f2e-451e-893c-35a64ad2b39b-dd4266ed.png"
+    },
+    {
+      "owner": "project:terraza-social",
+      "url": "/assets/images/area-set-patio-terraza-santiago.jpeg"
+    },
+    {
+      "owner": "site:page.about",
+      "url": "/assets/images/yascari.jpeg"
+    },
+    {
+      "owner": "site:home.sections",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/site/1793748603808-img-6599-17f85467.png"
+    },
+    {
+      "owner": "site:home.sections",
+      "url": "/assets/images/WhatsApp Image 2026-03-03 at 12.33.08 PM.jpeg"
+    },
+    {
+      "owner": "site:home.sections",
+      "url": "/assets/images/yascari.jpeg"
+    },
+    {
+      "owner": "site:home.sections",
+      "url": "/assets/images/textura-fibra-sintetica-v2.webp"
+    },
+    {
+      "owner": "site:home.sections",
+      "url": "/assets/images/estructura-acero.jpg"
+    },
+    {
+      "owner": "site:home.hero",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/site/1790374686379-7ac6f794-5b43-4b27-a3ad-06f47a74e507-c23008c0.png"
+    },
+    {
+      "owner": "site:home.hero",
+      "url": "/assets/images/candor-mix-collection.jpeg"
+    },
+    {
+      "owner": "site:home.hero",
+      "url": "https://guzuqitvzkenzsvcuttg.supabase.co/storage/v1/object/public/mash-media/site/1793758348179-45a67e6f-3f2e-451e-893c-35a64ad2b39b-b40a6dd2.png"
+    }
+  ],
+  "storageObjects": [
+    {
+      "name": "products/1790372527727-mash-5-8ed82725.png",
+      "metadata": {
+        "eTag": "\"317b74c349af169a3d736672489bb317\"",
+        "size": 2286982,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-09-25T21:42:09.000Z",
+        "contentLength": 2286982,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "collections/1790374027190-mash-971af580.png",
+      "metadata": {
+        "eTag": "\"56150e7aae55033b6e55847f1daa06b0\"",
+        "size": 3863284,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-09-25T22:07:08.000Z",
+        "contentLength": 3863284,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "site/1790374686379-7ac6f794-5b43-4b27-a3ad-06f47a74e507-c23008c0.png",
+      "metadata": {
+        "eTag": "\"c12f4d5e611e664766a9f0590096690a\"",
+        "size": 3011048,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-09-25T22:18:08.000Z",
+        "contentLength": 3011048,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "projects/1790714311398-brag-2657d4ef.jpg",
+      "metadata": {
+        "eTag": "\"ec61991d7c04c3c2033fe58200cd3b9f\"",
+        "size": 201671,
+        "mimetype": "image/jpeg",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-09-29T20:38:32.000Z",
+        "contentLength": 201671,
+        "httpStatusCode": 200
+      },
+      "referenced": false
+    },
+    {
+      "name": "products/1790945660072-img-6661-fed76220.png",
+      "metadata": {
+        "eTag": "\"28ff39908a0dc6ed1b2d02869c425b6c\"",
+        "size": 2845092,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-10-02T12:54:22.000Z",
+        "contentLength": 2845092,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "products/1790946097869-mash-4-de274fcf.png",
+      "metadata": {
+        "eTag": "\"22b6ec4bb4f145008749c616c4a1d141\"",
+        "size": 3192060,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-10-02T13:01:39.000Z",
+        "contentLength": 3192060,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "products/1790969622844-9b1c2406-0571-4ff5-a2f1-c8f069800cdb-1c44b428.png",
+      "metadata": {
+        "eTag": "\"35c374ab149fcb22e8f7da694da6d5d9\"",
+        "size": 1490473,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-10-02T19:33:44.000Z",
+        "contentLength": 1490473,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "products/1790976670492-mash-8ff32389.png",
+      "metadata": {
+        "eTag": "\"08d032ae78d31f99d3fed0c32010ae00\"",
+        "size": 1022795,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-10-02T21:31:11.000Z",
+        "contentLength": 1022795,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "projects/1790978263484-df611b36-2770-49ad-89dd-c71bf73cc784-c9d464ab.png",
+      "metadata": {
+        "eTag": "\"f6f7c53e150159e31701f369a465ea8a\"",
+        "size": 2585421,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-10-02T21:57:45.000Z",
+        "contentLength": 2585421,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "collections/1790978722569-mash-551c8b51.png",
+      "metadata": {
+        "eTag": "\"c1892f9f272bd0a5aabec6a9adeac447\"",
+        "size": 4146638,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-10-02T22:05:24.000Z",
+        "contentLength": 4146638,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "projects/1793022656977-45a67e6f-3f2e-451e-893c-35a64ad2b39b-dd4266ed.png",
+      "metadata": {
+        "eTag": "\"1f8edff66a8cfd57368669394c0a2e36\"",
+        "size": 2991656,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-10-26T13:50:58.000Z",
+        "contentLength": 2991656,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "collections/1793743131292-mash-5d07fff3.png",
+      "metadata": {
+        "eTag": "\"2d19a9a394ab6f49894fd91532e44ad6\"",
+        "size": 2378151,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-11-03T21:58:52.000Z",
+        "contentLength": 2378151,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "collections/1793743822326-mueble-redondo-domo-tipo-u-6839a1c9.png",
+      "metadata": {
+        "eTag": "\"f8d5d2b513034dd7925e8286addf9a86\"",
+        "size": 1782034,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-11-03T22:10:23.000Z",
+        "contentLength": 1782034,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "site/1793746812830-img-7330-2e90d2eb.png",
+      "metadata": {
+        "eTag": "\"ed631aea6a81846e7fe20195dd519a24\"",
+        "size": 3240948,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-11-03T23:00:14.000Z",
+        "contentLength": 3240948,
+        "httpStatusCode": 200
+      },
+      "referenced": false
+    },
+    {
+      "name": "site/1793748603808-img-6599-17f85467.png",
+      "metadata": {
+        "eTag": "\"2eab3bec815757e32ab25127be07375e\"",
+        "size": 2551046,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-11-03T23:30:05.000Z",
+        "contentLength": 2551046,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    },
+    {
+      "name": "site/1793758348179-45a67e6f-3f2e-451e-893c-35a64ad2b39b-b40a6dd2.png",
+      "metadata": {
+        "eTag": "\"1f8edff66a8cfd57368669394c0a2e36\"",
+        "size": 2991656,
+        "mimetype": "image/png",
+        "cacheControl": "max-age=31536000",
+        "lastModified": "2026-11-04T02:12:30.000Z",
+        "contentLength": 2991656,
+        "httpStatusCode": 200
+      },
+      "referenced": true
+    }
+  ],
+  "policy": {
+    "legacyImports": false,
+    "automaticNameMatching": false,
+    "oculusMare": "draft; never public"
+  }
+}

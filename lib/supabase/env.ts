@@ -11,7 +11,9 @@ export type SupabaseServerConfig = SupabasePublicConfig & {
 
 export function getSupabasePublicConfig(): SupabasePublicConfig | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const anonKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !anonKey) return null;
 
@@ -24,20 +26,28 @@ export function getSupabaseServerConfig(): SupabaseServerConfig | null {
 
   return {
     ...publicConfig,
-    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
   };
 }
 
 export function isSupabaseCatalogEnabled() {
-  return process.env.NEXT_PUBLIC_ENABLE_SUPABASE_CATALOG === "true";
+  return true; // Compatibility export. Managed content always comes from Supabase.
 }
 
 export function getSupabaseSetupIssues() {
   const issues: string[] = [];
 
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) issues.push("NEXT_PUBLIC_SUPABASE_URL");
-  if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) issues.push("NEXT_PUBLIC_SUPABASE_ANON_KEY");
-  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) issues.push("SUPABASE_SERVICE_ROLE_KEY");
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL)
+    issues.push("NEXT_PUBLIC_SUPABASE_URL");
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY &&
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
+    issues.push(
+      "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY (o NEXT_PUBLIC_SUPABASE_ANON_KEY)",
+    );
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY)
+    issues.push("SUPABASE_SERVICE_ROLE_KEY");
 
   return issues;
 }

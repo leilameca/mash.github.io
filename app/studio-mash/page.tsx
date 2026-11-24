@@ -1,22 +1,35 @@
 import Link from "next/link";
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { authenticatedContentClient } from "@/lib/supabase/persistence";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { StudioShell } from "./StudioShell";
 
 async function getCounts() {
-  const admin = createSupabaseAdminClient();
+  const admin = await authenticatedContentClient();
   const [products, collections, projects, contacts] = await Promise.all([
     admin.from("products").select("id", { count: "exact", head: true }),
     admin.from("collections").select("id", { count: "exact", head: true }),
     admin.from("projects").select("id", { count: "exact", head: true }),
-    admin.from("contact_requests").select("id", { count: "exact", head: true })
+    admin.from("contact_requests").select("id", { count: "exact", head: true }),
   ]);
 
+  if([products,collections,projects,contacts].some(result=>result.error || result.count===null))throw new Error("No pudimos consultar los indicadores. Intenta de nuevo.");
   return [
-    { label: "Productos", value: products.count ?? 0, href: "/studio-mash/productos" },
-    { label: "Colecciones", value: collections.count ?? 0, href: "/studio-mash/colecciones" },
-    { label: "Proyectos", value: projects.count ?? 0, href: "/studio-mash/proyectos" },
-    { label: "Solicitudes", value: contacts.count ?? 0, href: "/studio-mash" }
+    {
+      label: "Productos",
+      value: products.count ?? 0,
+      href: "/studio-mash/productos",
+    },
+    {
+      label: "Colecciones",
+      value: collections.count ?? 0,
+      href: "/studio-mash/colecciones",
+    },
+    {
+      label: "Proyectos",
+      value: projects.count ?? 0,
+      href: "/studio-mash/proyectos",
+    },
+    { label: "Solicitudes", value: contacts.count ?? 0, href: "/studio-mash" },
   ];
 }
 
@@ -50,9 +63,17 @@ export default async function StudioHomePage() {
         </div>
         <ul className="studio-checklist">
           <li>Usar texto base en espanol aprobado por MASH.</li>
-          <li>No inventar proyectos, reclamos legales ni descripciones finales en ingles.</li>
-          <li>Subir imagenes reales optimizadas en la carpeta correcta del bucket.</li>
-          <li>Publicar solo cuando la traduccion y disponibilidad hayan sido revisadas.</li>
+          <li>
+            No inventar proyectos, reclamos legales ni descripciones finales en
+            ingles.
+          </li>
+          <li>
+            Subir imagenes reales optimizadas en la carpeta correcta del bucket.
+          </li>
+          <li>
+            Publicar solo cuando la traduccion y disponibilidad hayan sido
+            revisadas.
+          </li>
         </ul>
       </section>
     </StudioShell>

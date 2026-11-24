@@ -1,14 +1,21 @@
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { authenticatedContentClient } from "@/lib/supabase/persistence";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { StudioShell } from "../../StudioShell";
 import { ProductForm } from "../ProductForm";
 
 async function getCollections() {
-  const admin = createSupabaseAdminClient();
-  const { data } = await admin.from("collections").select("id,slug,collection_translations(locale,name)").order("sort_order");
+  const admin = await authenticatedContentClient();
+  const { data, error } = await admin
+    .from("collections")
+    .select("id,revision,slug,collection_translations(locale,name)")
+    .order("sort_order");
+  if(error)throw new Error("No pudimos consultar las colecciones. Intenta de nuevo.");
   return (data ?? []).map((collection: any) => ({
     id: collection.id,
-    label: collection.collection_translations?.find((item: any) => item.locale === "es")?.name ?? collection.slug
+    label:
+      collection.collection_translations?.find(
+        (item: any) => item.locale === "es",
+      )?.name ?? collection.slug,
   }));
 }
 
