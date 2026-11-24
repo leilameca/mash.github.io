@@ -95,7 +95,9 @@
   .site-header .primary-nav {
     visibility: hidden;
     border-radius: var(--editorial-radius);
-    transition: opacity var(--editorial-motion), transform var(--editorial-motion);
+    transition:
+      opacity var(--editorial-motion),
+      transform var(--editorial-motion);
   }
   .site-header .primary-nav.is-open {
     visibility: visible;
@@ -142,4 +144,52 @@
     );
     width: calc(100% - var(--map-clearance));
   }
+}
+
+/* Darken text accents on light surfaces while preserving the gold palette. */
+.mash-public .showroom-intro__copy .eyebrow,
+.mash-public .product-detail .eyebrow,
+.mash-public .product-detail .spec-list dt,
+.mash-public .related-products .eyebrow,
+.mash-public .editorial-entry .eyebrow,
+.mash-public a[href$="/noticias"].text-link,
+.site-header .language-switch a[aria-current="page"] {
+  color: #715526;
+}
+
+.interactive-gallery__unavailable {
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: var(--surface-warm);
+  color: var(--text);
+  padding: 1rem;
+}
+.interactive-gallery__thumbs .interactive-gallery__unavailable {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  font-size: 0.7rem;
+}
+
+.mash-privacy-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-block: 1rem;
+}
+.mash-privacy-settings p {
+  flex-basis: 100%;
+}
+.mash-privacy-settings button {
+  min-height: 44px;
+  padding: 0.45rem 0.9rem;
+  color: var(--text);
+  background: var(--bg-soft);
+  border: 1px solid var(--brown);
+}
+
+.mash-public .editorial-split__portrait--yascari {
+  object-position: 50% 4%;
 }

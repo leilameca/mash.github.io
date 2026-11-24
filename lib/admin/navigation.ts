@@ -61,7 +61,6 @@ export const studioNavigation: StudioNavItem[] = [
     label: "Analítica",
     group: "Herramientas",
     icon: "analytics",
-    pending: true,
   },
   {
     href: "/studio-mash/revisiones",

@@ -28,6 +28,7 @@ const routes = [
   const page = await browser.newPage({
     viewport: { width: 1440, height: 900 },
     reducedMotion: "reduce",
+    hasTouch: true,
   });
   const errors = [];
   const samples = [];
@@ -125,15 +126,52 @@ const routes = [
       ),
       false,
     );
+    await page.route(
+      (url) => url.pathname === "/_next/image",
+      (route) => route.abort(),
+    );
+    await page.goto(origin + "/es/productos/oasis-set");
+    await page
+      .getByText("Fotografía no disponible", { exact: true })
+      .first()
+      .waitFor();
+    await page.unrouteAll();
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(origin + "/es");
+    const publicLinks = await page
+      .locator(".site-header .primary-nav > a")
+      .allTextContents();
+    const publicFooter = await page
+      .locator(".site-footer nav[aria-label=Legal] a")
+      .allTextContents();
     await page.goto(origin + "/__preview__/enter");
     await page.goto(origin + "/studio-mash/contenido/editor");
     assert.equal(await page.locator(".whatsapp-float").count(), 0);
     await page.getByRole("button", { name: "Móvil", exact: true }).click();
     const mobileNav = page.locator(".visual-frame .visual-preview-nav");
-    await mobileNav.getByLabel("Menú", { exact: true }).click();
+    await mobileNav.getByLabel("Menú", { exact: true }).tap();
     await mobileNav
       .getByRole("navigation", { name: "Navegación móvil" })
       .waitFor();
+    assert.deepEqual(
+      await mobileNav.locator(".primary-nav > span").allTextContents(),
+      publicLinks,
+    );
+    assert.deepEqual(
+      await page
+        .locator(
+          ".visual-frame .visual-preview-footer nav[aria-label=Legal] span",
+        )
+        .allTextContents(),
+      publicFooter,
+    );
+    await page.keyboard.press("Escape");
+    assert.equal(
+      await mobileNav
+        .getByLabel("Menú", { exact: true })
+        .getAttribute("aria-expanded"),
+      "false",
+    );
     if (process.env.MASH_CAPTURE_SCREENSHOTS === "1") {
       await page.screenshot({
         path: directory + "/lienzo-movil.png",

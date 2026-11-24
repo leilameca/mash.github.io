@@ -1,11 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
-import Link from "next/link";
+import { NewsCards } from "@/components/editorial/NewsCards";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { isLocale, localizedPath } from "@/lib/i18n";
+import { isLocale } from "@/lib/i18n";
 import { routeAlternates } from "@/lib/seo";
 import { getNews } from "@/lib/editorial/queries";
-import { categories, categoriesEn } from "@/lib/editorial/schema";
 import "@/components/editorial/editorial.css";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -25,27 +23,7 @@ export default async function Page({ params }: Props) {
     <section className="section-shell editorial-published">
       <h1>{es ? "Noticias" : "News"}</h1>
       {entries.length ? (
-        <div className="editorial-public-list">
-          {entries.map((entry) => (
-            <article key={entry.id} className="editorial-entry">
-              <Link href={localizedPath(locale, "/noticias/" + entry.slug)}>
-                {entry.data.cover && (
-                  <img
-                    src={entry.data.cover}
-                    alt={entry.text.cover_alt || ""}
-                    loading="lazy"
-                  />
-                )}
-                <h2>{entry.text.title || entry.original.title}</h2>
-              </Link>
-              <p className="eyebrow">
-                {(es ? categories : categoriesEn)[entry.data.category]}
-                {entry.data.date && " · " + entry.data.date}
-              </p>
-              <p>{entry.text.excerpt || entry.original.excerpt}</p>
-            </article>
-          ))}
-        </div>
+        <NewsCards entries={entries} locale={locale} />
       ) : (
         <p>
           {es

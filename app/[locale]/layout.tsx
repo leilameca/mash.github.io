@@ -6,6 +6,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { isPrivatePreview } from "@/lib/seo";
+import { GoogleMeasurement } from "@/components/GoogleMeasurement";
 import { PublicAnalytics } from "@/components/PublicAnalytics";
 import { MotionEnhancer } from "@/components/MotionEnhancer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
@@ -102,6 +104,14 @@ export default async function LocaleLayout({
           label={siteContent.requestQuoteLabel}
         />
         <MotionEnhancer />
+        {process.env.MASH_GA_ENABLED === "1" &&
+          !isPrivatePreview() &&
+          process.env.NEXT_PUBLIC_MASH_GA_ID && (
+            <GoogleMeasurement
+              id={process.env.NEXT_PUBLIC_MASH_GA_ID}
+              locale={locale}
+            />
+          )}
         <PublicAnalytics />
       </QuoteSelectionProvider>
     </SiteSettingsProvider>

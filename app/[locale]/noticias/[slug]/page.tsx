@@ -6,6 +6,7 @@ import { isLocale, localizedPath } from "@/lib/i18n";
 import { routeAlternates } from "@/lib/seo";
 import { getEditorialLinks, getNewsEntry } from "@/lib/editorial/queries";
 import { categories, categoriesEn } from "@/lib/editorial/schema";
+import { EditorialGallery } from "@/components/editorial/EditorialGallery";
 import { RelatedLinks } from "@/components/editorial/RelatedLinks";
 import "@/components/editorial/editorial.css";
 
@@ -76,20 +77,15 @@ export default async function Page({ params }: Props) {
           return <Tag key={block.id}>{field("body-" + block.id)}</Tag>;
         })}
       </div>
-      <div className="editorial-photos">
-        {entry.data.gallery.map((photo) => (
-          <figure key={photo.id}>
-            <img
-              src={photo.path}
-              alt={field("alt-" + photo.id)}
-              loading="lazy"
-            />
-            {field("caption-" + photo.id) && (
-              <figcaption>{field("caption-" + photo.id)}</figcaption>
-            )}
-          </figure>
-        ))}
-      </div>
+      <EditorialGallery
+        locale={locale}
+        photos={entry.data.gallery.map((photo) => ({
+          id: photo.id,
+          src: photo.path,
+          alt: field("alt-" + photo.id),
+          caption: field("caption-" + photo.id),
+        }))}
+      />
       <RelatedLinks
         locale={locale}
         groups={[

@@ -1,4 +1,6 @@
 "use client";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { ComparePhotos } from "@/components/editorial/ComparePhotos";
 import { AnnouncementBanner } from "@/components/editorial/Announcements";
 import {
@@ -15,6 +17,7 @@ import {
   effectiveDesign,
   fieldId,
   palette,
+  pagePaths,
   type Design,
   type TextField,
   type VisualChrome,
@@ -186,44 +189,14 @@ export function VisualDocument({
         let node: ReactNode;
         if (section.type === "navigation")
           node = (
-            <div className="visual-chrome visual-preview-nav">
-              <strong className="visual-wordmark">
-                M<span>A</span>SH
-              </strong>
-              <nav aria-label={locale === "es" ? "Principal" : "Main"}>
-                {chrome.navigation.map((link) => (
-                  <span key={link.href}>{link.label}</span>
-                ))}
-                <span aria-current="true">{locale.toUpperCase()}</span>
-              </nav>
-              <details>
-                <summary aria-label={locale === "es" ? "Menú" : "Menu"}>
-                  ☰
-                </summary>
-                <nav
-                  aria-label={
-                    locale === "es" ? "Navegación móvil" : "Mobile navigation"
-                  }
-                >
-                  {chrome.navigation.map((link) => (
-                    <span key={link.href}>{link.label}</span>
-                  ))}
-                  <span aria-current="true">{locale.toUpperCase()}</span>
-                </nav>
-              </details>
-            </div>
+            <Header
+              locale={locale}
+              content={chrome}
+              previewPath={localizedPath(locale, pagePaths[doc.page || "home"])}
+            />
           );
         else if (section.type === "footer")
-          node = (
-            <div className="visual-chrome visual-footer">
-              <strong>MASH</strong>
-              <p>
-                {chrome.footer}
-                <br />
-                {chrome.copyright}
-              </p>
-            </div>
-          );
+          node = <Footer locale={locale} content={chrome} preview />;
         else if (section.type === "spacer")
           node = <div className="visual-spacer" aria-hidden="true" />;
         else if (

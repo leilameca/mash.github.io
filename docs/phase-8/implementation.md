@@ -41,6 +41,12 @@ Muestra puntual de Chrome 157 contra el build aislado con PostgreSQL/WASM. El na
 4. Completar la matriz de regresión incluyendo navegación de colecciones, recursos fallidos, enlaces y accesibilidad formal. Medir Lighthouse y Core Web Vitals con un protocolo repetible. La evidencia de esta sesión describe solo los entornos y casos efectivamente ejecutados.
 5. Validar eventos con un receptor simulado del contrato interno. El evento de contacto completado se reserva para un flujo con confirmación real. Las integraciones, credenciales, consentimiento y validación externas quedan en el [plan de Fase 9](../PHASE_9_PLAN.md).
 
+## Validación adicional
+
+El recorrido local comprobó Noticias publicadas en Inicio, navegación de catálogo, la alternativa cuando falla una imagen, las galerías editoriales y la correspondencia de navegación y pie entre Studio y web en móvil. Se ampliaron las zonas táctiles del árbol de secciones y se revisó la navegación con teclado. El retrato que ya usa la web se reencuadró sin cambiar el archivo. Sigue pendiente la aprobación visual de Yascari y fibra con contenido de referencia.
+
+Las 14 combinaciones de rutas y anchos incluidas en axe pasaron sin infracciones detectadas. Lighthouse, en una primera muestra local optimizada de Inicio en español, midió 92 de rendimiento en móvil y 99 en escritorio, 96 de accesibilidad en ambos y LCP de 3,35 s y 0,85 s, respectivamente. La auditoría SEO se hizo en un entorno que bloquea la indexación. La prueba local del receptor de analítica verificó consentimiento, revocación y eventos. El [protocolo](../TESTING.md) permite repetir las mediciones.
+
 ## Limpieza y continuidad
 
 Se retiraron de Git 47 capturas y un índice de capturas de fases anteriores, con 7.822.832 bytes menos en el árbol de trabajo. Se retiraron referencias a esas imágenes y se conservaron las pruebas, informes técnicos, migraciones y recursos de la aplicación. Se trasladaron 2.160 archivos generados de los directorios de compilación y pruebas a un archivo local fuera del repositorio, con 1.519.204.218 bytes menos dentro de la carpeta del proyecto. El traslado conserva esos bytes en disco. Los respaldos y materiales locales de la herramienta de video también quedaron archivados fuera de Git. El historial sigue intacto.

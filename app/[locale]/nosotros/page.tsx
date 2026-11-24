@@ -33,8 +33,8 @@ export default async function AboutPage({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
-  const visual=await readVisualPublication("about");
-  if(visual)return <PublishedVisual doc={visual} locale={locale}/>;
+  const visual = await readVisualPublication("about");
+  if (visual) return <PublishedVisual doc={visual} locale={locale} />;
   const content = await getMarketingPageContent("about", locale);
 
   return (
@@ -44,6 +44,11 @@ export default async function AboutPage({
           <Image
             src={content.image ?? ""}
             alt={content.title}
+            className={
+              content.image === "/assets/images/yascari.jpeg"
+                ? "editorial-split__portrait--yascari"
+                : undefined
+            }
             fill
             sizes="(max-width: 900px) 92vw, 42vw"
           />

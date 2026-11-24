@@ -1,4 +1,4 @@
-import { siteOrigin } from "@/lib/seo";
+import { isPrivatePreview, siteOrigin } from "@/lib/seo";
 import { headers } from "next/headers";
 import type { Metadata, Viewport } from "next";
 import { PwaRegistration } from "@/components/PwaRegistration";
@@ -20,6 +20,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  ...(isPrivatePreview() ? { robots: { index: false, follow: false } } : {}),
   applicationName: "MASH",
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, title: "MASH", statusBarStyle: "default" },

@@ -84,7 +84,17 @@ export default async function ProductDetailPage({
           locale={locale}
         />
         <div className="product-detail__content">
-          <p className="eyebrow">{collection?.label[locale]}</p>
+          {collection && (
+            <Link
+              className="eyebrow text-link"
+              href={localizedPath(
+                locale,
+                "/colecciones/" + product.collectionSlug,
+              )}
+            >
+              {collection.label[locale]}
+            </Link>
+          )}
           <h1>{product.name}</h1>
           {product.translationPending && (
             <p role="status">

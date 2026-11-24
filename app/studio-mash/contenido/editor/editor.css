@@ -627,3 +627,19 @@
   .visual-editor-body { grid-template-columns: 186px minmax(0, 1fr) 270px; }
   .visual-stage { padding-inline: 5px; }
 }
+
+.visual-block-library button {
+  min-height: 88px;
+  touch-action: manipulation;
+}
+.visual-block-symbol[data-block="gallery"] { grid-template-columns: 2fr 1fr; }
+.visual-block-symbol[data-block="gallery"] i:first-child { grid-row: span 2; }
+.visual-block-symbol[data-block="products"] i { border-radius: 2px; }
+.visual-block-symbol[data-block="collections"] i { height: 82%; align-self: center; }
+.visual-block-symbol[data-block="projects"] i:nth-child(even),
+.visual-block-symbol[data-block="projects-grid"] i:nth-child(odd) { height: 64%; align-self: end; }
+.visual-block-symbol[data-block="news-list"] { grid-template-columns: 1fr; }
+.visual-block-symbol[data-block="news-list"] i { height: 5px; }
+.visual-block-symbol[data-block="news-list"] i:nth-child(even) { width: 72%; }
+.visual-block-symbol[data-block="carousel"] i:last-child { width: 24%; justify-self: center; }
+.visual-block-symbol[data-block="banner"] i:first-child { width: 100%; height: 10px; }

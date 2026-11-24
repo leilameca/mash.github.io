@@ -79,15 +79,7 @@ export const visualItems = cache(async (): Promise<VisualItem[]> => {
   return [...groups.flat(), ...news, ...banners];
 });
 export async function visualChrome(locale: Locale): Promise<VisualChrome> {
-  const row = await getSiteChromeContent(locale);
-  return {
-    navigation: row.navigation,
-    footer: row.footerDescription,
-    copyright: row.copyright,
-    phone: row.phone,
-    email: row.email,
-    location: row.location,
-  };
+  return getSiteChromeContent(locale);
 }
 export async function readVisualDraft(page: VisualPage) {
   const client = await authenticatedContentClient();

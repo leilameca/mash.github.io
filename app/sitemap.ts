@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { readPublished } from "@/lib/supabase/published";
-import { siteOrigin } from "@/lib/seo";
+import { isPrivatePreview, siteOrigin } from "@/lib/seo";
 export const dynamic = "force-dynamic";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (isPrivatePreview()) return [];
   const [products, collections, projects, site] = await Promise.all([
     readPublished("product"),
     readPublished("collection"),

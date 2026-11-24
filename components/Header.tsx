@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
 import { localizedPath, type Locale } from "@/lib/i18n";
 import type { SiteChromeContent } from "@/lib/supabase/site-content";
@@ -10,23 +10,30 @@ import type { SiteChromeContent } from "@/lib/supabase/site-content";
 export function Header({
   locale,
   content,
+  previewPath,
 }: {
   locale: Locale;
   content: SiteChromeContent;
+  previewPath?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
   const nav = useRef<HTMLElement>(null);
-  const pathname = usePathname();
+  const livePath = usePathname();
+  const preview = previewPath !== undefined;
+  const pathname = previewPath ?? livePath;
+  const generatedId = useId();
+  const navId = preview ? generatedId : "primary-navigation";
   const localePath = pathname?.replace(/^\/(es|en)/, "") ?? "";
 
   useEffect(() => {
+    if (preview) return;
     const onScroll = () => setIsScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [preview]);
 
   useEffect(() => {
     setIsOpen(false);
@@ -52,8 +59,13 @@ export function Header({
     };
     let focusFrame = 0;
     const focusMenu = () => {
-      const firstLink = nav.current?.querySelector("a");
-      if (!firstLink || !mobile.matches) return;
+      const firstLink = preview ? nav.current : nav.current?.querySelector("a");
+      if (
+        !firstLink ||
+        !toggle.current ||
+        getComputedStyle(toggle.current).display === "none"
+      )
+        return;
       if (getComputedStyle(firstLink).visibility === "visible") {
         firstLink.focus({ preventScroll: true });
       } else {
@@ -70,19 +82,33 @@ export function Header({
       document.removeEventListener("keydown", escape);
       document.removeEventListener("pointerdown", outside);
     };
-  }, [isOpen]);
+  }, [isOpen, preview]);
 
   return (
-    <header className={`site-header${isScrolled ? " is-scrolled" : ""}`}>
+    <header
+      className={
+        preview
+          ? "visual-preview-nav"
+          : `site-header${isScrolled ? " is-scrolled" : ""}`
+      }
+    >
       <div className="site-header__inner">
-        <BrandMark locale={locale} />
+        <BrandMark locale={locale} preview={preview} />
         <button
           ref={toggle}
           className="menu-toggle"
           type="button"
-          aria-label={isOpen ? content.closeLabel : content.menuLabel}
+          aria-label={
+            preview
+              ? locale === "es"
+                ? "Menú"
+                : "Menu"
+              : isOpen
+                ? content.closeLabel
+                : content.menuLabel
+          }
           aria-expanded={isOpen}
-          aria-controls="primary-navigation"
+          aria-controls={navId}
           onClick={() => setIsOpen((value) => !value)}
         >
           <span />
@@ -91,9 +117,18 @@ export function Header({
         </button>
         <nav
           ref={nav}
-          id="primary-navigation"
+          id={navId}
+          tabIndex={preview ? -1 : undefined}
           className={`primary-nav${isOpen ? " is-open" : ""}`}
-          aria-label={locale === "es" ? "Principal" : "Main"}
+          aria-label={
+            locale === "es"
+              ? preview
+                ? "Navegación móvil"
+                : "Principal"
+              : preview
+                ? "Mobile navigation"
+                : "Main"
+          }
         >
           {content.navigation.map((item) => {
             const href = localizedPath(locale, item.href);
@@ -101,7 +136,11 @@ export function Header({
               href === localizedPath(locale)
                 ? pathname === href
                 : pathname === href || pathname?.startsWith(href + "/");
-            return (
+            return preview ? (
+              <span key={item.id} aria-current={active ? "page" : undefined}>
+                {item.label}
+              </span>
+            ) : (
               <Link
                 key={item.id}
                 href={href}
@@ -111,31 +150,46 @@ export function Header({
               </Link>
             );
           })}
-          <div className="language-switch" aria-label="Language">
+          {preview ? (
+            <div className="language-switch">
+              <span aria-current={locale === "es" ? "page" : undefined}>
+                ES
+              </span>
+              <span aria-current={locale === "en" ? "page" : undefined}>
+                EN
+              </span>
+            </div>
+          ) : (
+            <div className="language-switch" aria-label="Language">
+              <a
+                data-analytics={locale !== "es" ? "change_language" : undefined}
+                href={localizedPath("es", localePath)}
+                aria-current={locale === "es" ? "page" : undefined}
+              >
+                ES
+              </a>
+              <a
+                data-analytics={locale !== "en" ? "change_language" : undefined}
+                href={localizedPath("en", localePath)}
+                aria-current={locale === "en" ? "page" : undefined}
+              >
+                EN
+              </a>
+            </div>
+          )}
+          {preview ? (
+            <span className="nav-quote">{content.quoteLabel}</span>
+          ) : (
             <a
-              data-analytics={locale !== "es" ? "change_language" : undefined}
-              href={localizedPath("es", localePath)}
-              aria-current={locale === "es" ? "page" : undefined}
+              className="nav-quote"
+              data-analytics="click_whatsapp"
+              href={content.whatsapp}
+              target="_blank"
+              rel="noreferrer"
             >
-              ES
+              {content.quoteLabel}
             </a>
-            <a
-              data-analytics={locale !== "en" ? "change_language" : undefined}
-              href={localizedPath("en", localePath)}
-              aria-current={locale === "en" ? "page" : undefined}
-            >
-              EN
-            </a>
-          </div>
-          <a
-            className="nav-quote"
-            data-analytics="click_whatsapp"
-            href={content.whatsapp}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {content.quoteLabel}
-          </a>
+          )}
         </nav>
       </div>
     </header>

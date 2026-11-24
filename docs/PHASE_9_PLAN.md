@@ -1,6 +1,6 @@
 # Fase 9 · Integración, QA y entrega
 
-Comenzar únicamente con aprobación. Terminar primero los puntos pendientes del [checkpoint de Fase 8](phase-8/implementation.md).
+La preparación de staging está autorizada y avanza junto con el [cierre de Fase 8](phase-8/implementation.md). El estado de cada requisito se mantiene en la [matriz de preparación](phase-9/readiness.md). El lanzamiento requiere autorización expresa.
 
 1. **Preparar staging hospedado.** Crear o confirmar recursos separados de producción. Configurar las variables por entorno. Aplicar migraciones tras inventario y respaldo, comprobar RLS, relaciones, acceso a la Data API, revisiones, URLs, redirecciones y exclusión de rutas y fixtures de ensayo.
 2. **Validar integraciones.** Probar OTP de ocho dígitos con Resend y allowlist, reenvío, vencimiento y remitente. Medir DeepL ES→EN con textos autorizados, revisión humana, cuotas y respaldo de traducciones. Probar Storage, original privado, variantes públicas, fallos parciales, reintentos y límites reales de Vercel. Generar derivados de fotos antiguas con inventario y comparación visual.

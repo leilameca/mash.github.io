@@ -78,6 +78,9 @@ export function adaptLegacy(
           typeof value === "string" && value.length > 0,
       )
       .slice(0, blockRegistry[type].photos);
+    if (type === "about" && block.media[0] === "/assets/images/yascari.jpeg") {
+      block.design = { ...block.design, y: 4 };
+    }
     sections.push(block);
     for (const [field, source] of Object.entries(fields)) {
       for (const [locale, to] of [

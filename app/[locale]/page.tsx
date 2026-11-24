@@ -1,3 +1,5 @@
+import { NewsCards } from "@/components/editorial/NewsCards";
+import { getNews } from "@/lib/editorial/queries";
 import { PublishedVisual } from "@/components/visual/PublishedVisual";
 import { readVisualPublication } from "@/lib/visual/queries";
 import type { Metadata } from "next";
@@ -60,7 +62,7 @@ export default async function HomePage({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
-  const visual=await readVisualPublication("home");
+  const visual = await readVisualPublication("home");
   const t = dictionary[locale].common;
   const [
     collections,
@@ -69,6 +71,7 @@ export default async function HomePage({
     heroContent,
     homeSections,
     site,
+    news,
   ] = await Promise.all([
     getCatalogCollections(),
     getCatalogProducts(locale),
@@ -76,6 +79,7 @@ export default async function HomePage({
     getHomeHeroContent(locale),
     getHomeSectionsContent(locale),
     getSiteChromeContent(locale),
+    visual ? Promise.resolve([]) : getNews(locale),
   ]);
   const featuredProducts = catalogProducts
     .filter((product) => product.featured)
@@ -99,8 +103,19 @@ export default async function HomePage({
     sameAs: [site.instagram],
   };
 
-  const structuredMarkup = <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(structuredData) }} />;
-  if (visual) return <>{structuredMarkup}<PublishedVisual doc={visual} locale={locale} /></>;
+  const structuredMarkup = (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(structuredData) }}
+    />
+  );
+  if (visual)
+    return (
+      <>
+        {structuredMarkup}
+        <PublishedVisual doc={visual} locale={locale} />
+      </>
+    );
 
   return (
     <>
@@ -320,7 +335,11 @@ export default async function HomePage({
                     ? "Asesoria de seleccion de muebles de exterior"
                     : "Outdoor furniture selection guidance"
                 }
-                className="editorial-split__portrait"
+                className={
+                  homeSections.philosophyImage === "/assets/images/yascari.jpeg"
+                    ? "editorial-split__portrait--yascari"
+                    : "editorial-split__portrait"
+                }
                 fill
                 sizes="(max-width: 900px) 92vw, 42vw"
               />
@@ -346,7 +365,7 @@ export default async function HomePage({
           <div className="project-strip">
             {projects.map((project) => (
               <Link
-                href={localizedPath(locale, "/proyectos")}
+                href={localizedPath(locale, "/proyectos/" + project.slug)}
                 key={project.slug}
                 className="project-card"
               >
@@ -445,6 +464,25 @@ export default async function HomePage({
               </QuoteLink>
             </div>
           </div>
+        </section>
+      )}
+      {news.length > 0 && (
+        <section
+          className="section-shell product-feature"
+          aria-labelledby="home-news-title"
+        >
+          <div className="section-heading section-heading--row">
+            <h2 id="home-news-title">
+              {locale === "es" ? "Noticias" : "News"}
+            </h2>
+            <Link
+              href={localizedPath(locale, "/noticias")}
+              className="text-link"
+            >
+              {locale === "es" ? "Ver todas las noticias" : "View all news"}
+            </Link>
+          </div>
+          <NewsCards entries={news.slice(0, 3)} locale={locale} heading="h3" />
         </section>
       )}
     </>

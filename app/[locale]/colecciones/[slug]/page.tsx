@@ -23,7 +23,9 @@ export async function generateMetadata({
   return {
     alternates: routeAlternates(rawLocale, `/colecciones/${slug}`),
     title: collection.seoTitle?.[rawLocale] || collection.label[rawLocale],
-    description: collection.seoDescription?.[rawLocale] || collection.description[rawLocale],
+    description:
+      collection.seoDescription?.[rawLocale] ||
+      collection.description[rawLocale],
   };
 }
 
@@ -62,6 +64,13 @@ export default async function CollectionDetailPage({
           </p>
           <h2>{collection.note[locale]}</h2>
         </div>
+        {collectionProducts.length === 0 && (
+          <p>
+            {locale === "es"
+              ? "Aún no hay productos publicados en esta colección."
+              : "This collection has no published products yet."}
+          </p>
+        )}
         <div className="product-grid">
           {collectionProducts.map((product) => (
             <ProductCard key={product.slug} product={product} locale={locale} />

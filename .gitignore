@@ -25,3 +25,6 @@ dist
 *.har
 *.log
 *.trace
+
+# Private browser sessions used for protected staging verification
+/playwright/.auth/

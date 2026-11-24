@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+export function isPrivatePreview() {
+  return process.env.MASH_STAGING === "1" || process.env.VERCEL_ENV === "preview";
+}
+
 export function siteOrigin() {
   const value =
     process.env.NEXT_PUBLIC_SITE_URL || "https://www.mashoficial.com";

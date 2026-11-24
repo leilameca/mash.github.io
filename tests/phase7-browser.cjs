@@ -140,6 +140,9 @@ async function main() {
     const newsDraft = await editorial("Guardar borrador");
     await studio.getByText("Borrador guardado.", { exact: true }).waitFor();
     assert.equal((await visitor.goto(newsUrl)).status(), 404);
+    await visitor.goto(origin + "/es");
+    assert.equal(await visitor.getByRole("link", { name: title }).count(), 0);
+
     await editorial("Publicar");
     await studio.getByText("Versión publicada.", { exact: true }).waitFor();
     await screenshots(studio, "01-noticia-escritorio");
@@ -155,6 +158,12 @@ async function main() {
       await visitor.locator('link[rel="canonical"]').getAttribute("href"),
       /\/es\/noticias\/noticia-de-prueba-/,
     );
+    await visitor.goto(origin + "/es");
+    await visitor
+      .getByRole("region", { name: "Noticias" })
+      .getByRole("link", { name: title })
+      .click();
+    await visitor.waitForURL(newsUrl);
     await studio
       .getByRole("textbox", { name: /^(Obligatorio )?Título$/ })
       .fill("Cambio privado " + timestamp);

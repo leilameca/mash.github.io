@@ -7,6 +7,7 @@ import { getEditorialLinks, getProjects } from "@/lib/editorial/queries";
 import { comparison } from "@/lib/editorial/schema";
 import { routeAlternates } from "@/lib/seo";
 import { ComparePhotos } from "@/components/editorial/ComparePhotos";
+import { EditorialGallery } from "@/components/editorial/EditorialGallery";
 import { RelatedLinks } from "@/components/editorial/RelatedLinks";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -74,29 +75,22 @@ export default async function Page({ params }: Props) {
           afterAlt={item.details.after_alt}
         />
       )}
-      <div className="editorial-photos">
-        {item.images
+      <EditorialGallery
+        locale={locale}
+        photos={item.images
           .filter(
             (image) =>
               image.storage_path !== item.cover ||
               image.caption_es ||
               image.caption_en,
           )
-          .map((image) => (
-            <figure key={image.storage_path}>
-              <img
-                src={image.variants?.gallery ?? image.storage_path}
-                alt={(locale === "en" && image.alt_en) || image.alt_es || ""}
-                loading="lazy"
-              />
-              {(image.caption_es || image.caption_en) && (
-                <figcaption>
-                  {(locale === "en" && image.caption_en) || image.caption_es}
-                </figcaption>
-              )}
-            </figure>
-          ))}
-      </div>
+          .map((image) => ({
+            id: image.storage_path,
+            src: image.variants?.gallery ?? image.storage_path,
+            alt: (locale === "en" && image.alt_en) || image.alt_es || "",
+            caption: (locale === "en" && image.caption_en) || image.caption_es,
+          }))}
+      />
       <RelatedLinks
         locale={locale}
         groups={[

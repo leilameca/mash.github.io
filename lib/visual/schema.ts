@@ -1,3 +1,4 @@
+import type { SiteChromeContent } from "@/lib/supabase/site-content";
 import type { PublicAnnouncement } from "@/lib/editorial/queries";
 import { z } from "zod";
 
@@ -478,11 +479,4 @@ export type VisualItem = {
   category?: string;
   announcements?: Partial<Record<"es" | "en", PublicAnnouncement>>;
 };
-export type VisualChrome = {
-  navigation: { label: string; href: string }[];
-  footer: string;
-  copyright: string;
-  phone: string;
-  email: string;
-  location: string;
-};
+export type VisualChrome = SiteChromeContent;
