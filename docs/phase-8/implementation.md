@@ -33,7 +33,7 @@ Muestra puntual de Chrome 157 contra el build aislado con PostgreSQL/WASM. El na
 | `/es/noticias` | 18 ms | 444 ms |
 | `/es/contacto` | 17 ms | 68 ms |
 
-## Cobertura pendiente de Fase 8
+## Cobertura registrada en el checkpoint anterior
 
 1. Iterar el diseño editorial del inicio y revisar cada sección con contenido real publicado. Preparar y validar el uso de Noticias en la composición de Inicio. Revisar composición y navegación entre fichas del catálogo, jerarquía de colecciones y estados vacíos.
 2. Realizar revisión visual detallada de Nosotros y confirmar el recorte del retrato de Yascari y la foto de fibra con los archivos aprobados. Revisar galería editorial de proyectos y maquetación de artículos con contenido representativo.
@@ -43,7 +43,7 @@ Muestra puntual de Chrome 157 contra el build aislado con PostgreSQL/WASM. El na
 
 ## Validación adicional
 
-El recorrido local comprobó Noticias publicadas en Inicio, navegación de catálogo, la alternativa cuando falla una imagen, las galerías editoriales y la correspondencia de navegación y pie entre Studio y web en móvil. Se ampliaron las zonas táctiles del árbol de secciones y se revisó la navegación con teclado. El retrato que ya usa la web se reencuadró sin cambiar el archivo. Sigue pendiente la aprobación visual de Yascari y fibra con contenido de referencia.
+El recorrido local comprobó Noticias publicadas en Inicio, navegación de catálogo, la alternativa cuando falla una imagen, las galerías editoriales y la correspondencia de navegación y pie entre Studio y web en móvil. Se ampliaron las zonas táctiles del árbol de secciones y se revisó la navegación con teclado. El retrato que ya usa la web se reencuadró y se inspeccionó a 390 y 1440 píxeles. Sigue pendiente la aprobación visual de Yascari y fibra, así como la revisión con lectores de pantalla de la entrega final.
 
 Las 14 combinaciones de rutas y anchos incluidas en axe pasaron sin infracciones detectadas. Lighthouse, en una primera muestra local optimizada de Inicio en español, midió 92 de rendimiento en móvil y 99 en escritorio, 96 de accesibilidad en ambos y LCP de 3,35 s y 0,85 s, respectivamente. La auditoría SEO se hizo en un entorno que bloquea la indexación. La prueba local del receptor de analítica verificó consentimiento, revocación y eventos. El [protocolo](../TESTING.md) permite repetir las mediciones.
 

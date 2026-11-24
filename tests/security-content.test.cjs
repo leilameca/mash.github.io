@@ -36,3 +36,19 @@ test('all navigation links can be hidden without restoring the old menu',async()
   const content=loadTs(path.resolve('lib/supabase/site-content.ts'),{'./published':{readPublished:async()=>rows,localizedTranslation:()=>({text:undefined,pending:true})},'./persistence':{}});
   assert.equal((await content.getSiteChromeContent('es')).navigation.length,0);
 });
+
+test("unpublished optional home sections are hidden without masking connection errors", async () => {
+  const loadHome = (readPublished) =>
+    loadTs(path.resolve("lib/supabase/site-content.ts"), {
+      "./published": { readPublished },
+      "./persistence": {},
+    });
+  const empty = loadHome(async () => []);
+  const { visible } = await empty.getHomeSectionsContent("es");
+  assert.ok(Object.keys(visible).length > 0);
+  assert.ok(Object.values(visible).every((value) => value === false));
+  const unavailable = loadHome(async () => {
+    throw new Error("database unavailable");
+  });
+  await assert.rejects(unavailable.getHomeSectionsContent("es"), /database unavailable/);
+});

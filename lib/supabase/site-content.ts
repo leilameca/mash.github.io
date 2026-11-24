@@ -314,7 +314,11 @@ export async function getHomeSectionsContent(
 ): Promise<HomeSectionsContent> {
   const defaults = emptyHomeSections();
   defaults.lifestyleLabels = ["", "", ""];
-  const row = workingCopy ?? (await readPublishedSite("home.sections"));
+  const row =
+    workingCopy ??
+    (await readPublished("site")).find(({ slug }) => slug === "home.sections")
+      ?.snapshot;
+  if (!row) return defaults;
   const shared = row.value ?? {};
   const text =
     (workingCopy

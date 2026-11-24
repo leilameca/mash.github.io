@@ -12,6 +12,6 @@ Rama de trabajo: `feature/mash-3`. El estado y las pruebas corresponden al entor
 | 6 · Editor visual | Composición tipada, puntos focales, herencia responsive y publicación. Ver [informe](phase-6/implementation.md). |
 | 7 · Editorial | Proyectos, antes/después, Noticias, Anuncios y mapa del taller en Contacto. Ver [informe](phase-7/implementation.md). |
 | 8 · Experiencia pública | Ver [checkpoint y pendientes](phase-8/implementation.md). |
-| 9 · Integración y entrega | Staging autorizado. Vercel preparado, Supabase pendiente de acceso a otra organización. Ver [matriz](phase-9/readiness.md). |
+| 9 · Integración y entrega | Presupuesto US$0. Revisión local disponible y Vercel de staging preparado sin despliegue. Ver [matriz](phase-9/readiness.md). |
 
 Los resultados detallados están en [Pruebas](TESTING.md). Para continuar, sigue [Traspaso](HANDOFF.md).
