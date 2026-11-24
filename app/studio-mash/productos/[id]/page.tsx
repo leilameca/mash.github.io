@@ -1,3 +1,4 @@
+import { PublicationNotice } from "../../PublicationNotice";
 import { notFound } from "next/navigation";
 import { authenticatedContentClient } from "@/lib/supabase/persistence";
 import { requireAdmin } from "@/lib/supabase/auth";
@@ -10,7 +11,8 @@ async function getCollections() {
     .from("collections")
     .select("id,revision,slug,collection_translations(locale,name)")
     .order("sort_order");
-  if(error)throw new Error("No pudimos consultar las colecciones. Intenta de nuevo.");
+  if (error)
+    throw new Error("No pudimos consultar las colecciones. Intenta de nuevo.");
   return (data ?? []).map((collection: any) => ({
     id: collection.id,
     label:
@@ -28,18 +30,20 @@ export default async function EditProductPage({
   const currentAdmin = await requireAdmin();
   const { id } = await params;
   const admin = await authenticatedContentClient();
-  const [{ data: product, error:productError }, collections] = await Promise.all([
-    admin
-      .from("products")
-      .select(
-        "id,revision,slug,collection_id,status,featured,dimensions,finishes,product_translations(locale,name,description,materials,care),product_images(storage_path,alt_es,alt_en,is_primary,sort_order)",
-      )
-      .eq("id", id)
-      .maybeSingle(),
-    getCollections(),
-  ]);
+  const [{ data: product, error: productError }, collections] =
+    await Promise.all([
+      admin
+        .from("products")
+        .select(
+          "id,revision,slug,collection_id,status,featured,dimensions,finishes,product_translations(locale,name,description,materials,care),product_images(storage_path,alt_es,alt_en,is_primary,sort_order)",
+        )
+        .eq("id", id)
+        .maybeSingle(),
+      getCollections(),
+    ]);
 
-  if(productError)throw new Error("No pudimos consultar el producto. Intenta de nuevo.");
+  if (productError)
+    throw new Error("No pudimos consultar el producto. Intenta de nuevo.");
   if (!product) notFound();
 
   const es = (product as any).product_translations?.find(
@@ -57,6 +61,7 @@ export default async function EditProductPage({
           <h1>Editar producto</h1>
         </div>
       </section>
+      <PublicationNotice kind="product" id={id} />
       <section className="studio-card">
         <ProductForm
           collections={collections}

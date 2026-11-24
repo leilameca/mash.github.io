@@ -12,11 +12,16 @@ export default async function StudioMediaPage() {
   const admin = await authenticatedContentClient();
   const mediaGroups = await Promise.all(
     folders.map(async (folder) => {
-      const { data, error } = await admin.storage.from(MEDIA_BUCKET).list(folder, {
-        limit: 24,
-        sortBy: { column: "created_at", order: "desc" },
-      });
-      if(error)throw new Error("No pudimos consultar la biblioteca. Intenta de nuevo.");
+      const { data, error } = await admin.storage
+        .from(MEDIA_BUCKET)
+        .list(folder, {
+          limit: 24,
+          sortBy: { column: "created_at", order: "desc" },
+        });
+      if (error)
+        throw new Error(
+          "No pudimos consultar la biblioteca. Intenta de nuevo.",
+        );
       return {
         folder,
         items: (data ?? [])
@@ -35,7 +40,7 @@ export default async function StudioMediaPage() {
     <StudioShell admin={currentAdmin}>
       <section className="studio-heading">
         <div>
-          <p>Storage</p>
+          <p>Contenido</p>
           <h1>Multimedia</h1>
         </div>
       </section>
@@ -43,8 +48,8 @@ export default async function StudioMediaPage() {
         <p className="studio-kicker">Nueva imagen</p>
         <h2>Cargar desde el dispositivo</h2>
         <p>
-          Las imagenes quedan guardadas en el bucket privado de administracion y
-          se sirven publicamente en el sitio.
+          Las imágenes cargadas quedan disponibles en la biblioteca. Asócialas a
+          un contenido y publica sus cambios para mostrarlas en el sitio.
         </p>
         <MediaUploadForm />
       </section>

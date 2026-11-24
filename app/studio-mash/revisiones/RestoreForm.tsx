@@ -1,5 +1,5 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { restoreRevision } from "../actions";
 export function RestoreForm({
   kind,
@@ -13,8 +13,21 @@ export function RestoreForm({
   expectedVersion: number;
 }) {
   const [state, action, pending] = useActionState(restoreRevision, {});
+  useEffect(() => {
+    if (state.ok && state.redirectTo) window.location.assign(state.redirectTo);
+  }, [state]);
   return (
-    <form action={action}>
+    <form
+      action={action}
+      onSubmit={(event) => {
+        if (
+          !window.confirm(
+            "¿Restaurar esta revisión como nueva copia de trabajo? El sitio público conservará su versión actual.",
+          )
+        )
+          event.preventDefault();
+      }}
+    >
       <input type="hidden" name="kind" value={kind} />
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="version" value={version} />

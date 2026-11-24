@@ -13,7 +13,7 @@ test('real PostgreSQL: atomic publication, draft isolation, translations, concur
   const f = await fixture(); const {db,save,product}=f;
   try {
     await t.test('published product is visible anonymously; working copy is private',async()=>{
-      const rows=await f.as('anon','',tx=>tx.query("select snapshot from public.content_publications where entity_kind='product'"));
+      const rows=await f.as('anon','',tx=>tx.query("select snapshot from public.published_content where entity_kind='product'"));
       assert.equal(rows.rows[0].snapshot.slug,'trap-set');
       assert.equal((await f.as('anon','',tx=>tx.query('select * from public.products'))).rows.length,0);
     });
@@ -21,7 +21,7 @@ test('real PostgreSQL: atomic publication, draft isolation, translations, concur
       await save([{kind:'product',id:product.id,expected_version:1,data:{},translations:[{...es,name:'Nuevo nombre'},{locale:'en',name:'',description:''}],intent:'save'}]);
       const en=(await db.query("select * from public.product_translations where product_id=$1 and locale='en'",[product.id])).rows[0];
       assert.equal(en.name,'Existing English');assert.equal(en.materials,'Preserved material');assert.equal(en.care,'Preserved care');assert.equal(en.translation_status,'needs_review');
-      const live=(await db.query("select snapshot from public.content_publications where entity_kind='product'")).rows[0].snapshot;
+      const live=(await db.query("select snapshot from public.published_content where entity_kind='product'")).rows[0].snapshot;
       assert.equal(live.translations.find(x=>x.locale==='es').name,'Trap Set');
     });
     await t.test('stale version rolls back before overwriting',async()=>{
@@ -42,13 +42,13 @@ test('real PostgreSQL: atomic publication, draft isolation, translations, concur
     await t.test('hidden, archived and draft states are excluded for visitors',async()=>{
       for(const [intent,version] of [['hide',3],['archive',4],['draft',5]]){
         await save([{kind:'product',id:product.id,expected_version:version,data:{},intent}]);
-        assert.equal((await f.as('anon','',tx=>tx.query("select * from public.content_publications where entity_kind='product'"))).rows.length,0);
+        assert.equal((await f.as('anon','',tx=>tx.query("select * from public.published_content where entity_kind='product'"))).rows.length,0);
       }
     });
     await t.test('restore creates a new draft revision without publishing',async()=>{
       await f.as('authenticated',ADMIN,tx=>tx.query('select public.restore_mash_revision($1,$2,$3,$4)',['product',product.id,1,6]));
       assert.equal((await db.query('select slug,revision from public.products where id=$1',[product.id])).rows[0].revision,7);
-      assert.equal((await f.as('anon','',tx=>tx.query("select * from public.content_publications where entity_kind='product'"))).rows.length,0);
+      assert.equal((await f.as('anon','',tx=>tx.query("select * from public.published_content where entity_kind='product'"))).rows.length,0);
     });
     await t.test('unauthorized authenticated user and anonymous role cannot write',async()=>{
       await assert.rejects(save([{kind:'product',data:{slug:'forbidden'},intent:'save'}],OUTSIDER),e=>e.code==='42501');
@@ -86,7 +86,7 @@ test('site English survives empty inputs and an older published revision restore
     const en=(await f.db.query("select value,translation_status from site_content_translations where site_content_id=$1 and locale='en'",[entry.id])).rows[0];
     assert.equal(en.value.title,'Existing title');assert.equal(en.value.description,'Existing description');assert.equal(en.translation_status,'needs_review');
     await f.as('authenticated',f.ADMIN,tx=>tx.query('select restore_mash_revision($1,$2,$3,$4)',['site',entry.id,1,2]));
-    const live=(await f.as('anon','',tx=>tx.query('select snapshot from content_publications where entity_id=$1',[entry.id]))).rows[0].snapshot;
+    const live=(await f.as('anon','',tx=>tx.query('select snapshot from published_content where entity_id=$1',[entry.id]))).rows[0].snapshot;
     assert.equal(live.translations.find(t=>t.locale==='es').value.title,'Original español');
     assert.equal((await f.db.query('select revision,is_public from site_content where id=$1',[entry.id])).rows[0].is_public,false);
     assert.equal((await f.db.query('select revision from site_content where id=$1',[entry.id])).rows[0].revision,3);

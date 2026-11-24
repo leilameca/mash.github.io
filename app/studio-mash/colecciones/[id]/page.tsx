@@ -1,3 +1,4 @@
+import { PublicationNotice } from "../../PublicationNotice";
 import { notFound } from "next/navigation";
 import { authenticatedContentClient } from "@/lib/supabase/persistence";
 import { requireAdmin } from "@/lib/supabase/auth";
@@ -20,7 +21,8 @@ export default async function EditCollectionPage({
     .eq("id", id)
     .maybeSingle();
 
-  if(error)throw new Error("No pudimos consultar el contenido. Intenta de nuevo.");
+  if (error)
+    throw new Error("No pudimos consultar el contenido. Intenta de nuevo.");
   if (!collection) notFound();
   const translations = (collection as any).collection_translations ?? [];
   const es = translations.find((item: any) => item.locale === "es");
@@ -34,6 +36,7 @@ export default async function EditCollectionPage({
           <h1>Editar coleccion</h1>
         </div>
       </section>
+      <PublicationNotice kind="collection" id={id} />
       <section className="studio-card">
         <CollectionForm
           collection={{

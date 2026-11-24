@@ -38,6 +38,7 @@ import {
 } from "@/lib/admin/content-schemas";
 
 export type ActionState = {
+  redirectTo?: string;
   ok?: boolean;
   message?: string;
   errors?: Record<string, string>;
@@ -428,7 +429,14 @@ export async function upsertProduct(
   revalidatePublicSite();
   revalidatePath(adminRoute);
   revalidatePath(`${adminRoute}/productos`);
-  redirect(`${adminRoute}/productos?saved=1`);
+  return {
+    ok: true,
+    message:
+      saveIntent(formData) === "publish"
+        ? "Versión publicada correctamente."
+        : "Cambios guardados. La versión pública se conserva.",
+    redirectTo: `${adminRoute}/productos?${saveIntent(formData) === "publish" ? "published=1" : "saved=1"}`,
+  };
 }
 
 async function changeStatus(
@@ -654,9 +662,11 @@ async function saveCatalogEntry(
   revalidatePath(
     `${adminRoute}/${kind === "collection" ? "colecciones" : "proyectos"}`,
   );
-  redirect(
-    `${adminRoute}/${kind === "collection" ? "colecciones" : "proyectos"}`,
-  );
+  return {
+    ok: true,
+    message: "Contenido guardado correctamente.",
+    redirectTo: `${adminRoute}/${kind === "collection" ? "colecciones" : "proyectos"}`,
+  };
 }
 export async function upsertCollection(
   _previous: ActionState,
@@ -1212,10 +1222,11 @@ export async function restoreRevision(
     p_expected_version: v.revision,
   });
   if (error) return { ok: false, message: persistenceMessage(error) };
-  revalidatePublicSite();
-  revalidatePath(adminRoute, "layout");
+  // Restoration changes only the private working copy. The client loads fresh
+  // history after this committed acknowledgement; the live version is untouched.
   return {
     ok: true,
+    redirectTo: `${adminRoute}/revisiones?kind=${v.kind}&id=${v.id}&restored=1`,
     message:
       "Revisión recuperada como borrador. Revisa el contenido antes de publicar.",
   };

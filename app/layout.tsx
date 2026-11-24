@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import type { Metadata, Viewport } from "next";
 import { PwaRegistration } from "@/components/PwaRegistration";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
-import "./globals.css";
+import "./base.css";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],

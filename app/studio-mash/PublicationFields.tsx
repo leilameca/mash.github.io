@@ -1,4 +1,5 @@
 "use client";
+import { SubmissionIntent } from "./FormSafety";
 import { createContext, useContext, type ReactNode } from "react";
 type Versions = Record<string, { id: string; revision: number }>;
 const VersionContext = createContext<Versions>({});
@@ -18,11 +19,14 @@ export function PublicationProvider({
 export function PublicationFields() {
   const versions = useContext(VersionContext);
   return (
-    <input
-      type="hidden"
-      name="content_versions"
-      value={JSON.stringify(versions)}
-    />
+    <>
+      <SubmissionIntent />
+      <input
+        type="hidden"
+        name="content_versions"
+        value={JSON.stringify(versions)}
+      />
+    </>
   );
 }
 export function PublishButton({ disabled }: { disabled?: boolean }) {

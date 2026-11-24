@@ -1,88 +1,16 @@
-import Image from "next/image";
-import Link from "next/link";
-import { authenticatedContentClient } from "@/lib/supabase/persistence";
 import { requireAdmin } from "@/lib/supabase/auth";
+import type { ListQuery } from "@/lib/admin/queries";
 import { StudioShell } from "../StudioShell";
-import { updateProjectStatus } from "../actions";
-import { StatusForm } from "../StatusForm";
-
-export default async function StudioProjectsPage() {
-  const currentAdmin = await requireAdmin();
-  const admin = await authenticatedContentClient();
-  const { data: projects, error } = await admin
-    .from("projects")
-    .select(
-      "id,revision,slug,status,location,cover_image_path,project_translations(locale,title,description)",
-    )
-    .order("updated_at", { ascending: false });
-
-  if(error)throw new Error("No pudimos consultar las proyectos. Intenta de nuevo.");
+import { EntryList } from "../EntryList";
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<ListQuery>;
+}) {
+  const admin = await requireAdmin();
   return (
-    <StudioShell admin={currentAdmin}>
-      <section className="studio-heading">
-        <div>
-          <p>Contenido</p>
-          <h1>Proyectos</h1>
-        </div>
-        <Link href="/studio-mash/proyectos/nuevo" className="admin-button">
-          Nuevo proyecto
-        </Link>
-      </section>
-      <section className="studio-table-card">
-        <div className="studio-table">
-          {(projects ?? []).map((project: any) => {
-            const es = project.project_translations?.find(
-              (item: any) => item.locale === "es",
-            );
-            return (
-              <article className="studio-row" key={project.id}>
-                <div className="studio-row__image">
-                  {project.cover_image_path ? (
-                    <Image
-                      src={project.cover_image_path}
-                      alt=""
-                      fill
-                      sizes="72px"
-                    />
-                  ) : null}
-                </div>
-                <div>
-                  <h2>{es?.title ?? project.slug}</h2>
-                  <p>{project.location ?? "Ubicacion pendiente"}</p>
-                </div>
-                <span
-                  className={`studio-status studio-status--${project.status}`}
-                >
-                  {project.status}
-                </span>
-                <div className="studio-row__actions">
-                  <StatusForm
-                    id={project.id}
-                    revision={project.revision}
-                    status={project.status}
-                    label={`Estado de ${es?.title ?? project.slug}`}
-                    action={updateProjectStatus}
-                  />
-                  <Link
-                    href={`/studio-mash/proyectos/${project.id}`}
-                    className="studio-edit-link"
-                  >
-                    Editar proyecto
-                  </Link>
-                </div>
-              </article>
-            );
-          })}
-          {(projects ?? []).length === 0 && (
-            <div className="studio-empty">
-              <h2>No hay proyectos publicados.</h2>
-              <p>
-                La estructura esta lista para contenido real aprobado por MASH.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+    <StudioShell admin={admin}>
+      <EntryList kind="project" query={await searchParams} />
     </StudioShell>
   );
 }

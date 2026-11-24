@@ -102,7 +102,7 @@ function form(paths = ["/one.jpg", "/two.jpg"], primary = "/two.jpg") {
 }
 
 async function saved(save, data) {
-  await assert.rejects(save({}, data), /redirect:\/studio-mash\/productos/);
+  const result=await save({},data);assert.equal(result.ok,true);assert.match(result.redirectTo,/^\/studio-mash\/productos/);
 }
 
 test("trash keeps the product and all shared image files recoverable", async () => {
@@ -399,7 +399,7 @@ test("text-only collection and project edits cannot restore stale covers", async
     data.set("title_es", "Proyecto de terraza");
     data.set("location", "Santiago");
     data.set("existing_image_path", "/stale-cover.jpg");
-    await assert.rejects(actions[actionName]({}, data), new RegExp(`redirect:/studio-mash/${route}`));
+    const result=await actions[actionName]({},data);assert.equal(result.ok,true);assert.equal(result.redirectTo,`/studio-mash/${route}`);
     const payload = calls.find((call) => call.table === table && call.operation === "update").rows;
     assert.notEqual(payload.cover_image_path, "/stale-cover.jpg");
     if (table === "projects") assert.equal(payload.cover_image_path,undefined);

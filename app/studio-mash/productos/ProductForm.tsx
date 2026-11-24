@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { ConflictHelp, SubmissionIntent } from "../FormSafety";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -61,6 +62,7 @@ export function ProductForm({
     ) => setValues((current) => ({ ...current, [name]: event.target.value })),
   });
   const formRef = useRef<HTMLFormElement>(null);
+  const submitting = useRef(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [dirty, setDirty] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -80,23 +82,16 @@ export function ProductForm({
   const [primaryImage, setPrimaryImage] = useState(
     product?.hero_image_path ?? images[0] ?? "",
   );
-  const [state, action, pending] = useActionState(
-    async (previous: ActionState, formData: FormData) => {
-      formData.set(
-        "library_image_paths",
-        JSON.stringify(
-          images.filter(
-            (path) =>
-              !(product?.image_paths ?? [product?.hero_image_path]).includes(
-                path,
-              ),
-          ),
-        ),
-      );
-      return upsertProduct(previous, formData);
-    },
-    initialState,
-  );
+  const [state, action, pending] = useActionState(upsertProduct, initialState);
+  useEffect(() => {
+    if (state.message || state.errors) submitting.current = false;
+  }, [state]);
+  useEffect(() => {
+    if (state.ok && state.redirectTo) {
+      submitting.current = true;
+      window.location.assign(state.redirectTo);
+    }
+  }, [state]);
   const [deleteState, deleteAction, deleting] = useActionState(
     deleteProduct,
     initialState,
@@ -109,6 +104,7 @@ export function ProductForm({
   useEffect(() => {
     if (!dirty || pending || deleting) return;
     const warn = (event: BeforeUnloadEvent) => {
+      if (submitting.current) return;
       event.preventDefault();
       event.returnValue = "";
     };
@@ -161,7 +157,11 @@ export function ProductForm({
         action={action}
         className="studio-form studio-product-editor"
         onSubmit={(event) => {
-          if (uploading || deleting) event.preventDefault();
+          if (uploading || deleting || pending) {
+            event.preventDefault();
+            return;
+          }
+          submitting.current = true;
         }}
         onChange={() => setDirty(true)}
       >
@@ -176,6 +176,19 @@ export function ProductForm({
             />
           </>
         )}
+        <SubmissionIntent />
+        <input
+          type="hidden"
+          name="library_image_paths"
+          value={JSON.stringify(
+            images.filter(
+              (path) =>
+                !(product?.image_paths ?? [product?.hero_image_path]).includes(
+                  path,
+                ),
+            ),
+          )}
+        />
         <input
           type="hidden"
           name="image_alts"
@@ -213,7 +226,11 @@ export function ProductForm({
             type="submit"
             disabled={pending || deleting || uploading}
           >
-            {pending ? "Guardando…" : "Guardar borrador"}
+            {pending
+              ? "Guardando…"
+              : product?.id
+                ? "Guardar cambios"
+                : "Guardar borrador"}
           </button>
           <button
             className="admin-button"
@@ -229,8 +246,12 @@ export function ProductForm({
           Guardar conserva la versión pública actual. Publicar valida y hace
           visibles los cambios.
         </p>
+        <ConflictHelp message={state.message} />
         {state.message && (
-          <p role="alert" className="admin-error">
+          <p
+            role={state.ok ? "status" : "alert"}
+            className={state.ok ? "admin-success" : "admin-error"}
+          >
             {state.message}
           </p>
         )}
@@ -440,8 +461,8 @@ export function ProductForm({
               />
               <small>
                 Arrastra para ordenar o usa las flechas. Marca la principal con
-                la estrella. Máximo 20 imágenes; los cambios se publican al
-                guardar.
+                la estrella. Máximo 20 imágenes; los cambios se hacen visibles
+                al guardar.
               </small>
               {state.errors?.hero_image && (
                 <span>{state.errors.hero_image}</span>

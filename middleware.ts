@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
     });
     const kind = detail[2] === "productos" ? "product" : "collection";
     const { data, error } = await client
-      .from("content_publications")
+      .from("published_content")
       .select("slug")
       .eq("entity_kind", kind)
       .eq("status", "published")
@@ -41,8 +41,8 @@ export async function middleware(request: NextRequest) {
       });
     if (!data) {
       const { data: redirect, error: redirectError } = await client
-        .from("content_redirects")
-        .select("entity_id")
+        .from("published_redirects")
+        .select("target_slug")
         .eq("entity_kind", kind)
         .eq("old_slug", detail[3])
         .maybeSingle();
@@ -50,20 +50,7 @@ export async function middleware(request: NextRequest) {
         return new NextResponse("Contenido temporalmente no disponible", {
           status: 503,
         });
-      if (redirect) {
-        const { data: target } = await client
-          .from("content_publications")
-          .select("slug")
-          .eq("entity_kind", kind)
-          .eq("entity_id", redirect.entity_id)
-          .eq("status", "published")
-          .maybeSingle();
-        if (target && target.slug !== detail[3])
-          return NextResponse.redirect(
-            new URL(`/${detail[1]}/${detail[2]}/${target.slug}`, request.url),
-            308,
-          );
-      }
+      if (redirect && redirect.target_slug!==detail[3]) return NextResponse.redirect(new URL(`/${detail[1]}/${detail[2]}/${redirect.target_slug}`,request.url),308);
       return NextResponse.rewrite(new URL("/_missing", request.url), {
         status: 404,
         request: { headers: requestHeaders },

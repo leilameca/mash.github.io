@@ -1,0 +1,67 @@
+{
+  "capturedAt": "2026-11-24T16:16:22.424Z",
+  "environment": "Local production build + PostgreSQL/WASM + test-only Data API facade; not hosted Supabase/Auth",
+  "productionModified": false,
+  "checks": [
+    {
+      "path": "/es",
+      "status": 200
+    },
+    {
+      "path": "/es/productos/oasis-set",
+      "status": 200
+    },
+    {
+      "path": "/en/productos/oasis-set",
+      "status": 200
+    },
+    {
+      "path": "/es/productos/oculus-mare",
+      "status": 404
+    },
+    {
+      "path": "/es/productos/not-existing",
+      "status": 404
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200
+    },
+    {
+      "path": "/es/productos/oasis-set",
+      "status": 200
+    },
+    {
+      "path": "/es/productos/oasis-set",
+      "status": 200
+    },
+    {
+      "path": "/es/productos",
+      "status": 200
+    },
+    {
+      "path": "/es/productos/oasis-set",
+      "status": 308
+    },
+    {
+      "path": "/api/studio-media",
+      "status": 401
+    },
+    {
+      "path": "/es/productos/oasis-confirmado",
+      "status": 503
+    }
+  ],
+  "draftIsolation": true,
+  "explicitPublication": true,
+  "dynamicCollectionLabels": true,
+  "englishHtmlLang": true,
+  "individualCanonical": true,
+  "slugRedirect": true,
+  "noStaticFallbackOnFailure": true,
+  "anonymousAdminDenied": true
+}

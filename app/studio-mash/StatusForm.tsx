@@ -22,7 +22,20 @@ export function StatusForm({
     setSelectedStatus(status);
   }, [status]);
   return (
-    <form action={submit} className="studio-row__actions">
+    <form
+      action={submit}
+      className="studio-row__actions"
+      onSubmit={(event) => {
+        if (
+          !window.confirm(
+            selectedStatus === "published"
+              ? "¿Publicar esta versión en el sitio?"
+              : "¿Cambiar el estado de este contenido?",
+          )
+        )
+          event.preventDefault();
+      }}
+    >
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="revision" value={revision ?? 0} />
       <select

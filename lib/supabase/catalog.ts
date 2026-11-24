@@ -65,7 +65,7 @@ export const getCatalogProducts = cache(async (locale: Locale) => {
 export const getCatalogProduct = cache(async (locale: Locale, slug: string) => {
   const client = await publicContentClient();
   const { data, error } = await client
-    .from("content_publications")
+    .from("published_content")
     .select("snapshot")
     .eq("entity_kind", "product")
     .eq("status", "published")
@@ -92,7 +92,7 @@ export async function getRelatedProducts(
   if (!collection) return [];
   const client = await publicContentClient();
   const { data, error } = await client
-    .from("content_publications")
+    .from("published_content")
     .select("snapshot")
     .eq("entity_kind", "product")
     .eq("status", "published")
@@ -170,7 +170,7 @@ export async function getCatalogProjects(locale: Locale): Promise<Project[]> {
 export async function getCatalogPage(locale: Locale, page: number) {
   const client = await publicContentClient();
   const { data, error, count } = await client
-    .from("content_publications")
+    .from("published_content")
     .select("snapshot", { count: "exact" })
     .eq("entity_kind", "product")
     .eq("status", "published")

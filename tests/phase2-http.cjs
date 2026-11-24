@@ -35,8 +35,8 @@ async function main(){
     await get('/api/studio-media',401);
     backend.setUnavailable(true);await get('/es/productos/oasis-confirmado',503);
     const failed=await fetch(origin+'/es/productos');const failedBody=await failed.text();assert.equal(failedBody.includes('Oasis Set'),false);assert.equal(failedBody.includes('Rombois Set'),false);
-    fs.mkdirSync('docs/phase-2',{recursive:true});
-    fs.writeFileSync('docs/phase-2/http-evidence.json',JSON.stringify({capturedAt:new Date().toISOString(),environment:'Local production build + PostgreSQL/WASM + test-only Data API facade; not hosted Supabase/Auth',productionModified:false,checks:evidence,draftIsolation:true,explicitPublication:true,dynamicCollectionLabels:true,englishHtmlLang:true,individualCanonical:true,slugRedirect:true,noStaticFallbackOnFailure:true,anonymousAdminDenied:true},null,2));
+    fs.mkdirSync(process.env.MASH_EVIDENCE_DIR||'docs/phase-2',{recursive:true});
+    fs.writeFileSync((process.env.MASH_EVIDENCE_DIR||'docs/phase-2')+'/http-evidence.json',JSON.stringify({capturedAt:new Date().toISOString(),environment:'Local production build + PostgreSQL/WASM + test-only Data API facade; not hosted Supabase/Auth',productionModified:false,checks:evidence,draftIsolation:true,explicitPublication:true,dynamicCollectionLabels:true,englishHtmlLang:true,individualCanonical:true,slugRedirect:true,noStaticFallbackOnFailure:true,anonymousAdminDenied:true},null,2));
     console.log('PASS: HTTP, public draft isolation, explicit publication, photos/alts, dynamic collections, canonical/hreflang/lang, sitemap, 404/308/503 and anonymous admin denial. PostgreSQL isolated; Auth facade is simulated.');
   }finally{server.kill();await backend.close();}
 }

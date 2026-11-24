@@ -14,7 +14,10 @@
     "test:pwa": "node --test tests/pwa.test.cjs",
     "test:pwa:browser": "node tests/pwa-browser.cjs",
     "test:phase2": "node --test tests/publication-db.test.cjs tests/action-db.test.cjs tests/security-content.test.cjs tests/auth-regression.test.cjs tests/middleware-auth.test.cjs",
-    "test:phase2:http": "node tests/phase2-http.cjs"
+    "test:phase2:http": "node tests/phase2-http.cjs",
+    "test:phase3": "node --test tests/studio-security.test.cjs",
+    "test:phase3:browser": "node tests/studio-browser.cjs",
+    "test:all": "npm run test:admin && npm run test:pwa && npm run test:phase2 && npm run test:phase3"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

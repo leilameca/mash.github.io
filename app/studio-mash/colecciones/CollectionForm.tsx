@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { FormActions } from "../FormActions";
 
 import Image from "next/image";
 import { useActionState } from "react";
@@ -38,15 +39,7 @@ export function CollectionForm({
         name="status"
         value={collection?.status ?? "draft"}
       />
-      <p>
-        Guardar conserva la publicación actual. El estado se cambia desde el
-        listado.
-      </p>
-      <input
-        type="hidden"
-        name="status"
-        value={collection?.status ?? "draft"}
-      />
+
       <p>
         El estado se cambia explícitamente desde el listado. Guardar no publica.
       </p>
@@ -173,20 +166,12 @@ export function CollectionForm({
         </label>
       </div>
 
-      {state.message && <p className="admin-error">{state.message}</p>}
-      <button className="admin-button" type="submit" disabled={pending}>
-        {pending ? "Guardando..." : "Guardar coleccion"}
-      </button>
-      <button
-        className="admin-button"
-        type="submit"
-        name="intent"
-        value="publish"
-        disabled={pending}
-      >
-        Publicar cambios
-      </button>
-      <p>Guardar conserva la versión pública actual.</p>
+      <FormActions
+        ok={state.ok} redirectTo={state.redirectTo}
+        pending={pending}
+        existing={!!collection?.id}
+        message={state.message}
+      />
       {collection?.id && (
         <Link
           href={`/studio-mash/revisiones?kind=collection&id=${collection.id}`}

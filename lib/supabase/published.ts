@@ -22,7 +22,7 @@ export type ImageRow = {
   is_cover?: boolean;
 };
 export type ContentSnapshot = {
-  id: string;
+  id?: string;
   slug?: string;
   key?: string;
   status?: string;
@@ -41,7 +41,6 @@ export type Publication = {
   slug: string;
   snapshot: ContentSnapshot;
   published_at: string;
-  version: number;
   sort_order: number;
 };
 
@@ -59,8 +58,8 @@ export const readPublished = cache(
   async (kind: ContentKind): Promise<Publication[]> => {
     const client = await publicContentClient();
     const { data, error } = await client
-      .from("content_publications")
-      .select("entity_id,slug,snapshot,published_at,version,sort_order")
+      .from("published_content")
+      .select("entity_id,slug,snapshot,published_at,sort_order")
       .eq("entity_kind", kind)
       .eq("status", "published")
       .order("sort_order")

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { FormActions } from "../FormActions";
 
 import Image from "next/image";
 import { useActionState } from "react";
@@ -28,11 +29,7 @@ export function ProjectForm({ project }: { project?: ProjectFormValue }) {
   return (
     <form action={action} className="studio-form">
       <input type="hidden" name="status" value={project?.status ?? "draft"} />
-      <p>
-        Guardar conserva la publicación actual. El estado se cambia desde el
-        listado.
-      </p>
-      <input type="hidden" name="status" value={project?.status ?? "draft"} />
+
       <p>
         El estado se cambia explícitamente desde el listado. Guardar no publica.
       </p>
@@ -155,20 +152,12 @@ export function ProjectForm({ project }: { project?: ProjectFormValue }) {
           />
         </label>
       </div>
-      {state.message && <p className="admin-error">{state.message}</p>}
-      <button className="admin-button" type="submit" disabled={pending}>
-        {pending ? "Guardando..." : "Guardar proyecto"}
-      </button>
-      <button
-        className="admin-button"
-        type="submit"
-        name="intent"
-        value="publish"
-        disabled={pending}
-      >
-        Publicar cambios
-      </button>
-      <p>Guardar conserva la versión pública actual.</p>
+      <FormActions
+        ok={state.ok} redirectTo={state.redirectTo}
+        pending={pending}
+        existing={!!project?.id}
+        message={state.message}
+      />
       {project?.id && (
         <Link href={`/studio-mash/revisiones?kind=project&id=${project.id}`}>
           Historial de revisiones

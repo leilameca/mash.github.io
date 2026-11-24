@@ -116,7 +116,7 @@ const css = fs.readFileSync(path.join(root,'app/globals.css'),'utf8') + fs.readF
     await page.getByRole('button',{name:'Reintentar',exact:true}).click();
     await page.getByText('Lista para guardar en el producto',{exact:true}).waitFor();
     assert.equal(await page.locator('form.studio-product-editor').evaluate(form=>new FormData(form).get('status')),'draft');
-    await page.getByRole('button',{name:'Guardar borrador',exact:true}).click();
+    await page.getByRole('button',{name:'Guardar cambios',exact:true}).click();
     await page.getByText('Prueba aislada: no se guardaron datos.',{exact:true}).waitFor();
     assert.equal(await page.locator('[name=name_es]').inputValue(),'Oasis actualizado','A failed save must preserve entered values');
     assert.deepEqual(errors,[]);

@@ -25,8 +25,9 @@ async function database({ seed = false, beforeIntegrity } = {}) {
   }
   await db.exec(`insert into auth.users values('${ADMIN}'),('${OUTSIDER}');
     insert into public.admin_users(email,user_id) values('admin@isolated.invalid','${ADMIN}');
-    grant select,insert,update,delete on public.admin_users,public.products,public.collections,public.projects,public.site_content,public.product_translations,public.product_images,public.collection_translations,public.project_translations,public.project_images,public.site_content_translations to authenticated;
+    grant select on public.admin_users,public.products,public.collections,public.projects,public.site_content,public.product_translations,public.product_images,public.collection_translations,public.project_translations,public.project_images,public.site_content_translations to authenticated;
     grant select on public.products,public.collections,public.projects,public.site_content,public.product_translations,public.product_images,public.collection_translations,public.project_translations,public.project_images,public.site_content_translations to anon;`);
+  await db.exec("insert into private.mash_environment(singleton,storage_origin) values(true,'https://isolated.invalid') on conflict(singleton) do update set storage_origin=excluded.storage_origin");
   async function as(role, user, callback) {
     return db.transaction(async tx => {
       await tx.exec(`set local role ${role};`);

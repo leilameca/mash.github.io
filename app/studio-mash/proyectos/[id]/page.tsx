@@ -1,3 +1,4 @@
+import { PublicationNotice } from "../../PublicationNotice";
 import { notFound } from "next/navigation";
 import { authenticatedContentClient } from "@/lib/supabase/persistence";
 import { requireAdmin } from "@/lib/supabase/auth";
@@ -19,7 +20,8 @@ export default async function EditProjectPage({
     )
     .eq("id", id)
     .maybeSingle();
-  if(error)throw new Error("No pudimos consultar el contenido. Intenta de nuevo.");
+  if (error)
+    throw new Error("No pudimos consultar el contenido. Intenta de nuevo.");
   if (!project) notFound();
   const translations = (project as any).project_translations ?? [];
   const es = translations.find((item: any) => item.locale === "es");
@@ -33,6 +35,7 @@ export default async function EditProjectPage({
           <h1>Editar proyecto</h1>
         </div>
       </section>
+      <PublicationNotice kind="project" id={id} />
       <section className="studio-card">
         <ProjectForm
           project={{
