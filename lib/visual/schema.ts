@@ -1,3 +1,4 @@
+import type { PublicAnnouncement } from "@/lib/editorial/queries";
 import { z } from "zod";
 
 export const pagePaths = {
@@ -100,6 +101,11 @@ export const blockTypes = [
   "collections",
   "products",
   "projects",
+  "projects-grid",
+  "news-featured",
+  "news-list",
+  "comparison",
+  "announcements",
   "about",
   "cta",
   "contact",
@@ -114,6 +120,8 @@ export const textFields = [
   "body",
   "button",
   "alt",
+  "before",
+  "after",
 ] as const;
 export type TextField = (typeof textFields)[number];
 export const blockId = z.string().regex(/^[a-z0-9][a-z0-9-]{1,54}$/);
@@ -193,12 +201,15 @@ export const fieldId = (id: string, field: TextField) => id + "__" + field;
 export const visualTextSchema = z.record(
   z
     .string()
-    .regex(/^[a-z0-9][a-z0-9-]{1,54}__(eyebrow|title|body|button|alt)$/),
+    .regex(
+      /^[a-z0-9][a-z0-9-]{1,54}__(eyebrow|title|body|button|alt|before|after)$/,
+    ),
   z.string().max(10000),
 );
 export type VisualText = z.infer<typeof visualTextSchema>;
 export type VisualDocumentData = {
   layout: VisualLayout;
+  page?: VisualPage;
   es: VisualText;
   en: VisualText;
   revision: number;
@@ -211,7 +222,7 @@ type Meta = {
   fields: TextField[];
   photos: number;
   controls: (keyof Design)[];
-  entity?: "collection" | "product" | "project";
+  entity?: "collection" | "product" | "project" | "news" | "announcement";
   protected?: boolean;
   preset?: Design;
 };
@@ -342,6 +353,45 @@ export const blockRegistry: Record<BlockType, Meta> = {
     controls: [...typeControls, ...photoControls, ...gridControls],
     entity: "project",
   },
+  "projects-grid": {
+    label: "Cuadrícula de proyectos",
+    representation: "grid",
+    fields: action,
+    photos: 0,
+    controls: [...typeControls, ...photoControls, ...gridControls],
+    entity: "project",
+  },
+  "news-featured": {
+    label: "Noticias destacadas",
+    representation: "grid",
+    fields: action,
+    photos: 0,
+    controls: [...typeControls, ...photoControls, ...gridControls],
+    entity: "news",
+  },
+  "news-list": {
+    label: "Listado de noticias",
+    representation: "grid",
+    fields: action,
+    photos: 0,
+    controls: [...typeControls, ...photoControls, ...gridControls],
+    entity: "news",
+  },
+  comparison: {
+    label: "Antes y después",
+    representation: "split",
+    fields: [...text, "before", "after", "alt"],
+    photos: 2,
+    controls: [...typeControls, ...photoControls],
+  },
+  announcements: {
+    label: "Anuncios publicados",
+    representation: "space",
+    fields: [],
+    photos: 0,
+    controls: ["background", "margin"],
+    entity: "announcement",
+  },
   about: {
     label: "Sobre la empresa",
     representation: "split",
@@ -416,7 +466,7 @@ export function effectiveDesign(section: VisualSection, device: Device) {
 }
 export type VisualItem = {
   id: string;
-  kind: "collection" | "product" | "project";
+  kind: "collection" | "product" | "project" | "news" | "announcement";
   title: string;
   titleEn?: string;
   description?: string;
@@ -424,6 +474,9 @@ export type VisualItem = {
   image?: string;
   slug: string;
   featured?: boolean;
+  location?: string;
+  category?: string;
+  announcements?: Partial<Record<"es" | "en", PublicAnnouncement>>;
 };
 export type VisualChrome = {
   navigation: { label: string; href: string }[];

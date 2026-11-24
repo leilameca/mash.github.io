@@ -3,6 +3,7 @@ import type { Locale } from "@/lib/i18n";
 import type { ContentSnapshot } from "@/lib/supabase/published";
 import {
   blockRegistry,
+  pageSchema,
   fieldId,
   layoutSchema,
   newSection,
@@ -38,6 +39,7 @@ export function fromSnapshot(
   };
   return {
     layout: layout.data,
+    page: pageSchema.catch("home").parse(snapshot.key?.slice(7)),
     es: read("es"),
     en: read("en"),
     revision,
@@ -255,5 +257,5 @@ export function adaptLegacy(
     );
   }
   sections.push(newSection("footer", "footer"));
-  return { layout: { schema: 1, sections }, es, en, revision: 0 };
+  return { layout: { schema: 1, sections }, page, es, en, revision: 0 };
 }

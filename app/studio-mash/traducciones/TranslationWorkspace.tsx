@@ -87,10 +87,14 @@ const fieldLabel = ({ path, label }: Field, i: number) =>
 const editHref = (entry: Entry) =>
   entry.kind === "site" && entry.slug.startsWith("visual.")
     ? "/studio-mash/contenido/editor?pagina=" + entry.slug.slice(7)
-    : entry.kind === "site" &&
-        ["site.settings", "site.footer"].includes(entry.slug)
-      ? "/studio-mash/configuracion"
-      : entryHref(entry);
+    : entry.kind === "site" && entry.slug.startsWith("news.")
+      ? "/studio-mash/noticias/" + entry.id
+      : entry.kind === "site" && entry.slug.startsWith("announcement.")
+        ? "/studio-mash/anuncios/" + entry.id
+        : entry.kind === "site" &&
+            ["site.settings", "site.footer"].includes(entry.slug)
+          ? "/studio-mash/configuracion"
+          : entryHref(entry);
 
 async function api<T>(query = "", init?: RequestInit): Promise<T> {
   const response = await fetch(endpoint + query, {

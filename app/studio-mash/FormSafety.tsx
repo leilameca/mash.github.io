@@ -3,11 +3,12 @@ import { useEffect, useRef } from "react";
 /** Shared protection for uncontrolled editors. ProductForm has its own dirty state. */
 export function FormSafety() {
   useEffect(() => {
+    const managedForm = "form.studio-form:not([data-form-managed])";
     const dirty = new Set<HTMLFormElement>();
     const inFlight = new Set<HTMLFormElement>();
     const change = (event: Event) => {
       const form = (event.target as HTMLElement)?.closest<HTMLFormElement>(
-        "form.studio-form",
+        managedForm,
       );
       if (form && !form.classList.contains("studio-product-editor")) {
         dirty.add(form);
@@ -25,7 +26,7 @@ export function FormSafety() {
         'button[type="submit"][value="publish"]',
       );
       if (
-        publish?.form?.matches("form.studio-form") &&
+        publish?.form?.matches(managedForm) &&
         !window.confirm("¿Publicar estos cambios en el sitio?")
       ) {
         event.preventDefault();
@@ -52,7 +53,7 @@ export function FormSafety() {
     };
     const submit = (event: SubmitEvent) => {
       const form = event.target as HTMLFormElement;
-      if (!form.matches("form.studio-form")) return;
+      if (!form.matches(managedForm)) return;
       if (inFlight.has(form)) {
         event.preventDefault();
         return;

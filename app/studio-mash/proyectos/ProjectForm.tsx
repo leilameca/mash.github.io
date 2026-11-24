@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import { FormActions } from "../FormActions";
+import { ProjectExtras, type ProjectInitial } from "./ProjectExtras";
+import type { RelatedOption } from "../editorial/AssetFields";
 
-import Image from "next/image";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { upsertProject, type ActionState } from "../actions";
 
 export type ProjectFormValue = {
@@ -26,11 +27,26 @@ export type ProjectFormValue = {
 
 const initialState: ActionState = {};
 
-export function ProjectForm({ project }: { project?: ProjectFormValue }) {
+export function ProjectForm({
+  project,
+  extra,
+  options = [],
+}: {
+  project?: ProjectFormValue;
+  extra?: ProjectInitial;
+  options?: RelatedOption[];
+}) {
+  const [uploading, setUploading] = useState(false);
   const [state, action, pending] = useActionState(upsertProject, initialState);
 
   return (
-    <form action={action} className="studio-form">
+    <form
+      action={action}
+      className="studio-form"
+      onSubmit={(e) => {
+        if (uploading || pending) e.preventDefault();
+      }}
+    >
       <input type="hidden" name="status" value={project?.status ?? "draft"} />
 
       <p>
@@ -54,7 +70,7 @@ export function ProjectForm({ project }: { project?: ProjectFormValue }) {
           {state.errors?.slug && <span>{state.errors.slug}</span>}
         </label>
         <label>
-          Ubicacion
+          Ubicación general pública
           <input name="location" defaultValue={project?.location} required />
           {state.errors?.location && <span>{state.errors.location}</span>}
         </label>
@@ -108,32 +124,7 @@ export function ProjectForm({ project }: { project?: ProjectFormValue }) {
           <span>{state.errors.description_es}</span>
         )}
       </label>
-      <label>
-        Imagen de portada
-        {project?.cover_image_path && (
-          <span className="studio-image-preview studio-image-preview--wide">
-            <Image
-              src={project.cover_image_path}
-              alt="Portada actual"
-              fill
-              sizes="360px"
-            />
-          </span>
-        )}
-        <input
-          type="hidden"
-          name="existing_image_path"
-          value={project?.cover_image_path ?? ""}
-        />
-        <input
-          name="cover_image"
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/avif"
-          required={!project?.cover_image_path}
-        />
-        <small>JPG, PNG, WebP o AVIF. Maximo 6 MB.</small>
-        {state.errors?.cover_image && <span>{state.errors.cover_image}</span>}
-      </label>
+      <ProjectExtras initial={extra} options={options} onBusy={setUploading} />
       <details className="studio-fieldset">
         <summary>Buscadores</summary>
         <label>
@@ -154,15 +145,6 @@ export function ProjectForm({ project }: { project?: ProjectFormValue }) {
           />
         </label>
       </details>
-      <label>
-        Texto alternativo de portada{" "}
-        <textarea
-          name="cover_alt_es"
-          rows={2}
-          maxLength={600}
-          defaultValue={project?.cover_alt_es}
-        />
-      </label>
       <details className="studio-fieldset">
         <summary>Traducción al inglés (opcional)</summary>
         <div className="studio-form__grid">
@@ -183,7 +165,7 @@ export function ProjectForm({ project }: { project?: ProjectFormValue }) {
       <FormActions
         ok={state.ok}
         redirectTo={state.redirectTo}
-        pending={pending}
+        pending={pending || uploading}
         existing={!!project?.id}
         message={state.message}
       />

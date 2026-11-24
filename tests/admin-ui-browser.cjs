@@ -41,7 +41,7 @@ const {ProductForm}=require('../app/studio-mash/productos/ProductForm');
 const {ProductList}=require('../app/studio-mash/productos/ProductList');
 const {StudioNav}=require('../app/studio-mash/StudioNav');
 const {StudioSidebar}=require('../app/studio-mash/StudioSidebar');
-const Loading=require('../app/studio-mash/loading').default;
+const Loading=require('../app/studio-mash/StudioLoading').default;
 const nav=[['','Resumen'],['/productos','Productos'],['/colecciones','Colecciones'],['/contenido','Contenido'],['/proyectos','Proyectos'],['/multimedia','Multimedia']].map(([suffix,label])=>({href:'/studio-mash'+suffix,label}));
 const product={id:'11111111-1111-4111-8111-111111111111',slug:'oasis',name_es:'Oasis',description_es:'Un conjunto para tu terraza.',collection_id:'c1',status:'draft',hero_image_path:${JSON.stringify(imageA)},image_paths:${JSON.stringify([imageA, imageB])}};
 const list=[{id:'1',slug:'oasis',name:'Oasis',collection:'Terraza',status:'draft',image:product.hero_image_path},{id:'2',slug:'candor',name:'Candor',collection:'Comedor',status:'archived',image:product.hero_image_path}];

@@ -1,3 +1,4 @@
+import { WorkshopLocation } from "@/components/editorial/WorkshopLocation";
 import { PublishedVisual } from "@/components/visual/PublishedVisual";
 import { readVisualPublication } from "@/lib/visual/queries";
 import { routeAlternates } from "@/lib/seo";
@@ -35,31 +36,41 @@ export default async function ContactPage({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
-  const visual=await readVisualPublication("contact");
-  if(visual)return <PublishedVisual doc={visual} locale={locale}/>;
+  const visual = await readVisualPublication("contact");
+  const workshop = <WorkshopLocation locale={locale} />;
+  if (visual)
+    return (
+      <>
+        <PublishedVisual doc={visual} locale={locale} />
+        {workshop}
+      </>
+    );
   const [site, content] = await Promise.all([
     getSiteChromeContent(locale),
     getMarketingPageContent("contact", locale),
   ]);
 
   return (
-    <section className="section-shell contact-page">
-      <div>
-        <p className="eyebrow">{content.eyebrow}</p>
-        <h1>{content.title}</h1>
-        <p>{content.description}</p>
-        <QuoteLink className="button button--gold">
-          {dictionary[locale].common.requestQuote}
-        </QuoteLink>
-      </div>
-      <address className="contact-card">
-        <a href={site.phoneHref}>{site.phone}</a>
-        <a href={site.emailHref}>{site.email}</a>
-        <a href={site.instagram} target="_blank" rel="noreferrer">
-          {site.instagramHandle}
-        </a>
-        <span>{site.location}</span>
-      </address>
-    </section>
+    <>
+      <section className="section-shell contact-page">
+        <div>
+          <p className="eyebrow">{content.eyebrow}</p>
+          <h1>{content.title}</h1>
+          <p>{content.description}</p>
+          <QuoteLink className="button button--gold">
+            {dictionary[locale].common.requestQuote}
+          </QuoteLink>
+        </div>
+        <address className="contact-card">
+          <a href={site.phoneHref}>{site.phone}</a>
+          <a href={site.emailHref}>{site.email}</a>
+          <a href={site.instagram} target="_blank" rel="noreferrer">
+            {site.instagramHandle}
+          </a>
+          <span>{site.location}</span>
+        </address>
+      </section>
+      {workshop}
+    </>
   );
 }

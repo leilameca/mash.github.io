@@ -14,11 +14,14 @@ export type TranslationRow = {
   seo_title?: string | null;
   seo_description?: string | null;
   value?: Record<string, any>;
+  details?: Record<string, string>;
 };
 export type ImageRow = {
   storage_path: string;
   alt_es?: string | null;
   alt_en?: string | null;
+  caption_es?: string | null;
+  caption_en?: string | null;
   sort_order: number;
   is_primary?: boolean;
   is_cover?: boolean;
@@ -37,6 +40,8 @@ export type ContentSnapshot = {
   featured?: boolean;
   dimensions?: string;
   finishes?: string[];
+  editorial?: Partial<import("@/lib/editorial/schema").ProjectEditorial>;
+  project_date?: string | null;
   location?: string;
   cover_image_path?: string;
   translations: TranslationRow[];

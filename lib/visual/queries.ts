@@ -1,3 +1,4 @@
+import { getNews, getAnnouncements } from "@/lib/editorial/queries";
 import "server-only";
 import { cache } from "react";
 import { authenticatedContentClient } from "@/lib/supabase/persistence";
@@ -39,7 +40,43 @@ export const visualItems = cache(async (): Promise<VisualItem[]> => {
       }),
     ),
   );
-  return groups.flat();
+  const now = Date.now();
+  const [newsEs, newsEn, es, en] = await Promise.all([
+    getNews("es"),
+    getNews("en"),
+    getAnnouncements("es", now),
+    getAnnouncements("en", now),
+  ]);
+  const news: VisualItem[] = newsEs.map((item) => {
+    const translated = newsEn.find((row) => row.id === item.id);
+    return {
+      id: item.id,
+      slug: item.slug,
+      kind: "news",
+      title: item.text.title,
+      titleEn: translated?.text.title,
+      image: item.data.cover,
+      description: item.text.excerpt,
+      descriptionEn: translated?.text.excerpt,
+      featured: item.data.featured,
+    };
+  });
+  const banners: VisualItem[] = [
+    ...new Set([...es, ...en].map((entry) => entry.id)),
+  ].map((id) => ({
+    id,
+    kind: "announcement",
+    slug: "",
+    title:
+      es.find((row) => row.id === id)?.message ??
+      en.find((row) => row.id === id)?.message ??
+      "",
+    announcements: {
+      es: es.find((row) => row.id === id),
+      en: en.find((row) => row.id === id),
+    },
+  }));
+  return [...groups.flat(), ...news, ...banners];
 });
 export async function visualChrome(locale: Locale): Promise<VisualChrome> {
   const row = await getSiteChromeContent(locale);

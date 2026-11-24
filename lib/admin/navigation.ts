@@ -43,7 +43,12 @@ export const studioNavigation: StudioNavItem[] = [
     label: "Noticias",
     group: "Contenido",
     icon: "news",
-    pending: true,
+  },
+  {
+    href: "/studio-mash/anuncios",
+    label: "Anuncios",
+    group: "Contenido",
+    icon: "alert",
   },
   {
     href: "/studio-mash/traducciones",

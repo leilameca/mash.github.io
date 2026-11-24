@@ -1,3 +1,4 @@
+import { DuplicateProject } from "./proyectos/DuplicateProject";
 import Link from "next/link";
 import { MediaImage } from "./multimedia/MediaImage";
 import { StudioIcon } from "./StudioIcon";
@@ -192,15 +193,17 @@ export async function EntryList({
                         <Link
                           target="_blank"
                           rel="noopener noreferrer"
-                          href={
-                            kind === "project"
-                              ? "/es/proyectos"
-                              : `/es/${module.path}/${entry.published_slug}`
-                          }
+                          href={`/es/${module.path}/${entry.published_slug}`}
                         >
                           <StudioIcon name="external" /> Ver publicado
                         </Link>
                       )}
+                    {kind === "project" && (
+                      <DuplicateProject
+                        id={entry.id}
+                        revision={entry.revision}
+                      />
+                    )}
                     <StatusForm
                       id={entry.id}
                       revision={entry.revision}

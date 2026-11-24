@@ -3,15 +3,17 @@ import { readPublished } from "@/lib/supabase/published";
 import { siteOrigin } from "@/lib/seo";
 export const dynamic = "force-dynamic";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [products, collections, site] = await Promise.all([
+  const [products, collections, projects, site] = await Promise.all([
     readPublished("product"),
     readPublished("collection"),
+    readPublished("project"),
     readPublished("site"),
   ]);
   const paths = [
     "",
     "/productos",
     "/colecciones",
+    "/noticias",
     "/privacidad",
     "/cookies",
     "/terminos",
@@ -29,6 +31,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       path: `/productos/${r.slug}`,
       date: r.published_at,
     })),
+    ...projects.map((r) => ({
+      path: `/proyectos/${r.slug}`,
+      date: r.published_at,
+    })),
+    ...site
+      .filter((r) => r.slug.startsWith("news.") && !r.snapshot.value?.archived)
+      .map((r) => ({
+        path: `/noticias/${r.slug.slice(5)}`,
+        date: r.published_at,
+      })),
     ...collections.map((r) => ({
       path: `/colecciones/${r.slug}`,
       date: r.published_at,

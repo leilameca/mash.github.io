@@ -31,18 +31,16 @@ export async function PublicationNotice({
       </div>
       {data.live_status === "published" && (
         <Link
-          href={
-            kind === "project"
-              ? "/es/proyectos"
-              : `/es/${modulePaths[kind]}/${data.published_slug}`
-          }
+          href={`/es/${modulePaths[kind]}/${data.published_slug}`}
           target="_blank"
           rel="noopener noreferrer"
         >
           Ver versión publicada ↗
         </Link>
       )}
-      <Link href={`/studio-mash/traducciones?kind=${kind}&id=${id}`}>Traducción en inglés</Link>
+      <Link href={`/studio-mash/traducciones?kind=${kind}&id=${id}`}>
+        Traducción en inglés
+      </Link>
       <Link href={`/studio-mash/revisiones?kind=${kind}&id=${id}`}>
         Historial
       </Link>

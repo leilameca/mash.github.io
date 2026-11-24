@@ -1,0 +1,21 @@
+{
+  "base": "86bc6045ab43f945700c6e262cab473e09b34dc2",
+  "branch": "feature/mash-3",
+  "environment": "local build, isolated PostgreSQL/WASM and simulated Auth",
+  "typecheck": "pass",
+  "build": "pass",
+  "automated": {
+    "baseline": 99,
+    "phase7": 3,
+    "total": 102
+  },
+  "browser": {
+    "checks": 8,
+    "evidence": "browser-evidence.json"
+  },
+  "http": {
+    "result": "pass",
+    "evidence": "http-evidence.json"
+  },
+  "productionChanged": false
+}

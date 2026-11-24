@@ -84,6 +84,8 @@ export async function GET(request: NextRequest) {
         body: "Texto",
         button: "Botón",
         alt: "Texto alternativo",
+        before: "Etiqueta antes",
+        after: "Etiqueta después",
       };
       return response({
         entry,

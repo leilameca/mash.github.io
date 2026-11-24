@@ -1,4 +1,6 @@
 import "../globals.css";
+import { getAnnouncements } from "@/lib/editorial/queries";
+import { ScheduledAnnouncements } from "@/components/editorial/Announcements";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
@@ -69,7 +71,10 @@ export default async function LocaleLayout({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
-  const siteContent = await getSiteChromeContent(locale);
+  const [siteContent, announcements] = await Promise.all([
+    getSiteChromeContent(locale),
+    getAnnouncements(locale, Date.now()),
+  ]);
 
   return (
     <SiteSettingsProvider value={{ whatsapp: siteContent.whatsapp }}>
@@ -85,6 +90,7 @@ export default async function LocaleLayout({
           </p>
         )}
         <main id="main-content" className="page-shell">
+          <ScheduledAnnouncements initial={announcements} locale={locale} />
           {children}
         </main>
         <Footer locale={locale} content={siteContent} />

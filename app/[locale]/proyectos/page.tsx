@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { localizedPath } from "@/lib/i18n";
 import { PublishedVisual } from "@/components/visual/PublishedVisual";
 import { readVisualPublication } from "@/lib/visual/queries";
 import { routeAlternates } from "@/lib/seo";
@@ -32,8 +34,8 @@ export default async function ProjectsPage({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
-  const visual=await readVisualPublication("projects");
-  if(visual)return <PublishedVisual doc={visual} locale={locale}/>;
+  const visual = await readVisualPublication("projects");
+  if (visual) return <PublishedVisual doc={visual} locale={locale} />;
   const [projects, content] = await Promise.all([
     getCatalogProjects(locale),
     getMarketingPageContent("projects", locale),
@@ -57,7 +59,13 @@ export default async function ProjectsPage({
             </div>
             <div>
               <p className="eyebrow">{project.location[locale]}</p>
-              <h2>{project.title[locale]}</h2>
+              <h2>
+                <Link
+                  href={localizedPath(locale, "/proyectos/" + project.slug)}
+                >
+                  {project.title[locale]}
+                </Link>
+              </h2>
               <p>{project.description[locale]}</p>
             </div>
           </article>

@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
     NextResponse.next({ request: { headers: requestHeaders } });
   let response = next();
   const detail = request.nextUrl.pathname.match(
-    /^\/(es|en)\/(productos|colecciones)\/([^/]+)\/?$/,
+    /^\/(es|en)\/(productos|colecciones|proyectos|noticias)\/([^/]+)\/?$/,
   );
   if (detail) {
     if (!config)
@@ -27,17 +27,30 @@ export async function middleware(request: NextRequest) {
         fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
       },
     });
-    const kind = detail[2] === "productos" ? "product" : "collection";
+    const kind =
+      detail[2] === "productos"
+        ? "product"
+        : detail[2] === "colecciones"
+          ? "collection"
+          : detail[2] === "proyectos"
+            ? "project"
+            : "site";
+    const slug = kind === "site" ? "news." + detail[3] : detail[3];
     const { data, error } = await client
       .from("published_content")
       .select("slug")
       .eq("entity_kind", kind)
       .eq("status", "published")
-      .eq("slug", detail[3])
+      .eq("slug", slug)
       .maybeSingle();
     if (error)
       return new NextResponse("Contenido temporalmente no disponible", {
         status: 503,
+      });
+    if (!data && kind === "site")
+      return NextResponse.rewrite(new URL("/_missing", request.url), {
+        status: 404,
+        request: { headers: requestHeaders },
       });
     if (!data) {
       const { data: redirect, error: redirectError } = await client
@@ -50,7 +63,14 @@ export async function middleware(request: NextRequest) {
         return new NextResponse("Contenido temporalmente no disponible", {
           status: 503,
         });
-      if (redirect && redirect.target_slug!==detail[3]) return NextResponse.redirect(new URL(`/${detail[1]}/${detail[2]}/${redirect.target_slug}`,request.url),308);
+      if (redirect && redirect.target_slug !== detail[3])
+        return NextResponse.redirect(
+          new URL(
+            `/${detail[1]}/${detail[2]}/${redirect.target_slug}`,
+            request.url,
+          ),
+          308,
+        );
       return NextResponse.rewrite(new URL("/_missing", request.url), {
         status: 404,
         request: { headers: requestHeaders },

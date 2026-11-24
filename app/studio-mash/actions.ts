@@ -1,5 +1,8 @@
 "use server";
 
+import { projectExtras } from "@/lib/editorial/project-commit";
+import { randomUUID } from "node:crypto";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -639,17 +642,31 @@ async function saveCatalogEntry(
       );
     const image =
       uploaded?.publicUrl ?? (!v.id ? v.existing_image_path : undefined);
+    const extra =
+      kind === "project"
+        ? await projectExtras(client, formData, v.id, uploaded?.publicUrl)
+        : null;
     const data = {
       slug: v.slug,
       featured: v.featured ?? false,
       sort_order: v.sort_order,
       ...(image ? { cover_image_path: image } : {}),
       ...(kind === "project" ? { location: v.location } : {}),
+      ...(extra
+        ? {
+            editorial: extra.editorial,
+            project_date: extra.date,
+            cover_image_path: extra.cover,
+          }
+        : {}),
     };
     const title = kind === "collection" ? "name" : "title";
-    let projectImages;
+    let projectImages:
+      | import("@/lib/supabase/published").ImageRow[]
+      | undefined = extra?.images;
     if (
       kind === "project" &&
+      !extra &&
       (image || (v.id && v.cover_alt_es !== undefined))
     ) {
       const { data: existingImages, error: readError } = v.id
@@ -693,6 +710,7 @@ async function saveCatalogEntry(
             locale: "es",
             [title]: v[title + "_es"],
             description: v.description_es,
+            ...(extra ? { details: extra.details } : {}),
             ...(v.seo_title_es !== undefined
               ? { seo_title: v.seo_title_es || null }
               : {}),
@@ -728,6 +746,108 @@ async function saveCatalogEntry(
     redirectTo: `${adminRoute}/${kind === "collection" ? "colecciones" : "proyectos"}`,
   };
 }
+export async function duplicateProject(
+  _previous: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  if (!/^[0-9a-f-]{36}$/i.test(id))
+    return { ok: false, message: "Proyecto no válido." };
+  const client = await authenticatedContentClient();
+  try {
+    const { data, error } = await client
+      .from("projects")
+      .select(
+        "slug,revision,location,project_date,editorial,sort_order,cover_image_path,project_translations(locale,title,description,seo_title,seo_description,details),project_images(storage_path,alt_es,alt_en,caption_es,caption_en,sort_order,is_cover)",
+      )
+      .eq("id", id)
+      .single();
+    if (error || !data) throw Error("No pudimos consultar el proyecto.");
+    if (Number(data.revision) !== expectedVersion(formData))
+      throw Error(
+        "El proyecto cambió en otra pestaña. Recarga antes de duplicar.",
+      );
+    const {
+      project_translations,
+      project_images,
+      slug,
+      location,
+      project_date,
+      editorial,
+      sort_order,
+      cover_image_path,
+    } = data;
+    const [draft] = await commitContent(client, [
+      {
+        kind: "project",
+        intent: "save",
+        data: {
+          location,
+          project_date,
+          editorial,
+          sort_order,
+          cover_image_path,
+          slug:
+            slug.slice(0, 65).replace(/-$/, "") +
+            "-copia-" +
+            randomUUID().slice(0, 8),
+          featured: false,
+        },
+        translations: project_translations.map(
+          ({
+            locale,
+            title,
+            description,
+            seo_title,
+            seo_description,
+            details,
+          }) => ({
+            locale: locale as "es" | "en",
+            title,
+            description,
+            seo_title,
+            seo_description,
+            details,
+          }),
+        ),
+        images: project_images.map(
+          ({
+            storage_path,
+            alt_es,
+            alt_en,
+            caption_es,
+            caption_en,
+            sort_order,
+            is_cover,
+          }) => ({
+            storage_path,
+            alt_es,
+            alt_en,
+            caption_es,
+            caption_en,
+            sort_order,
+            is_cover,
+          }),
+        ),
+      },
+    ]);
+    return {
+      ok: true,
+      message: "Copia guardada como borrador.",
+      redirectTo: `${adminRoute}/proyectos/${draft.id}`,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "No pudimos duplicar el proyecto.",
+    };
+  }
+}
+
 export async function upsertCollection(
   _previous: ActionState,
   formData: FormData,

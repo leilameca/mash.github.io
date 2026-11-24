@@ -1,6 +1,13 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { ComparePhotos } from "@/components/editorial/ComparePhotos";
+import { AnnouncementBanner } from "@/components/editorial/Announcements";
+import {
+  withinAnnouncementWindow,
+  type pageTargets,
+} from "@/lib/editorial/schema";
+import type { PublicAnnouncement } from "@/lib/editorial/queries";
+/* eslint-disable @next/next/no-img-element */
+import { useState, useEffect, type CSSProperties, type ReactNode } from "react";
 import type { Locale } from "@/lib/i18n";
 import { localizedPath } from "@/lib/i18n";
 import {
@@ -52,7 +59,9 @@ function style(section: VisualSection): CSSProperties {
 const prefixes = {
   collection: "/colecciones/",
   product: "/productos/",
-  project: "/proyectos",
+  project: "/proyectos/",
+  news: "/noticias/",
+  announcement: "",
 } as const;
 export function VisualDocument({
   doc,
@@ -132,15 +141,18 @@ export function VisualDocument({
         const options = meta.entity
           ? items.filter((item) => item.kind === meta.entity)
           : [];
-        const featured =
-          section.type === "products" && section.id === "legacy-products"
-            ? options.filter((item) => item.featured)
-            : options;
+        const curated =
+          (section.type === "products" && section.id === "legacy-products") ||
+          section.type === "news-featured" ||
+          (section.type === "projects" && section.id !== "legacy-projects");
+        const optionsForBlock = curated
+          ? options.filter((item) => item.featured)
+          : options;
         const cards = section.entities.length
           ? section.entities.flatMap(
               (id) => options.find((item) => item.id === id) ?? [],
             )
-          : featured.slice(0, 6);
+          : optionsForBlock.slice(0, 6);
         const href = section.href ? localizedPath(locale, section.href) : "";
         const action =
           text("button") && href ? (
@@ -230,6 +242,42 @@ export function VisualDocument({
                 ))}
               </div>
             </>
+          );
+        else if (section.type === "comparison")
+          node = (
+            <>
+              {copy}
+              <div className="visual-comparison">
+                <ComparePhotos
+                  locale={locale}
+                  comparison={{
+                    before: section.media[0] ?? "",
+                    after: section.media[1] ?? "",
+                    x: 50,
+                    y: 50,
+                    fit: "cover",
+                  }}
+                  inheritCrop
+                  beforeLabel={text("before")}
+                  afterLabel={text("after")}
+                  beforeAlt={text("alt")}
+                  afterAlt={text("alt")}
+                />
+              </div>
+            </>
+          );
+        else if (section.type === "announcements")
+          node = (
+            <VisualAnnouncements
+              locale={locale}
+              preview={preview}
+              page={doc.page ?? "home"}
+              entries={cards.flatMap((card) =>
+                card.announcements?.[locale]
+                  ? [card.announcements[locale]!]
+                  : [],
+              )}
+            />
           );
         else if (meta.entity)
           node = (
@@ -407,5 +455,52 @@ function Cover({
         </div>
       )}
     </div>
+  );
+}
+
+function VisualAnnouncements({
+  entries,
+  locale,
+  preview,
+  page,
+}: {
+  entries: PublicAnnouncement[];
+  locale: Locale;
+  preview: boolean;
+  page: (typeof pageTargets)[number];
+}) {
+  const [now, setNow] = useState<number | null>(null);
+  const [dismiss, setDismiss] = useState<string[]>([]);
+  useEffect(() => {
+    if (!entries.length) return;
+    const refresh = () => setNow(Date.now());
+    refresh();
+    const interval = setInterval(refresh, 1000);
+    return () => clearInterval(interval);
+  }, [entries.length]);
+  const entry = entries
+    .filter(
+      (row) =>
+        !dismiss.includes(row.id) &&
+        (now === null
+          ? row.data.pages.includes("all") || row.data.pages.includes(page)
+          : withinAnnouncementWindow(row.data, locale, page, now)),
+    )
+    .sort((a, b) => b.data.priority - a.data.priority)[0];
+  if (!entry)
+    return preview ? (
+      <p className="visual-context">
+        {locale === "es"
+          ? "No hay anuncios vigentes para esta página."
+          : "No active announcements for this page."}
+      </p>
+    ) : null;
+  return (
+    <AnnouncementBanner
+      entry={entry}
+      locale={locale}
+      preview={preview}
+      onDismiss={() => setDismiss((value) => [...value, entry.id])}
+    />
   );
 }

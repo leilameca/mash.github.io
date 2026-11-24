@@ -96,6 +96,8 @@ const fields: Record<TextField, string> = {
   body: "Texto",
   button: "Texto del botón",
   alt: "Texto alternativo",
+  before: "Etiqueta antes",
+  after: "Etiqueta después",
 };
 export function Inspector({
   section,

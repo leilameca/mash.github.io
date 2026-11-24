@@ -49,6 +49,20 @@ export function translationFields(
       : null;
     for (const [key, value] of Object.entries(es?.value ?? {})) {
       if (visualIds && !visualIds.has(key.split("__")[0])) continue;
+      if (
+        snapshot.key?.startsWith("news.") &&
+        /^(body|alt|caption)-/.test(key)
+      ) {
+        const id = key.slice(key.indexOf("-") + 1);
+        const related = key.startsWith("body-")
+          ? snapshot.value?.blocks
+          : snapshot.value?.gallery;
+        if (
+          !Array.isArray(related) ||
+          !related.some((entry: { id: string }) => entry.id === id)
+        )
+          continue;
+      }
       if (technical.test(key) || /(?:image|href|url|path)$/i.test(key))
         continue;
       if (key === "labels" && value && typeof value === "object") {
@@ -62,8 +76,18 @@ export function translationFields(
     for (const key of fields) {
       add([key], es?.[key], en?.[key], key === "name");
     }
-    for (const image of snapshot.images)
+    if (kind === "project")
+      for (const [key, value] of Object.entries(es?.details ?? {}))
+        add(["details", key], value, en?.details?.[key]);
+    for (const image of snapshot.images) {
       add(["alts", image.storage_path], image.alt_es, image.alt_en);
+      if (kind === "project")
+        add(
+          ["captions", image.storage_path],
+          image.caption_es,
+          image.caption_en,
+        );
+    }
   }
   return result;
 }
@@ -76,12 +100,26 @@ export function packFields(
   snapshot: ContentSnapshot,
 ) {
   const text: Record<string, unknown> = {};
-  const alts: Record<string, string> = Object.create(null);
+  const alts: Record<string, string | Record<string, string>> =
+    Object.create(null);
+  let details: Record<string, string> | undefined;
   const values: Record<string, unknown> = Object.create(null);
   const labels: Record<string, string> = Object.create(null);
   for (const { path, text: value } of changes) {
-    if (path[0] === "alts") alts[path[1]] = value;
-    else if (path[0] !== "value") text[path[0]] = value;
+    if (path[0] === "alts" || path[0] === "captions") {
+      if (path[0] === "captions" || snapshot.editorial !== undefined) {
+        const previous = alts[path[1]];
+        alts[path[1]] = {
+          ...(typeof previous === "object" ? previous : {}),
+          [path[0] === "alts" ? "alt_en" : "caption_en"]: value,
+        };
+      } else if (path[0] === "alts") alts[path[1]] = value;
+    } else if (path[0] === "details") {
+      details ??= {
+        ...snapshot.translations.find((t) => t.locale === "en")?.details,
+      };
+      details[path[1]] = value;
+    } else if (path[0] !== "value") text[path[0]] = value;
     else if (path[1] === "labels") labels[path[2]] = value;
     else values[path[1]] = value;
   }
@@ -91,6 +129,7 @@ export function packFields(
     values.labels = { ...existing, ...labels };
   }
   if (Object.keys(values).length) text.value = values;
+  if (details) text.details = details;
   return { text, alts };
 }
 

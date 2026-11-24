@@ -59,6 +59,7 @@ function fixture(savedPaths = ["/one.jpg", "/two.jpg"], imageError = null, heroV
   }};
   const module = { exports: {} };
   const mocks = {
+    "@/lib/editorial/project-commit": { projectExtras: async () => null },
     "@/lib/admin/content-schemas": require("./support/load-ts.cjs").loadTs(path.join(__dirname,"../lib/admin/content-schemas.ts")),
     "next/cache": { revalidatePath(...args) { revalidated.push(args); } },
     "next/navigation": { redirect(url) { throw new Error(`redirect:${url}`); } },
