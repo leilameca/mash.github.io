@@ -17,7 +17,14 @@ function contentFixture(value, translations = []) {
   const {loadTs}=require('./support/load-ts.cjs');
   return loadTs(path.join(__dirname,"../lib/supabase/site-content.ts"),{
     "@/lib/content":{},"./persistence":{},
-    "./published":{readPublishedSite:async()=>({value,translations}),localizedTranslation:(rows,locale)=>({text:rows.find(r=>r.locale===locale)??rows.find(r=>r.locale==="es"),pending:false})}
+    "./published": {
+      readPublished: async () => [{ slug: "home.sections", snapshot: { value, translations } }],
+      readPublishedSite: async () => ({ value, translations }),
+      localizedTranslation: (rows, locale) => ({
+        text: rows.find((row) => row.locale === locale) ?? rows.find((row) => row.locale === "es"),
+        pending: false,
+      }),
+    },
   });
 }
 
