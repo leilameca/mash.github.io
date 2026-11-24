@@ -34,6 +34,7 @@ async function main(){
     const studio=await fetch(origin+'/studio-mash/productos');const studioBody=await studio.text();assert.ok(studio.url.endsWith('/studio-mash/login')||studioBody.includes('/studio-mash/login'));assert.equal(studioBody.includes('Nombre confirmado'),false);
     await get('/api/studio-media',401);
     await get('/api/studio-translations',401);
+    await get('/api/studio-visual?page=home',401);
     const demo=await get('/__preview__/enter',404);
     assert.equal(demo.headers.get('set-cookie'),null);
     backend.setUnavailable(true);await get('/es/productos/oasis-confirmado',503);

@@ -1,3 +1,5 @@
+import { PublishedVisual } from "@/components/visual/PublishedVisual";
+import { readVisualPublication } from "@/lib/visual/queries";
 import { routeAlternates } from "@/lib/seo";
 import Image from "next/image";
 import type { Metadata } from "next";
@@ -31,6 +33,8 @@ export default async function AboutPage({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
+  const visual=await readVisualPublication("about");
+  if(visual)return <PublishedVisual doc={visual} locale={locale}/>;
   const content = await getMarketingPageContent("about", locale);
 
   return (

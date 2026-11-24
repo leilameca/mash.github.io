@@ -35,13 +35,23 @@ type List = {
   preferences: { auto_on_save: boolean; terms: string[] };
   providerConfigured: boolean;
 };
-type Field = { key: string; path: string[]; es: string; en: string };
+type Field = {
+  key: string;
+  path: string[];
+  es: string;
+  en: string;
+  label?: string;
+};
 type Detail = { entry: Entry; fields: Field[] };
 type Mode = "translate" | "regenerate" | "review";
 
 const endpoint = "/api/studio-translations";
 const statePairs = Object.entries(translationStates) as [State, string][];
 const siteLabels: Record<string, string> = {
+  "visual.home": "Inicio · composición",
+  "visual.about": "Nosotros · composición",
+  "visual.contact": "Contacto · composición",
+  "visual.projects": "Proyectos · composición",
   "home.hero": "Portada",
   "home.sections": "Secciones de inicio",
   "site.navigation": "Navegación",
@@ -66,17 +76,21 @@ const fieldLabels: Record<string, string> = {
 };
 const displayName = (entry: Entry) =>
   entry.kind === "site" ? siteLabels[entry.slug] || entry.name : entry.name;
-const fieldLabel = ({ path }: Field, i: number) =>
-  path[0] === "alts"
+const fieldLabel = ({ path, label }: Field, i: number) =>
+  label ??
+  (path[0] === "alts"
     ? `Texto alternativo · Foto ${i + 1}`
     : path[1] === "labels"
       ? `Etiqueta de navegación · ${path[2]}`
       : (fieldLabels[path.at(-1) ?? ""] ??
-        (path.at(-1) ?? "").replace(/([A-Z])/g, " $1"));
+        (path.at(-1) ?? "").replace(/([A-Z])/g, " $1")));
 const editHref = (entry: Entry) =>
-  entry.kind === "site" && ["site.settings", "site.footer"].includes(entry.slug)
-    ? "/studio-mash/configuracion"
-    : entryHref(entry);
+  entry.kind === "site" && entry.slug.startsWith("visual.")
+    ? "/studio-mash/contenido/editor?pagina=" + entry.slug.slice(7)
+    : entry.kind === "site" &&
+        ["site.settings", "site.footer"].includes(entry.slug)
+      ? "/studio-mash/configuracion"
+      : entryHref(entry);
 
 async function api<T>(query = "", init?: RequestInit): Promise<T> {
   const response = await fetch(endpoint + query, {

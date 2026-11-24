@@ -1,3 +1,5 @@
+import { PublishedVisual } from "@/components/visual/PublishedVisual";
+import { readVisualPublication } from "@/lib/visual/queries";
 import type { Metadata } from "next";
 import { routeAlternates, siteOrigin } from "@/lib/seo";
 import { safeJsonLd } from "@/lib/security";
@@ -58,6 +60,7 @@ export default async function HomePage({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
+  const visual=await readVisualPublication("home");
   const t = dictionary[locale].common;
   const [
     collections,
@@ -96,13 +99,12 @@ export default async function HomePage({
     sameAs: [site.instagram],
   };
 
+  const structuredMarkup = <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(structuredData) }} />;
+  if (visual) return <>{structuredMarkup}<PublishedVisual doc={visual} locale={locale} /></>;
+
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: safeJsonLd(structuredData) }}
-      />
-
+      {structuredMarkup}
       <section className="hero-section">
         <div className="hero-media" data-image-motion>
           {heroContent.image && (

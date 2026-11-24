@@ -41,7 +41,14 @@ export function translationFields(
     });
   };
   if (kind === "site") {
+    const composition = snapshot.value?.composition;
+    const visualIds = Array.isArray(composition?.sections)
+      ? new Set(
+          composition.sections.map((section: { id: string }) => section.id),
+        )
+      : null;
     for (const [key, value] of Object.entries(es?.value ?? {})) {
+      if (visualIds && !visualIds.has(key.split("__")[0])) continue;
       if (technical.test(key) || /(?:image|href|url|path)$/i.test(key))
         continue;
       if (key === "labels" && value && typeof value === "object") {

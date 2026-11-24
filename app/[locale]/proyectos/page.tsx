@@ -1,3 +1,5 @@
+import { PublishedVisual } from "@/components/visual/PublishedVisual";
+import { readVisualPublication } from "@/lib/visual/queries";
 import { routeAlternates } from "@/lib/seo";
 import Image from "next/image";
 import type { Metadata } from "next";
@@ -30,6 +32,8 @@ export default async function ProjectsPage({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
+  const visual=await readVisualPublication("projects");
+  if(visual)return <PublishedVisual doc={visual} locale={locale}/>;
   const [projects, content] = await Promise.all([
     getCatalogProjects(locale),
     getMarketingPageContent("projects", locale),

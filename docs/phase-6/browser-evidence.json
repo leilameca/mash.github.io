@@ -1,0 +1,31 @@
+{
+  "checks": [
+    "Selecting the canvas, edit, undo/redo, block library, photo reuse, reorder, duplicate, hide, delete",
+    "Preview has no live links, persist responsive overrides, conflict 409, save does not publish, shared public markup after publish",
+    "Responsive at 1440, 768, 390 and 320 px",
+    "Shared secondary buttons pass contrast in both themes, visible focus and mobile translation indicators"
+  ],
+  "contrast": {
+    "light": [
+      12.98427011194395,
+      12.98427011194395,
+      12.98427011194395,
+      4.902331779243811,
+      5.5863169383018
+    ],
+    "dark": [
+      12.08026693889735,
+      12.08026693889735,
+      12.08026693889735,
+      6.991784720642023,
+      13.877598824641911
+    ]
+  },
+  "syntheticFixture": true,
+  "widths": [
+    1440,
+    768,
+    390,
+    320
+  ]
+}

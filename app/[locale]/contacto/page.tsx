@@ -1,3 +1,5 @@
+import { PublishedVisual } from "@/components/visual/PublishedVisual";
+import { readVisualPublication } from "@/lib/visual/queries";
 import { routeAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -33,6 +35,8 @@ export default async function ContactPage({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
+  const visual=await readVisualPublication("contact");
+  if(visual)return <PublishedVisual doc={visual} locale={locale}/>;
   const [site, content] = await Promise.all([
     getSiteChromeContent(locale),
     getMarketingPageContent("contact", locale),

@@ -1,3 +1,4 @@
+import { blockRegistry, layoutSchema } from "@/lib/visual/schema";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentAdmin } from "@/lib/supabase/auth";
@@ -67,12 +68,36 @@ export async function GET(request: NextRequest) {
         .single();
       if (historyError || !revision)
         throw historyError ?? new Error("Missing revision");
+      const snapshot = revision.snapshot as ContentSnapshot;
+      const visual = layoutSchema.safeParse(snapshot.value?.composition);
+      const sectionNames = visual.success
+        ? new Map(
+            visual.data.sections.map((section) => [
+              section.id,
+              blockRegistry[section.type].label,
+            ]),
+          )
+        : null;
+      const names: Record<string, string> = {
+        title: "Título",
+        eyebrow: "Antetítulo",
+        body: "Texto",
+        button: "Botón",
+        alt: "Texto alternativo",
+      };
       return response({
         entry,
-        fields: translationFields(
-          entity.data,
-          revision.snapshot as ContentSnapshot,
-        ).map((field) => ({ ...field, key: fieldKey(field.path) })),
+        fields: translationFields(entity.data, snapshot).map((field) => {
+          const [section, property] = field.path[1]?.split("__") ?? [];
+          const block = sectionNames?.get(section);
+          return {
+            ...field,
+            key: fieldKey(field.path),
+            ...(block
+              ? { label: block + " · " + (names[property] ?? "Texto") }
+              : {}),
+          };
+        }),
       });
     }
 

@@ -4007,3 +4007,49 @@
   .studio-translation-summary button { display: flex; align-items: center; gap: .55rem; min-height: 44px; padding: .45rem .55rem; }
   .studio-translation-summary strong { font-size: 1.15rem; min-width: 1.35rem; }
 }
+/* Button colors pair semantic foreground and surface in every Studio scope. */
+.studio-root :is(button,a).admin-button.admin-button--secondary,
+.studio-root :is(button,a).admin-button.admin-button--secondary:hover {
+  background:var(--studio-subtle);
+  border-color:var(--studio-line);
+  color:var(--studio-text);
+  filter:none;
+}
+.studio-root :is(button,a).admin-button.admin-button--secondary:hover:not(:disabled) {
+  background:var(--studio-accent-soft);
+  border-color:var(--studio-accent);
+  color:var(--studio-text);
+}
+.studio-root button.admin-button:disabled,
+.studio-root button.admin-button.admin-button--secondary:disabled {
+  opacity:1;
+  background:var(--studio-subtle);
+  color:var(--studio-muted);
+  border-color:var(--studio-line);
+  filter:none;
+}
+.studio-root[data-theme="dark"] .studio-sidebar .studio-nav a,
+.studio-root[data-theme="dark"] .studio-sidebar .studio-nav a .studio-icon {
+  color:var(--studio-text);
+}
+.studio-root[data-theme="dark"] .studio-sidebar .studio-nav a[aria-current="page"],
+.studio-root[data-theme="dark"] .studio-sidebar .studio-nav a[aria-current="page"] .studio-icon {
+  color:var(--studio-accent);
+}
+.studio-root input[type="checkbox"] { accent-color:var(--studio-accent); }
+.studio-root :is(button,a,input,select,textarea,summary):focus-visible {
+  outline:2px solid var(--studio-accent);
+  outline-offset:3px;
+}
+@media(max-width:600px) {
+  .studio-translation-summary { grid-template-columns:repeat(2,minmax(0,1fr)); gap:.45rem; }
+  .studio-translation-summary button { min-width:0; align-items:baseline; }
+  .studio-translation-summary span { overflow-wrap:anywhere; line-height:1.25; }
+}
+.studio-root[data-theme="dark"] .studio { color-scheme:dark; }
+@media(min-width:361px) and (max-width:600px) {
+  .studio-translation-summary { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .studio-translation-summary button { gap:.3rem;padding:.35rem; }
+  .studio-translation-summary strong { min-width:1rem; }
+  .studio-translation-summary span { font-size:.71rem; }
+}

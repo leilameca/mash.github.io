@@ -22,7 +22,9 @@
     "test:phase4:browser": "node tests/phase4-browser.cjs",
     "test:phase5": "node --test tests/translation.test.cjs",
     "test:phase5:browser": "node tests/phase5-browser.cjs",
-    "test:all": "npm run test:admin && npm run test:pwa && npm run test:phase2 && npm run test:phase3 && npm run test:phase4 && npm run test:phase5"
+    "test:phase6": "node --test tests/visual.test.cjs",
+    "test:phase6:browser": "node tests/phase6-browser.cjs",
+    "test:all": "npm run test:admin && npm run test:pwa && npm run test:phase2 && npm run test:phase3 && npm run test:phase4 && npm run test:phase5 && npm run test:phase6"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
