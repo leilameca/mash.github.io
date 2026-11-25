@@ -2,19 +2,20 @@ import { isPrivatePreview, siteOrigin } from "@/lib/seo";
 import { headers } from "next/headers";
 import type { Metadata, Viewport } from "next";
 import { PwaRegistration } from "@/components/PwaRegistration";
-import { Cormorant_Garamond, Outfit } from "next/font/google";
+import localFont from "next/font/local";
 import "./base.css";
 
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+const cormorant = localFont({
+  src: "./fonts/cormorant-garamond.woff2",
+  weight: "300 600",
+  adjustFontFallback: "Times New Roman",
   variable: "--font-serif",
   display: "swap",
 });
 
-const outfit = Outfit({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+const outfit = localFont({
+  src: "./fonts/outfit.woff2",
+  weight: "300 700",
   variable: "--font-sans",
   display: "swap",
 });
