@@ -1,5 +1,7 @@
 # Matriz de preparación para lanzamiento
 
+La [matriz de aceptación de Fase 8](../phase-8/acceptance.md) registra los 32 requisitos funcionales y visuales previos al cierre.
+
 Base de la sesión: `78a63b13ff7ebeda09430d4152d47ac6c13fba24` en `feature/mash-3`. Para identificar el checkpoint que contiene este informe, usa `git rev-parse HEAD` y `git ls-remote origin refs/heads/feature/mash-3`.
 
 | Requisito | Estado | Evidencia o condición pendiente |
