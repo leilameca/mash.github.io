@@ -3,6 +3,47 @@ const assert = require('node:assert/strict');
 const { database, ADMIN, OUTSIDER } = require('./support/database.cjs');
 const es = { locale: 'es', name: 'Trap Set', description: 'Descripción española verificada.', materials: 'Fibra', care: 'Limpiar con agua' };
 const images = [{ storage_path: '/assets/images/oasis-set.jpg', sort_order: 0, is_primary: true, alt_es: 'Conjunto real', alt_en: 'Original caption' }];
+
+test('legacy upgrade preserves an unpublished product and its working content', async () => {
+  const visibleSlug = 'oasis-set';
+  const draftSlug = 'oculus-mare';
+  const f = await database({
+    seed: true,
+    beforeIntegrity: async (db) => {
+      await db.query("update public.products set status = 'published' where slug = $1", [visibleSlug]);
+    },
+  });
+  try {
+    const { rows: products } = await f.db.query(
+      "select id, slug, status from public.products where slug in ($1, $2)",
+      [visibleSlug, draftSlug],
+    );
+    assert.equal(products.length, 2);
+    const draft = products.find((product) => product.slug === draftSlug);
+    assert.equal(draft.status, 'draft');
+    const { rows: translations } = await f.db.query(
+      "select locale from public.product_translations where product_id = $1 order by locale",
+      [draft.id],
+    );
+    assert.deepEqual(translations.map(({ locale }) => locale), ['en', 'es']);
+    const { rows: photos } = await f.db.query(
+      "select storage_path from public.product_images where product_id = $1 order by sort_order",
+      [draft.id],
+    );
+    assert.deepEqual(photos.map(({ storage_path }) => storage_path), [
+      '/assets/images/oculus-mare-dining.jpg',
+      '/assets/images/oculus-mare-compacto.jpg',
+    ]);
+    const { rows: publications } = await f.as('anon', '', (tx) => tx.query(
+      "select slug from public.published_content where entity_kind = 'product' and slug in ($1, $2)",
+      [visibleSlug, draftSlug],
+    ));
+    assert.deepEqual(publications.map(({ slug }) => slug), [visibleSlug]);
+  } finally {
+    await f.db.close();
+  }
+});
+
 async function fixture() {
   const f = await database();
   const [collection] = await f.save([{kind:'collection',data:{slug:'terraza',cover_image_path:images[0].storage_path},translations:[{locale:'es',name:'Colección dinámica',description:'Descripción de colección válida.'}],intent:'publish'}]);
