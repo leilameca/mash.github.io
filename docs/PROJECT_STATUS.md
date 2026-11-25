@@ -11,7 +11,7 @@ Rama de trabajo: `feature/mash-3`. El estado y las pruebas corresponden al entor
 | 5 · Traducciones | Flujo de traducción, revisión humana y preservación del inglés existente. Ver [informe](phase-5/implementation.md). |
 | 6 · Editor visual | Composición tipada, puntos focales, herencia responsive y publicación. Ver [informe](phase-6/implementation.md). |
 | 7 · Editorial | Proyectos, antes/después, Noticias, Anuncios y mapa del taller en Contacto. Ver [informe](phase-7/implementation.md). |
-| 8 · Experiencia pública | Aprobación visual del sitio local registrada el 24 de noviembre de 2026. Ver [checkpoint y pendientes](phase-8/implementation.md). |
-| 9 · Integración y entrega | Presupuesto US$0. Supabase de ensayo preparado. QA multinavegador local aprobado en el alcance registrado. Falta despliegue autorizado, proveedores reales y aprobación de lanzamiento. Ver [matriz](phase-9/readiness.md), [QA](phase-9/qa.md) y [operación](phase-9/delivery.md). |
+| 8 · Experiencia pública | Aprobación visual del sitio local registrada. La [matriz de aceptación](phase-8/acceptance.md) conserva 14 de 32 requisitos aprobados. Falta el cierre definitivo de la titular. |
+| 9 · Integración y entrega | Previo al inicio formal. Render privado y Supabase de ensayo preparados con presupuesto US$0. Los 18 bloques, criterios y dependencias constan en la [matriz maestra](phase-9/acceptance.md). Lanzamiento en estado NO GO. |
 
 Los resultados detallados están en [Pruebas](TESTING.md). Para continuar, sigue [Traspaso](HANDOFF.md).
