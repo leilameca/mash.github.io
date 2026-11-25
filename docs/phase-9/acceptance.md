@@ -13,6 +13,12 @@ Referencia funcional `c6c24e869d52f5b348f38b9e82c9fe19953fbbae` en `feature/mash
 - El repositorio tiene 17 archivos de migración. El [inventario de ensayo](readiness.md) documenta 14 migraciones de esquema aplicadas y tres semillas históricas omitidas. La producción histórica requiere inventario y conciliación antes de aplicar cambios.
 - Render Free queda como ensayo. Su documentación indica suspensión por inactividad y disco efímero. Vercel Hobby restringe el uso comercial. El coste de producción queda por decidir y no se contrató ningún servicio en esta revisión. [Render Free](https://render.com/docs/free) · [Vercel Hobby](https://vercel.com/docs/plans/hobby).
 
+## Checkpoint de automatización
+
+- Se configuró MASH checks en GitHub Actions para la rama de trabajo. En local pasaron ESLint, typecheck, compilación y las 108 pruebas. El análisis de dependencias de producción con `npm audit --omit=dev` devolvió cero avisos del registro. La revisión de seguridad de la aplicación y la infraestructura sigue pendiente.
+- La regresión de imágenes a 390 px verifica la decodificación de las imágenes visibles. Las dos imágenes decorativas de la portada reservadas para escritorio pueden tener un tamaño intrínseco de cero en móvil pese a responder HTTP 200 y decodificar correctamente.
+- La ejecución remota se verifica en [GitHub Actions](https://github.com/leilameca/mash.github.io/actions/workflows/mash-checks.yml). El flujo ejecuta pruebas aisladas sin credenciales de Render, Supabase hospedado, DeepL ni producción.
+
 ## Bloques y criterios
 
 | Bloque | Estado | Criterios de aceptación | Dependencias y evidencia de partida |

@@ -30,12 +30,16 @@ async function main() {
             paths.add(detail);
           }
         }
-        report.brokenImages = await page.locator("main img").evaluateAll(async (images) => {
-          await Promise.all(images.map((image) => {
+        report.brokenImages = await page.locator("main img:visible").evaluateAll(async (images) => {
+          return (await Promise.all(images.map(async (image) => {
             image.loading = "eager";
-            return image.decode().catch(() => {});
-          }));
-          return images.filter((image) => !image.naturalWidth).map((image) => image.currentSrc || image.src);
+            try {
+              await image.decode();
+              return null;
+            } catch {
+              return image.currentSrc || image.src;
+            }
+          }))).filter(Boolean);
         });
         results.push(report);
       }
