@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | QA-01 · Contraste en Inicio | Lighthouse encontró etiquetas doradas sobre fondos claros en Colecciones, Proyectos, Beneficios y Preguntas frecuentes. La etiqueta mostró 2,68:1 y los números de beneficios 2,77:1, frente a 4,5:1. | Corregida. La auditoría de contraste de Lighthouse pasó en las dos repeticiones. |
 | QA-02 · Analítica sin acceso externo | La sesión observable de Chrome corresponde a otro perfil. Falta abrir Google con la cuenta autorizada de MASH. | Pendiente de acceso |
-| QA-03 · Staging sin datos ni frontend | El proyecto Supabase hospedado tiene 14 migraciones de esquema, cero publicaciones y cero usuarios. | Pendiente de contenido autorizado y alojamiento |
+| QA-03 · Staging sin frontend hospedado | El proyecto Supabase tiene 14 migraciones de esquema y ahora 22 publicaciones copiadas con autorización. El frontend local se conecta con la clave pública del proyecto de ensayo. | Pendiente de alojamiento privado y credenciales de Studio |
 | QA-04 · Franja horizontal inaccesible por teclado | Axe marcó `.lifestyle-band__track` a 390 px en Inicio ES y EN. La región desplaza horizontalmente y no entraba en el orden de tabulación. | Corregida. Se verificaron foco visible y desplazamiento con flecha derecha. |
 
 ## Alcance
@@ -27,3 +27,8 @@ La evidencia se separa entre navegador local con copia del contenido publicado, 
 | Lector de pantalla | Pendiente pasada manual con lector; los resultados axe se registran por separado | Pendiente |
 
 Los JSON de navegación, axe y Lighthouse se mantienen bajo `.test-artifacts/`. Muestras de laboratorio como LCP y CLS dependen del equipo, navegador y caché.
+
+## Ensayo con Supabase hospedado
+
+- El frontend local en 3039 consultó la base hospedada con su clave pública. Chromium confirmó 14 rutas ES/EN, las tres fotos de la franja en ambos idiomas y la redirección anónima de Studio al inicio de sesión. No apareció la entrada del fixture. Se verificaron `noindex`, robots con `Disallow: /` y sitemap vacío.
+- El respaldo de contenido público se restauró en PostgreSQL local. Se comprobaron las ocho fichas, las membresías de catálogo y la ausencia de Oculus Mare en publicaciones. El respaldo de contenido y el manifiesto de originales y variantes quedan fuera de Git.

@@ -18,7 +18,7 @@ En otra terminal establece `MASH_PREVIEW_URL` al puerto de ensayo y ejecuta las 
 
 ## Continuidad del staging
 
-El 25 de noviembre de 2026 se habilitó el cupo gratuito y se creó el Supabase `mash-staging` (`iyxfhxoarxagtwiyqqer`). Se aplicaron las 14 migraciones de esquema y se verificó Storage, la vista de publicaciones y la separación anónima de Traducciones. La base está vacía de contenido publicado y usuarios. El siguiente paso es acordar el contenido que se copiará y configurar las credenciales privadas del Preview, el remitente OTP y DeepL.
+El 25 de noviembre de 2026 se creó Supabase `mash-staging` (`iyxfhxoarxagtwiyqqer`) y se aplicaron 14 migraciones de esquema. Con autorización se importaron 8 productos, 4 colecciones, 2 proyectos y 8 bloques públicos de MASH. El entorno quedó sin cuentas, contactos ni borradores de producción. El frontend local conectado a ese proyecto está disponible en el puerto 3039. Quedan el alojamiento privado, las credenciales de Studio, el remitente OTP y DeepL.
 
 El presupuesto autorizado es de US$0. La entrega se puede revisar localmente sin credenciales mediante `npm run preview:studio`. El proyecto `mash-staging` está configurado con protección en Vercel y queda sin despliegue. La consulta de solo lectura a MASH confirmó que el esquema de producción todavía no tiene las tablas de publicación que requiere esta rama. La titular autorizó revisar las propiedades de Google e identificó el contenedor GTM existente. Quedan por verificar el flujo de GA4 y el acceso de la Data API. Consulta la [matriz de preparación](phase-9/readiness.md), el [informe de QA](phase-9/qa.md) y la [guía de operación](phase-9/delivery.md).
 

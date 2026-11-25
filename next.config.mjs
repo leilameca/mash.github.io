@@ -5,6 +5,11 @@ const privatePreview =
   process.env.MASH_STAGING === "1" || process.env.VERCEL_ENV === "preview";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseHostname = supabaseUrl ? new URL(supabaseUrl).hostname : null;
+const previewMediaHost = process.env.MASH_PREVIEW_MEDIA_HOST;
+const imageHosts = new Set(supabaseHostname ? [supabaseHostname] : []);
+if (privatePreview && /^[a-z0-9]+\.supabase\.co$/.test(previewMediaHost ?? "")) {
+  imageHosts.add(previewMediaHost);
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -51,15 +56,11 @@ const nextConfig = {
   },
   images: {
     formats: ["image/avif", "image/webp"],
-    remotePatterns: supabaseHostname
-      ? [
-          {
-            protocol: "https",
-            hostname: supabaseHostname,
-            pathname: "/storage/v1/object/public/**",
-          },
-        ]
-      : [],
+    remotePatterns: [...imageHosts].map((hostname) => ({
+      protocol: "https",
+      hostname,
+      pathname: "/storage/v1/object/public/**",
+    })),
   },
   experimental: {
     serverActions: {
