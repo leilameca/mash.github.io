@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint app components lib middleware.ts",
     "typecheck": "tsc --noEmit",
     "test:products": "node --test tests/admin-content.test.cjs",
     "test:admin": "node --test tests/admin-content.test.cjs tests/catalog.test.cjs tests/media-library.test.cjs tests/site-content.test.cjs",
@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.3.14",
+    "@eslint/eslintrc": "3.3.7",
     "@types/node": "^22.15.21",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",

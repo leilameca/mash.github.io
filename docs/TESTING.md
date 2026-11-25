@@ -23,3 +23,7 @@ Pasaron las 108 pruebas de `npm run test:all`, incluidas las 105 originales, y l
 Para comprobar la protección sin credenciales, define `MASH_QA_STAGING_URL=https://mash-staging.onrender.com` y ejecuta `npm run test:staging:browser -- --anonymous-only`.
 
 Para el recorrido hospedado, instala Chromium, Firefox y WebKit con `npx playwright install chromium firefox webkit`. Inyecta `MASH_QA_STAGING_PASSWORD` desde un gestor seguro al proceso de QA para Render. En un Preview autorizado de Vercel, usa `MASH_QA_STORAGE_STATE` con la ruta al estado de navegador en `playwright/.auth/`. Ejecuta `npm run test:staging:browser`. El runner realiza lecturas, limita las credenciales al origen autorizado y rechaza el dominio de producción. Los flujos de escritura requieren cuentas y registros de ensayo.
+
+## GitHub Actions
+
+El flujo [MASH checks](../.github/workflows/mash-checks.yml) se ejecuta al subir cambios a `feature/mash-3`. Usa Node 24, `npm ci`, ESLint, las pruebas existentes, una compilación optimizada, typecheck y tres regresiones en Chromium contra un servidor aislado. Conserva diagnósticos de fallos durante tres días. El job usa permisos de lectura del repositorio y datos locales. El QA hospedado se ejecuta por separado y requiere las credenciales de ensayo.

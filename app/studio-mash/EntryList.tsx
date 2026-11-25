@@ -44,7 +44,7 @@ export async function EntryList({
   query: ListQuery;
 }) {
   const { entries, total, page, pageSize } = await studioEntries(kind, query);
-  const module = modules[kind];
+  const entryModule = modules[kind];
   const pageLink = (p: number) => {
     const params = new URLSearchParams(
       Object.entries(query).filter(([, v]) => !!v) as [string, string][],
@@ -63,14 +63,14 @@ export async function EntryList({
       )}
       <PageHeader
         eyebrow={kind === "project" ? "Contenido" : "Catálogo"}
-        title={module.title}
+        title={entryModule.title}
         description="Gestiona el contenido de trabajo y su versión pública."
       >
         <Link
           className="admin-button"
-          href={`/studio-mash/${module.path}/${module.create}`}
+          href={`/studio-mash/${entryModule.path}/${entryModule.create}`}
         >
-          + {module.new}
+          + {entryModule.new}
         </Link>
       </PageHeader>
       <section className="studio-table-card">
@@ -117,7 +117,7 @@ export async function EntryList({
             Filtrar
           </button>
           {(query.q || query.state || query.work) && (
-            <Link href={`/studio-mash/${module.path}`}>Limpiar</Link>
+            <Link href={`/studio-mash/${entryModule.path}`}>Limpiar</Link>
           )}
         </form>
         <div className="studio-list-caption">
@@ -193,7 +193,7 @@ export async function EntryList({
                         <Link
                           target="_blank"
                           rel="noopener noreferrer"
-                          href={`/es/${module.path}/${entry.published_slug}`}
+                          href={`/es/${entryModule.path}/${entry.published_slug}`}
                         >
                           <StudioIcon name="external" /> Ver publicado
                         </Link>

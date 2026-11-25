@@ -55,10 +55,11 @@ export const MediaUploader = forwardRef<
   const callbacks = useRef({ onAdd, onBusy });
   callbacks.current = { onAdd, onBusy };
   useEffect(() => {
+    const activeRequests = requests.current;
     mounted.current = true;
     return () => {
       mounted.current = false;
-      requests.current.forEach((r) => r.abort());
+      activeRequests.forEach((request) => request.abort());
     };
   }, []);
   const patch = (id: string, values: Partial<Job>) => {
@@ -212,11 +213,7 @@ export const MediaUploader = forwardRef<
     setJobs((current) => [...current, ...queue]);
     void run(queue);
   }
-  useImperativeHandle(forwardedRef, () => ({ addFiles: add }), [
-    disabled,
-    folder,
-    maxFiles,
-  ]);
+  useImperativeHandle(forwardedRef, () => ({ addFiles: add }));
   return (
     <div
       className={`studio-media-uploader${compact ? " studio-media-uploader--compact" : ""}`}
