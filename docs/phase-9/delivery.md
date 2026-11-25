@@ -38,6 +38,8 @@ Restaura en una base de recuperación separada, con un bucket separado. Verifica
 
 ### Preparación del corte en Vercel
 
+El panel autenticado identifica el equipo actual como **Hobby**. Las [reglas de uso de Vercel](https://vercel.com/docs/limits/fair-use-guidelines#commercial-usage) reservan Hobby para uso personal no comercial. Con el presupuesto autorizado de US$0, el corte comercial en ese equipo queda bloqueado. La referencia del despliegue actual es `53GgEveLPUhttXEXJ7b4F2191KAu` en el panel y `fc2a2b499afc2db4f46d0bac12c65104683090ec` en GitHub. La referencia de Supabase de producción facilitada por la titular es `guzuqitvzkenzsvcuttg`. La compatibilidad del esquema y el respaldo recuperable siguen pendientes.
+
 - El 25 de noviembre de 2026, el panel de Vercel aportado por la titular mostraba el despliegue de `www.mashoficial.com` en estado Ready y Production Current, con origen `main` en `fc2a2b4`. GitHub confirma `fc2a2b499afc2db4f46d0bac12c65104683090ec` como SHA completo de esa referencia. El dominio raíz redirigía a `www` y Vercel servía `/es` con HTTP 200. Antes del corte falta confirmar en el panel el ID de ese despliegue, el plan y su disponibilidad para revertir.
 - Identificar por referencia el Supabase que usa Vercel y comparar su registro de migraciones con `supabase/migrations`. Clasificar las tres semillas históricas por separado. Conciliar el catálogo existente antes de incorporar datos de arranque. Documentar los recuentos antes y después en una copia aislada.
 - Verificar que el respaldo recupera catálogo, publicación, archivos y acceso administrativo. Revisar también que el despliegue anterior funciona con cualquier cambio compatible de esquema. Si no existe una ruta de reversión comprobada, detener el corte.
