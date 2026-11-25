@@ -1,19 +1,38 @@
 import { requireAdmin } from "@/lib/supabase/auth";
-import { getCommercialEvents } from "@/lib/ga-report";
+import { getCommercialEvents, reportingPeriods } from "@/lib/ga-report";
+import Link from "next/link";
 import { StudioShell } from "../StudioShell";
 import { PageHeader, EmptyState } from "../StudioPrimitives";
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ dias?: string | string[] }>;
+}) {
   const admin = await requireAdmin();
-  const report = await getCommercialEvents();
+  const { dias } = await searchParams;
+  const days = reportingPeriods.find((period) => String(period) === dias) ?? 30;
+  const report = await getCommercialEvents(days);
   return (
     <StudioShell admin={admin}>
       <PageHeader
         title="Analítica"
         eyebrow="Google Analytics 4"
-        description="Últimos 30 días completos. Los clics en WhatsApp indican intención de contacto."
+        description={`Últimos ${days} días completos. Los clics en WhatsApp indican intención de contacto.`}
       />
       <section className="studio-card">
+        <nav aria-label="Período de analítica" className="studio-form-actions">
+          {reportingPeriods.map((period) => (
+            <Link
+              key={period}
+              href={`/studio-mash/analitica?dias=${period}`}
+              className="admin-button admin-button--secondary"
+              aria-current={period === days ? "page" : undefined}
+            >
+              {period} días
+            </Link>
+          ))}
+        </nav>
         {report.status === "ready" && report.rows.length > 0 ? (
           <table className="studio-table">
             <caption>Eventos del sitio</caption>
@@ -44,7 +63,7 @@ export default async function Page() {
                 ? "Conecta la propiedad autorizada de Google Analytics para consultar sus métricas."
                 : report.status === "unavailable"
                   ? "Google Analytics no respondió o la cuenta no tiene acceso a la propiedad."
-                  : "Google Analytics no devolvió eventos comerciales para los últimos 30 días."
+                  : `Google Analytics no devolvió eventos comerciales para los últimos ${days} días.`
             }
           />
         )}

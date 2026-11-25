@@ -148,6 +148,11 @@
 
 /* Darken text accents on light surfaces while preserving the gold palette. */
 .mash-public .showroom-intro__copy .eyebrow,
+.mash-public .chapter .section-heading--row .eyebrow,
+.mash-public .projects-preview .eyebrow,
+.mash-public .benefits-section__heading .eyebrow,
+.mash-public .benefit-card__number,
+.mash-public .faq-section__heading .eyebrow,
 .mash-public .product-detail .eyebrow,
 .mash-public .product-detail .spec-list dt,
 .mash-public .related-products .eyebrow,
@@ -192,4 +197,9 @@
 
 .mash-public .editorial-split__portrait--yascari {
   object-position: 50% 4%;
+}
+
+.mash-public .lifestyle-band__track:focus-visible {
+  outline: 2px solid #f8f6f0;
+  outline-offset: -4px;
 }

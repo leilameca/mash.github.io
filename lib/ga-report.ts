@@ -2,7 +2,10 @@ import "server-only";
 import { JWT } from "google-auth-library";
 import { analyticsEventNames } from "./analytics";
 
-export async function getCommercialEvents() {
+export const reportingPeriods = [7, 30, 90] as const;
+export type ReportingPeriod = (typeof reportingPeriods)[number];
+
+export async function getCommercialEvents(days: ReportingPeriod = 30) {
   const property = process.env.MASH_GA_PROPERTY_ID;
   const credential = process.env.MASH_GA_SERVICE_ACCOUNT_JSON;
   if (!property || !/^\d+$/.test(property) || !credential) {
@@ -28,7 +31,7 @@ export async function getCommercialEvents() {
       timeout: 8000,
       retry: false,
       data: {
-        dateRanges: [{ startDate: "30daysAgo", endDate: "yesterday" }],
+        dateRanges: [{ startDate: `${days}daysAgo`, endDate: "yesterday" }],
         dimensions: [{ name: "eventName" }],
         metrics: [{ name: "eventCount" }],
         dimensionFilter: {

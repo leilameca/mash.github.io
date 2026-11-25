@@ -282,7 +282,7 @@ export default async function HomePage({
             locale === "es" ? "Inspiracion exterior" : "Outdoor inspiration"
           }
         >
-          <div className="lifestyle-band__track">
+          <div className="lifestyle-band__track" tabIndex={0}>
             <span>{homeSections.lifestyleLabels[0]}</span>
             <div>
               {homeSections.lifestyleImageOne && (

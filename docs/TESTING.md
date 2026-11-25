@@ -18,6 +18,6 @@ Para regenerar las capturas de Fase 8, define `MASH_CAPTURE_SCREENSHOTS=1` antes
 
 ## Resultado del checkpoint
 
-Pasaron las 105 pruebas de `npm run test:all`, la compilación optimizada y la auditoría de dependencias de ejecución. La auditoría axe cubrió 14 combinaciones de ruta y ancho sin infracciones detectadas. La [matriz de preparación](phase-9/readiness.md) registra qué casos se repitieron con Supabase real en Docker y cuáles dependen de staging.
+Pasaron las 108 pruebas de `npm run test:all`, incluidas las 105 originales, y la compilación optimizada. El [QA del 25 de noviembre](phase-9/qa.md) registra los recorridos con Chromium, Firefox y WebKit y la segunda auditoría axe con 14 combinaciones sin infracciones detectadas. La [matriz de preparación](phase-9/readiness.md) registra qué casos se repitieron con Supabase real en Docker y cuáles dependen de staging.
 
 Para el smoke test hospedado, instala los navegadores con `npx playwright install chromium firefox webkit`. Usa `MASH_QA_STAGING_URL` con el enlace HTTPS de Preview de `mash-staging` y `MASH_QA_STORAGE_STATE` con la ruta local del estado de navegador autorizado. Guarda el estado en `playwright/.auth/` y protégelo como una sesión activa. Luego ejecuta `npm run test:staging:browser`. El runner solo realiza lecturas, comprueba el bloqueo anónimo antes de cargar el estado y rechaza hosts fuera del patrón de Preview de `mash-staging`. Los flujos que escriben datos deben usar cuentas y registros de ensayo.
