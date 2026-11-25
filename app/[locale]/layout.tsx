@@ -82,7 +82,7 @@ export default async function LocaleLayout({
 
   return (
     <SiteSettingsProvider value={{ whatsapp: siteContent.whatsapp }}>
-      <QuoteSelectionProvider locale={locale}>
+      <QuoteSelectionProvider locale={locale} quoteMessage={siteContent.quoteMessage}>
         <a href="#main-content" className="skip-link">
           {locale === "es" ? "Saltar al contenido" : "Skip to content"}
         </a>

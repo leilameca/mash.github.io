@@ -189,6 +189,8 @@ export const navigationSchema = z.object({
   quote_label_en: z.string().trim().min(1).optional().or(z.literal("")),
   request_quote_label_es: z.string().trim().min(1),
   request_quote_label_en: z.string().trim().min(1).optional().or(z.literal("")),
+  quote_message_es: z.string().trim().max(400),
+  quote_message_en: z.string().trim().max(400),
   menu_label_es: z.string().trim().min(1),
   menu_label_en: z.string().trim().min(1).optional().or(z.literal("")),
   close_label_es: z.string().trim().min(1),

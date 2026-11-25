@@ -30,6 +30,7 @@ export type SiteChromeContent = {
   navigation: SiteNavigationItem[];
   quoteLabel: string;
   requestQuoteLabel: string;
+  quoteMessage?: string;
   menuLabel: string;
   closeLabel: string;
   footerCta: string;
@@ -212,7 +213,11 @@ export async function getSiteChromeContent(
     throw new ContentError("missing", "Falta contenido general publicado.");
   const settings = settingsRow?.value ?? {};
   const settingsText = getTranslation(settingsRow);
-  const navigationText = getTranslation(navigationRow);
+  const navigationTranslation = localizedTranslation(
+    navigationRow.site_content_translations ?? [],
+    locale,
+  );
+  const navigationText = navigationTranslation.text?.value ?? {};
   const footerText = getTranslation(footerRow);
   const items = Array.isArray(navigationRow?.value?.items)
     ? navigationRow.value.items
@@ -286,6 +291,10 @@ export async function getSiteChromeContent(
       typeof navigationText.request_quote_label === "string"
         ? navigationText.request_quote_label
         : defaults.requestQuoteLabel,
+    quoteMessage:
+      !navigationTranslation.pending && typeof navigationText.quote_message === "string"
+        ? navigationText.quote_message
+        : undefined,
     menuLabel:
       typeof navigationText.menu_label === "string"
         ? navigationText.menu_label

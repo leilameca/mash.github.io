@@ -32,7 +32,7 @@ Evidencia local fuera de Git en `.test-artifacts/phase8-admin/s1/` y `.test-arti
 | S1 | Inventario y flujos registrados en la tabla anterior. Las 108 pruebas existentes y typecheck pasaron. | Completar las operaciones indicadas por módulo. |
 | S2 | Productos y Multimedia ejercitan guardado, persistencia y rechazo de archivo inválido. | Validar obligatorios, máximos, caracteres especiales, cancelación y cambios sin guardar en cada formulario. |
 | S3 | Menú de Productos con búsqueda y duplicación confirmada o cancelada. | Inventariar y accionar controles secundarios de los demás módulos. |
-| S4 | Configuración editable de negocio, contacto y mapa. | Conectar las cabeceras comerciales y la plantilla de cotización y probar su publicación. |
+| S4 | Configuración editable de negocio, contacto y mapa. El mensaje de cotización para una selección se administra en Sitio web → Navegación y botones. | Conectar las cabeceras comerciales y revisar los textos fijos de la cotización individual. |
 | S5 | Evidencia previa de conflicto de revisión. La carga de imágenes muestra progreso y un archivo inválido produce un error visible. | Ejercitar vacíos, desconexión, guardado y operaciones bloqueadas en cada superficie. |
 | S6 | Pestañas de Configuración y galería de Productos operadas con teclado. | Probar recorrido de foco, regreso, menús táctiles y protección de cambios sin guardar en todas las rutas. |
 | S7 | Alternancia de temas y contraste de controles compartidos registrados en la matriz principal. | Medir contraste en formularios, tablas, modales y estados deshabilitados. |

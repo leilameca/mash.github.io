@@ -15,7 +15,7 @@ Para revisar la instancia de esta auditoría, abre [la web ES](http://localhost:
 | S1 | Funcionamiento completo de módulos | PARCIAL | [Evidencia y operaciones pendientes por módulo](studio-acceptance.md). Se reparó la duplicación de productos en el menú vigente. |
 | S2 | Formularios intuitivos y completos | PARCIAL | Revisar límites, validaciones y persistencia por formulario. |
 | S3 | Botones y acciones operativos | PARCIAL | Cubiertos flujos principales. Inventario y prueba de acciones secundarias pendientes. |
-| S4 | Todos los contenidos comerciales editables | PARCIAL | Falta cerrar cabeceras comerciales y plantilla de cotización. |
+| S4 | Todos los contenidos comerciales editables | PARCIAL | Mensaje de cotización de la selección editable en ES/EN. Quedan cabeceras comerciales y textos de cotización individual. |
 | S5 | Estados y mensajes comprensibles | PARCIAL | Ejercitar errores, vacíos, esperas y confirmaciones por módulo. |
 | S6 | Navegación administrativa cómoda | PARCIAL | Recorrido de 13 rutas por motor. Revisar teclado y uso táctil de menús. |
 | S7 | Temas claro y oscuro | PARCIAL | Alternancia por clic verificada en 12 rutas a 390 y 1440 px. Queda evaluar el contraste de estados de cada formulario. |

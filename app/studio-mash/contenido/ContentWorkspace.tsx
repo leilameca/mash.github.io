@@ -223,6 +223,8 @@ export async function ContentWorkspace({
                   request_quote_label_en:
                     navigationEn.request_quote_label ??
                     fallbackEn.requestQuoteLabel,
+                  quote_message_es: navigationEs.quote_message ?? "",
+                  quote_message_en: navigationEn.quote_message ?? "",
                   menu_label_es:
                     navigationEs.menu_label ?? fallbackEs.menuLabel,
                   menu_label_en:

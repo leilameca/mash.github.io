@@ -18,6 +18,8 @@ export type NavigationValue = {
   quote_label_en: string;
   request_quote_label_es: string;
   request_quote_label_en: string;
+  quote_message_es: string;
+  quote_message_en: string;
   menu_label_es: string;
   menu_label_en: string;
   close_label_es: string;
@@ -182,6 +184,14 @@ export function NavigationForm({ value }: { value: NavigationValue }) {
             name="request_quote_label_en"
             defaultValue={value.request_quote_label_en}
           />
+        </label>
+        <label>
+          Mensaje para cotizar selección por WhatsApp (ES)
+          <textarea name="quote_message_es" maxLength={400} defaultValue={value.quote_message_es} />
+        </label>
+        <label>
+          Mensaje para cotizar selección por WhatsApp (EN)
+          <textarea name="quote_message_en" maxLength={400} defaultValue={value.quote_message_en} />
         </label>
         <label>
           Abrir menu ES

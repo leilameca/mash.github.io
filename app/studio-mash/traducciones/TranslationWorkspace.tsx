@@ -77,6 +77,7 @@ const fieldLabels: Record<string, string> = {
   message: "Texto del anuncio",
   excerpt: "Extracto de la noticia",
   quote_label: "Cotización",
+  quote_message: "Mensaje para cotizar selección",
   location: "Ubicación",
 };
 const entrySection = (entry: Entry) => entry.kind === "site" && entry.slug.startsWith("announcement.")

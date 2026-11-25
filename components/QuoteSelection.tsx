@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { QuoteLink } from "./QuoteLink";
 type Item = { slug: string; name: string };
 const Selection = createContext<{ items: Item[]; toggle: (item: Item) => void } | null>(null);
-export function QuoteSelectionProvider({ children, locale }: { children: React.ReactNode; locale: string }) {
+export function QuoteSelectionProvider({ children, locale, quoteMessage }: { children: React.ReactNode; locale: string; quoteMessage?: string }) {
   const [items, setItems] = useState<Item[]>([]);
   const [ready, setReady] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -11,7 +11,7 @@ export function QuoteSelectionProvider({ children, locale }: { children: React.R
   useEffect(() => { try { const saved = JSON.parse(sessionStorage.getItem("mash-quote") || "[]"); if (Array.isArray(saved)) setItems(saved.filter((item) => typeof item?.slug === "string" && /^[a-z0-9-]+$/.test(item.slug) && typeof item?.name === "string").slice(0, 10)); } catch {} setReady(true); }, []);
   useEffect(() => { if (ready) { try { sessionStorage.setItem("mash-quote", JSON.stringify(items)); } catch {} } }, [items, ready]);
   const toggle = (item: Item) => setItems((current) => current.some((entry) => entry.slug === item.slug) ? current.filter((entry) => entry.slug !== item.slug) : current.length < 10 ? [...current, item] : current);
-  const message = `${es ? "Hola, me gustaría cotizar estas piezas:" : "Hello, I would like a quote for these pieces:"}\n${items.map((item) => `${item.name}\nhttps://www.mashoficial.com/${locale}/productos/${item.slug}`).join("\n\n")}`;
+  const message = `${quoteMessage || (es ? "Hola, me gustaría cotizar estas piezas:" : "Hello, I would like a quote for these pieces:")}\n${items.map((item) => `${item.name}\nhttps://www.mashoficial.com/${locale}/productos/${item.slug}`).join("\n\n")}`;
   return <Selection.Provider value={{ items, toggle }}>{children}
     {items.length > 0 && <button className="quote-selection-trigger" onClick={() => dialog.current?.showModal()}>{es ? "Mi cotización" : "My quote"} · {items.length}</button>}
     <dialog ref={dialog} className="quote-selection-dialog" aria-label={es ? "Tu selección para cotizar" : "Your quote selection"}>
