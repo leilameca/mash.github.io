@@ -44,3 +44,9 @@ La evidencia nueva se guarda fuera de Git en `.test-artifacts/phase8-close/`. Pa
 - `node tests/phase8-studio-themes.cjs` completó 48 capturas de 12 superficies sin excepciones del navegador.
 - `node tests/phase6-browser.cjs` verificó edición, deshacer, rehacer, reutilización de fotos, orden, duplicado, ocultación, eliminación, conflicto entre revisiones y paso de borrador a publicación. Comprobó 320, 390, 768 y 1440 px y dejó seis capturas.
 - El editor aún requiere comparar composiciones completas con datos representativos. Los contrastes medidos se limitan a los controles ejercitados en la suite.
+
+## Checkpoint de web pública e integridad
+
+- `node tests/phase8-browser.cjs` completó ocho rutas ES a nueve anchos de 320 a 1920 px, incluido el menú táctil y la orientación horizontal. Guardó 19 capturas y métricas de desarrollo. Esas métricas no sustituyen Lighthouse en una compilación optimizada.
+- `node tests/phase8-public-media.cjs` recorrió 28 rutas enlazadas incluyendo fichas ES/EN del catálogo aislado, a 390 px y con movimiento reducido. Todas respondieron 200, declararon el idioma esperado y decodificaron las imágenes de `main`. Queda revisar recortes, texto y reacciones al movimiento reducido por plantilla.
+- `node tests/phase7-browser.cjs` verificó Noticias, Anuncios y Proyectos en otro catálogo aislado. Conservó una noticia publicada al publicar la primera composición de Inicio y comprobó su enlace de pie exclusivamente en ES/EN. La comparación de proyectos se operó por ratón, tacto y teclado. No representa un ensayo de conservación de contenido para todas las composiciones.
