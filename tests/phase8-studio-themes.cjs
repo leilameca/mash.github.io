@@ -37,6 +37,28 @@ async function main() {
             const name = (route || "inicio").replaceAll("/", "-");
             await page.screenshot({ path: output + "/" + width + "-" + name + "-" + theme + ".png" });
           }
+          if (width === 390 && route === "contenido/editor") {
+            await page.getByRole("button", { name: "Lienzo", exact: true }).click();
+            await page.getByRole("button", { name: "Móvil", exact: true }).click();
+            const visitor = await context.newPage();
+            try {
+              for (const locale of ["es", "en"]) {
+                await page.getByRole("button", { name: locale.toUpperCase(), exact: true }).click();
+                await visitor.goto(new URL("/" + locale, origin).href);
+                const live = visitor.locator(".site-header .menu-toggle");
+                const preview = page.locator(".visual-preview-nav .menu-toggle");
+                for (const expanded of ["false", "true"]) {
+                  assert.equal(await live.getAttribute("aria-expanded"), expanded);
+                  assert.equal(await preview.getAttribute("aria-expanded"), expanded);
+                  assert.equal(await preview.getAttribute("aria-label"), await live.getAttribute("aria-label"), locale + " menu label");
+                  await live.click();
+                  await preview.click();
+                }
+              }
+            } finally {
+              await visitor.close();
+            }
+          }
         }
       } finally {
         await context.close();

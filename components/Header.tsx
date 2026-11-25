@@ -101,15 +101,7 @@ export function Header({
           ref={toggle}
           className="menu-toggle"
           type="button"
-          aria-label={
-            preview
-              ? locale === "es"
-                ? "Menú"
-                : "Menu"
-              : isOpen
-                ? content.closeLabel
-                : content.menuLabel
-          }
+          aria-label={isOpen ? content.closeLabel : content.menuLabel}
           aria-expanded={isOpen}
           aria-controls={navId}
           onClick={() => setIsOpen((value) => !value)}

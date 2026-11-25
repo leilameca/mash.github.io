@@ -2,6 +2,8 @@
 
 Se conserva el punto de partida de 14 de 32 requisitos aprobados. Las aprobaciones locales se sustentan en la revisión de la titular, las pruebas de regresión, el [QA local](../phase-9/qa.md) y la [auditoría del editor](../phase-9/visual-editor-parity.md). La aprobación definitiva corresponde a la titular.
 
+Para revisar la instancia de esta auditoría, abre [la web ES](http://localhost:3048/es), [la web EN](http://localhost:3048/en) y [Studio](http://localhost:3048/__preview__/enter). La instancia usa datos aislados y no escribe en servicios hospedados. Para repetir las suites nuevas contra ella, define `MASH_PREVIEW_URL=http://localhost:3048`.
+
 | ID | Requisito | Estado | Evidencia o caso pendiente |
 | --- | --- | --- | --- |
 | W1 | Diseño de todas las páginas | APROBADO | Revisión visual de la titular. |
@@ -30,8 +32,8 @@ Se conserva el punto de partida de 14 de 32 requisitos aprobados. Las aprobacion
 | I4 | Publicación de traducciones aprobadas | PARCIAL | Colecciones y Noticias cubiertas. Falta completar publicación y restauración para las otras familias. |
 | I5 | Persistencia tras recargar | APROBADO | Verificada en composición, catálogo y configuración. |
 | I6 | Conservación de medios y relaciones | APROBADO | Se comprobaron derivados y membresías múltiples. |
-| T1 | Regresión automatizada | APROBADO | 108 pruebas superadas en último checkpoint de código. |
-| T2 | Typecheck y build | APROBADO | Compilación optimizada con verificación de tipos. |
+| T1 | Regresión automatizada | APROBADO | Las 108 pruebas existentes volvieron a pasar tras ajustar la etiqueta del menú móvil. |
+| T2 | Typecheck y build | APROBADO | Compilación optimizada con verificación de tipos después del ajuste. |
 | T3 | Cierre de incidencias críticas y altas | PARCIAL | Consolidar y reevaluar cada hallazgo abierto. |
 | T4 | Accesibilidad básica | APROBADO | Axe sin infracciones en las 14 combinaciones evaluadas. |
 | T5 | Rendimiento local | APROBADO | Lighthouse de Inicio local dio 100 en las muestras móvil y escritorio. |
@@ -50,3 +52,12 @@ La evidencia nueva se guarda fuera de Git en `.test-artifacts/phase8-close/`. Pa
 - `node tests/phase8-browser.cjs` completó ocho rutas ES a nueve anchos de 320 a 1920 px, incluido el menú táctil y la orientación horizontal. Guardó 19 capturas y métricas de desarrollo. Esas métricas no sustituyen Lighthouse en una compilación optimizada.
 - `node tests/phase8-public-media.cjs` recorrió 28 rutas enlazadas incluyendo fichas ES/EN del catálogo aislado, a 390 px y con movimiento reducido. Todas respondieron 200, declararon el idioma esperado y decodificaron las imágenes de `main`. Queda revisar recortes, texto y reacciones al movimiento reducido por plantilla.
 - `node tests/phase7-browser.cjs` verificó Noticias, Anuncios y Proyectos en otro catálogo aislado. Conservó una noticia publicada al publicar la primera composición de Inicio y comprobó su enlace de pie exclusivamente en ES/EN. La comparación de proyectos se operó por ratón, tacto y teclado. No representa un ensayo de conservación de contenido para todas las composiciones.
+
+## Registro de incidencias
+
+| Severidad | Hallazgo | Estado y evidencia |
+| --- | --- | --- |
+| Media | El menú móvil del lienzo usaba un nombre accesible fijo y omitía la indicación de cerrar. | Reproducido a 390 px. La cabecera comparte ahora los nombres con la web. La regresión pasó al abrir y cerrar en ES y EN. |
+| Alta | La primera composición de Inicio podía omitir las noticias ya publicadas. | Caso corregido previamente. La suite editorial lo reprodujo como regresión en ES y EN. Queda ampliar el inventario a todos los bloques. |
+| Alta | La paridad del editor solo se había comprobado en parte. | La comparación de portada y el paso de borrador a publicación pasaron. Siguen abiertos cabecera y pie completos, galería y variantes representativas de los 22 tipos. |
+| Media | Quedan textos comerciales fijos. | Pendiente revisar cabeceras comerciales y la plantilla de cotización antes de aprobar S4. |
