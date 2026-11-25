@@ -18,6 +18,8 @@ En otra terminal establece `MASH_PREVIEW_URL` al puerto de ensayo y ejecuta las 
 
 ## Continuidad del staging
 
+El 25 de noviembre de 2026 se habilitó el cupo gratuito y se creó el Supabase `mash-staging` (`iyxfhxoarxagtwiyqqer`). Se aplicaron las 14 migraciones de esquema y se verificó Storage, la vista de publicaciones y la separación anónima de Traducciones. La base está vacía de contenido publicado y usuarios. El siguiente paso es acordar el contenido que se copiará y configurar las credenciales privadas del Preview, el remitente OTP y DeepL.
+
 El presupuesto autorizado es de US$0. La entrega se puede revisar localmente sin credenciales mediante `npm run preview:studio`. El proyecto `mash-staging` está configurado con protección en Vercel y queda sin despliegue. Supabase rechazó la creación por cuota y la rama facturable fue descartada. La consulta de solo lectura a MASH confirmó que el esquema de producción todavía no tiene las tablas de publicación que requiere esta rama. La titular autorizó revisar las propiedades de Google y queda por habilitar acceso técnico a ellas. La [matriz de preparación](phase-9/readiness.md) registra la evidencia y lo que falta para una entrega hospedada.
 
 Para repetir el ensayo con Supabase real y sin cuenta en la nube, sigue [Supabase local](LOCAL_SETUP.md#supabase-real-en-local-con-us0). Pasaron las 16 migraciones, las rutas ES/EN, el acceso con OTP capturado localmente, la subida con cuatro derivados y el original privado, y la publicación de Noticias en la ficha y en Inicio. La primera ejecución detectó que Inicio lanzaba un error si faltaba el bloque opcional `home.sections`. El arreglo conserva las secciones opcionales ocultas y sigue reportando los errores de conexión.
