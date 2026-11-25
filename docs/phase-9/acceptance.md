@@ -6,6 +6,8 @@ Referencia funcional `c6c24e869d52f5b348f38b9e82c9fe19953fbbae` en `feature/mash
 
 **Decisión de lanzamiento: NO GO.** El techo autorizado para nuevos servicios es US$0. La titular identificó Vercel como el alojamiento del MASH real con `mashoficial.com`. Render aloja el ensayo privado y aislado.
 
+La titular solicitó publicar en el dominio oficial. El 25 de noviembre de 2026 se verificó en lectura que `mashoficial.com` redirige a `www.mashoficial.com` y que Vercel sirve `/es` con HTTP 200. Falta acceso al proyecto de Vercel para identificar el despliegue actual y su reversión. Antes de sustituirlo, verificar por lectura que la base productiva tenga el esquema que requiere la rama y documentar una recuperación comprobada. La revisión histórica encontró tablas de publicación ausentes. La solicitud de publicación no especifica un plan de migración de datos.
+
 ## Verificación previa
 
 - Pasaron las 108 pruebas de `npm run test:all`, `npm run typecheck` y `npm run build` con `MASH_VERIFICATION_BUILD=1`. Los once documentos base solicitados están presentes. La compilación local deja establecida la referencia para las regresiones posteriores.
