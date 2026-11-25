@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: mash-staging
+    runtime: node
+    plan: free
+    branch: feature/mash-3
+    autoDeployTrigger: off
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: MASH_STAGING
+        value: "1"
+      - key: MASH_STAGING_REQUIRE_ACCESS
+        value: "1"
+      - key: MASH_PREVIEW_MEDIA_HOST
+        value: guzuqitvzkenzsvcuttg.supabase.co
+      - key: MASH_STAGING_ACCESS_PASSWORD
+        generateValue: true
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        value: https://iyxfhxoarxagtwiyqqer.supabase.co
+      - key: NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false

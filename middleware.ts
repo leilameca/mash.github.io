@@ -4,6 +4,33 @@ import { createServerClient } from "@supabase/ssr";
 import { getSupabasePublicConfig } from "@/lib/supabase/env";
 
 export async function middleware(request: NextRequest) {
+  if (process.env.MASH_STAGING_REQUIRE_ACCESS === "1") {
+    const password = process.env.MASH_STAGING_ACCESS_PASSWORD;
+    const headers = {
+      "Cache-Control": "private, no-store",
+      "X-Robots-Tag": "noindex, nofollow",
+    };
+    if (process.env.MASH_STAGING !== "1" || !password || !/^[A-Za-z0-9+/]{43}=$/.test(password)) {
+      return new NextResponse("Staging unavailable", { status: 503, headers });
+    }
+    const expected = `Basic ${btoa(`mash:${password}`)}`;
+    const received = request.headers.get("authorization") ?? "";
+    let difference = received.length ^ expected.length;
+    for (let index = 0; index < expected.length; index++) {
+      difference |= expected.charCodeAt(index) ^ (received.charCodeAt(index) || 0);
+    }
+    if (difference !== 0) {
+      return new NextResponse("Private staging", {
+        status: 401,
+        headers: { ...headers, "WWW-Authenticate": 'Basic realm="MASH Staging"' },
+      });
+    }
+  }
+
+  if (!/^\/(?:es|en|studio-mash)(?:\/|$)/.test(request.nextUrl.pathname)) {
+    return NextResponse.next();
+  }
+
   const config = getSupabasePublicConfig();
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(
@@ -106,5 +133,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/studio-mash/:path*", "/es/:path*", "/en/:path*"],
+  matcher: "/:path*",
 };
