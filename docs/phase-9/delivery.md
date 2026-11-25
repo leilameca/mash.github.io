@@ -36,6 +36,13 @@ Restaura en una base de recuperación separada, con un bucket separado. Verifica
 
 ## Reversión y decisión de lanzamiento
 
+### Preparación del corte en Vercel
+
+- En el proyecto que atiende `www.mashoficial.com`, registrar el equipo, el plan, la rama de producción, el ID del despliegue activo y su SHA. Confirmar en el panel qué despliegue quedaría disponible para revertir. El 25 de noviembre de 2026 el dominio raíz redirigía a `www` y Vercel servía `/es` con HTTP 200.
+- Identificar por referencia el Supabase que usa Vercel y comparar su registro de migraciones con `supabase/migrations`. Clasificar las tres semillas históricas por separado. Conciliar el catálogo existente antes de incorporar datos de arranque. Documentar los recuentos antes y después en una copia aislada.
+- Verificar que el respaldo recupera catálogo, publicación, archivos y acceso administrativo. Revisar también que el despliegue anterior funciona con cualquier cambio compatible de esquema. Si no existe una ruta de reversión comprobada, detener el corte.
+- En una compilación de ensayo del SHA candidato, validar la configuración pública de Supabase y la presencia de secretos de servidor sin exportar valores a informes. Conservar las referencias de ambos despliegues y verificar ES, EN, Studio y el comportamiento de las rutas de ensayo antes de decidir el corte.
+
 1. Registra el SHA actual de producción, referencia de base, copia recuperable y responsables. La titular autoriza el cambio antes de iniciar la ventana de lanzamiento.
 2. Comprueba HTTPS, acceso de ambos administradores, políticas de Storage, publicación, restauración, traducciones revisadas y SEO. Comprueba GA4 con consentimiento, DebugView en el entorno autorizado, Search Console y exclusión de Studio.
 3. Detén el lanzamiento ante pérdida de publicaciones o imágenes, errores de acceso, publicación de borradores, ausencia de respaldo verificable o errores de catálogo. Mantén disponible el despliegue anterior.
