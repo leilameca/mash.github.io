@@ -62,28 +62,12 @@ export default async function HomePage({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
-  const visual = await readVisualPublication("home");
-  const t = dictionary[locale].common;
-  const [
-    collections,
-    catalogProducts,
-    projects,
-    heroContent,
-    homeSections,
-    site,
-    news,
-  ] = await Promise.all([
-    getCatalogCollections(),
-    getCatalogProducts(locale),
-    getCatalogProjects(locale),
+  const [visual, heroContent, site] = await Promise.all([
+    readVisualPublication("home"),
     getHomeHeroContent(locale),
-    getHomeSectionsContent(locale),
     getSiteChromeContent(locale),
-    visual ? Promise.resolve([]) : getNews(locale),
   ]);
-  const featuredProducts = catalogProducts
-    .filter((product) => product.featured)
-    .slice(0, 6);
+  const t = dictionary[locale].common;
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -116,6 +100,19 @@ export default async function HomePage({
         <PublishedVisual doc={visual} locale={locale} />
       </>
     );
+
+  const [homeSections, news] = await Promise.all([
+    getHomeSectionsContent(locale),
+    getNews(locale),
+  ]);
+  const [collections, catalogProducts, projects] = await Promise.all([
+    homeSections.visible.collections ? getCatalogCollections() : [],
+    homeSections.visible.featured ? getCatalogProducts(locale) : [],
+    homeSections.visible.projects ? getCatalogProjects(locale) : [],
+  ]);
+  const featuredProducts = catalogProducts
+    .filter((product) => product.featured)
+    .slice(0, 6);
 
   return (
     <>
@@ -260,12 +257,11 @@ export default async function HomePage({
               <p>{homeSections.featuredDescription}</p>
             </div>
             <div className="product-grid product-grid--featured">
-              {featuredProducts.map((product, index) => (
+              {featuredProducts.map((product) => (
                 <ProductCard
                   key={product.slug}
                   product={product}
                   locale={locale}
-                  priority={index < 2}
                 />
               ))}
             </div>
