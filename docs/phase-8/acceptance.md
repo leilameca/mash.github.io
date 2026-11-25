@@ -12,7 +12,7 @@ Para revisar la instancia de esta auditoría, abre [la web ES](http://localhost:
 | W4 | Navegación y enlaces | APROBADO | Recorridos locales y enlace de Noticias en el pie. |
 | W5 | Experiencia móvil | PARCIAL | Recorrido a 320 px completado. Quedan interacciones táctiles y estados vacíos por plantilla. |
 | W6 | Coherencia ES/EN | PARCIAL | Rutas cubiertas. Falta validar textos y fallback en todas las fichas. |
-| S1 | Funcionamiento completo de módulos | PARCIAL | Recorridos y operaciones representativas. Verificar acciones restantes por módulo. |
+| S1 | Funcionamiento completo de módulos | PARCIAL | [Evidencia y operaciones pendientes por módulo](studio-acceptance.md). Se reparó la duplicación de productos en el menú vigente. |
 | S2 | Formularios intuitivos y completos | PARCIAL | Revisar límites, validaciones y persistencia por formulario. |
 | S3 | Botones y acciones operativos | PARCIAL | Cubiertos flujos principales. Inventario y prueba de acciones secundarias pendientes. |
 | S4 | Todos los contenidos comerciales editables | PARCIAL | Falta cerrar cabeceras comerciales y plantilla de cotización. |

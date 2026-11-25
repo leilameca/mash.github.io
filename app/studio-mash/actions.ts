@@ -562,12 +562,15 @@ export async function duplicateProduct(
   const { data: source, error } = await client
     .from("products")
     .select(
-      "slug,collection_id,dimensions,finishes,availability,product_translations(locale,name,description,materials,care),product_images(storage_path,alt_es,alt_en,sort_order,is_primary)",
+      "slug,collection_id,dimensions,finishes,availability,product_collections(collection_id,sort_order),product_translations(locale,name,description,materials,care,seo_title,seo_description),product_images(storage_path,alt_es,alt_en,sort_order,is_primary)",
     )
     .eq("id", id)
     .single();
   if (error || !source)
     return { ok: false, message: "No pudimos leer el producto." };
+  const collectionIds = [...(source.product_collections ?? [])]
+    .sort((left, right) => left.sort_order - right.sort_order)
+    .map(({ collection_id }) => collection_id);
   let result;
   try {
     result = await commitContent(client, [
@@ -581,8 +584,17 @@ export async function duplicateProduct(
           availability: source.availability,
           featured: false,
         },
-        translations: source.product_translations,
-        images: source.product_images,
+        ...(collectionIds.length ? { collection_ids: collectionIds } : {}),
+        translations: source.product_translations.map(
+          ({ locale, name, description, materials, care, seo_title, seo_description }) => ({
+            locale, name, description, materials, care, seo_title, seo_description,
+          }),
+        ),
+        images: source.product_images.map(
+          ({ storage_path, alt_es, alt_en, sort_order, is_primary }) => ({
+            storage_path, alt_es, alt_en, sort_order, is_primary,
+          }),
+        ),
         intent: "save",
       },
     ]);

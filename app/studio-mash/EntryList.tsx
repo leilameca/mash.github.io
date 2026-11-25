@@ -1,4 +1,4 @@
-import { DuplicateProject } from "./proyectos/DuplicateProject";
+import { DuplicateEntry } from "./DuplicateEntry";
 import Link from "next/link";
 import { MediaImage } from "./multimedia/MediaImage";
 import { StudioIcon } from "./StudioIcon";
@@ -198,8 +198,9 @@ export async function EntryList({
                           <StudioIcon name="external" /> Ver publicado
                         </Link>
                       )}
-                    {kind === "project" && (
-                      <DuplicateProject
+                    {(kind === "product" || kind === "project") && (
+                      <DuplicateEntry
+                        kind={kind}
                         id={entry.id}
                         revision={entry.revision}
                       />

@@ -157,6 +157,7 @@ async function main() {
       .click();
     await page.waitForURL("**/productos?saved=1");
     await page.getByRole("link", { name, exact: true }).first().click();
+    await page.waitForURL(/\/studio-mash\/productos\/[0-9a-f-]+$/);
     const productUrl = page.url();
     assert.equal(
       await page.locator("[name=collection_ids]").inputValue(),
@@ -217,6 +218,29 @@ async function main() {
     check.push(
       "Publicación explícita en español con SEO y presencia en ambas colecciones",
     );
+
+    await page.getByRole("searchbox", { name: "Buscar", exact: true }).fill(name);
+    await page.getByRole("button", { name: "Filtrar", exact: true }).click();
+    await page.waitForURL((url) => url.searchParams.get("q") === name);
+    const originalPath = new URL(productUrl).pathname;
+    await page.getByLabel("Acciones de " + name, { exact: true }).click();
+    const duplicate = page.getByRole("button", { name: "Duplicar producto", exact: true });
+    page.once("dialog", (dialog) => dialog.dismiss());
+    await duplicate.click();
+    assert.equal(new URL(page.url()).searchParams.get("q"), name);
+    page.once("dialog", (dialog) => dialog.accept());
+    await duplicate.click();
+    await page.waitForURL((url) =>
+      /\/studio-mash\/productos\/[0-9a-f-]+$/.test(url.pathname) && url.pathname !== originalPath,
+    );
+    const copiedSlug = await page.locator("[name=slug]").inputValue();
+    assert.ok(copiedSlug.startsWith(slug + "-copia-"));
+    assert.equal(await page.locator("[name=collection_ids]").inputValue(), selectedIds);
+    assert.equal(await page.locator('[name="existing_image_paths"]').inputValue(), order);
+    assert.equal(await page.locator('[name="primary_image_path"]').inputValue(), cover);
+    assert.equal(await page.locator("[name=seo_title_es]").inputValue(), "Título SEO de prueba");
+    assert.equal((await page.request.get(origin + "/es/productos/" + copiedSlug)).status(), 404);
+    check.push("Buscar, cancelar y duplicar conserva colecciones, fotos y SEO sin publicar la copia");
 
     await page.goto(path("multimedia"));
     await page.locator(".studio-asset-grid li").first().waitFor();
@@ -282,7 +306,30 @@ async function main() {
     check.push(
       "Pestañas por teclado y filtro de entidad con comparación expandible",
     );
+    await page.goto(path("productos"));
+    const row = page.locator(".studio-entry").filter({
+      has: page.locator(`.studio-entry-name[href="${originalPath}"]`),
+    });
+    const menu = row.locator("summary");
+    await menu.click();
+    const trash = row.getByRole("button", { name: "Mover a papelera", exact: true });
+    page.once("dialog", (dialog) => dialog.dismiss());
+    await trash.click();
+    assert.equal((await page.request.get(origin + "/es/productos/" + slug)).status(), 200);
+    page.once("dialog", (dialog) => dialog.accept());
+    await trash.click();
+    await row.getByText("Trabajo: Archivado", { exact: false }).waitFor();
+    assert.equal((await page.request.get(origin + "/es/productos/" + slug)).status(), 404);
+    const restore = row.getByRole("button", { name: "Pasar a borrador", exact: true });
+    if (!(await restore.isVisible())) await menu.click();
+    page.once("dialog", (dialog) => dialog.accept());
+    await restore.click();
+    await row.getByText("Trabajo: Borrador", { exact: false }).waitFor();
     await page.goto(productUrl);
+    assert.equal(await page.locator("[name=collection_ids]").inputValue(), selectedIds);
+    assert.equal(await page.locator('[name="existing_image_paths"]').inputValue(), order);
+    assert.equal((await page.request.get(origin + "/es/productos/" + slug)).status(), 404);
+    check.push("Cancelar papelera mantiene la versión pública; archivar y restaurar conserva fotos y colecciones");
     assert.deepEqual(errors, []);
     fs.writeFileSync(
       directory + "/phase4-browser.json",

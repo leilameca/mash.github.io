@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { StudioIcon, type StudioIconName } from "./StudioIcon";
 import type { ActionState } from "./actions";
 
@@ -20,6 +20,7 @@ export function StatusForm({
   action: (previous: ActionState, formData: FormData) => Promise<ActionState>;
 }) {
   const [state, submit, pending] = useActionState(action, {});
+  const menuStatus = useRef<HTMLInputElement>(null);
   const [selectedStatus, setSelectedStatus] = useState(status);
   useEffect(() => {
     setSelectedStatus(status);
@@ -65,16 +66,20 @@ export function StatusForm({
           const button = (event.nativeEvent as SubmitEvent)
             .submitter as HTMLButtonElement | null;
           const choice = actions.find((item) => item.status === button?.value);
-          if (!choice || !window.confirm(choice.prompt)) event.preventDefault();
+          if (!choice || !menuStatus.current || !window.confirm(choice.prompt)) {
+            event.preventDefault();
+            return;
+          }
+          menuStatus.current.value = choice.status;
         }}
       >
         <input type="hidden" name="id" value={id} />
         <input type="hidden" name="revision" value={revision ?? 0} />
+        <input type="hidden" name="status" ref={menuStatus} />
         {actions.map((item) => (
           <button
             key={item.status}
             type="submit"
-            name="status"
             value={item.status}
             disabled={pending}
           >

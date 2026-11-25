@@ -1,15 +1,20 @@
 "use client";
 import { useActionState, useEffect } from "react";
-import { duplicateProject } from "../actions";
-import { StudioIcon } from "../StudioIcon";
-export function DuplicateProject({
+import { duplicateProduct, duplicateProject } from "./actions";
+import { StudioIcon } from "./StudioIcon";
+export function DuplicateEntry({
   id,
   revision,
+  kind,
 }: {
   id: string;
   revision: number;
+  kind: "product" | "project";
 }) {
-  const [state, submit, pending] = useActionState(duplicateProject, {});
+  const [state, submit, pending] = useActionState(
+    kind === "product" ? duplicateProduct : duplicateProject,
+    {},
+  );
   useEffect(() => {
     if (state.ok && state.redirectTo) window.location.assign(state.redirectTo);
   }, [state]);
@@ -30,7 +35,7 @@ export function DuplicateProject({
         disabled={pending}
       >
         <StudioIcon name="plus" />
-        Duplicar proyecto
+        {kind === "product" ? "Duplicar producto" : "Duplicar proyecto"}
       </button>
       {state.message && !state.ok && <p role="alert">{state.message}</p>}
     </form>
