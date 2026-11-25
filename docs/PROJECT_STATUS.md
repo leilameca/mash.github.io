@@ -12,6 +12,6 @@ Rama de trabajo: `feature/mash-3`. El estado y las pruebas corresponden al entor
 | 6 · Editor visual | Composición tipada, puntos focales, herencia responsive y publicación. Ver [informe](phase-6/implementation.md). |
 | 7 · Editorial | Proyectos, antes/después, Noticias, Anuncios y mapa del taller en Contacto. Ver [informe](phase-7/implementation.md). |
 | 8 · Experiencia pública | Aprobación visual del sitio local registrada. La [matriz de aceptación](phase-8/acceptance.md) conserva 14 de 32 requisitos aprobados. Falta el cierre definitivo de la titular. |
-| 9 · Integración y entrega | Previo al inicio formal. Render privado y Supabase de ensayo preparados con presupuesto US$0. Los 18 bloques, criterios y dependencias constan en la [matriz maestra](phase-9/acceptance.md). Lanzamiento en estado NO GO. |
+| 9 · Integración y entrega | En curso en Render privado con Supabase de ensayo y presupuesto US$0. Producción está en Vercel con `mashoficial.com`. Los 18 bloques constan en la [matriz maestra](phase-9/acceptance.md). Lanzamiento en estado NO GO. |
 
 Los resultados detallados están en [Pruebas](TESTING.md). Para continuar, sigue [Traspaso](HANDOFF.md).

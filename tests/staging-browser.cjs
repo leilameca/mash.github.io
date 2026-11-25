@@ -4,27 +4,38 @@ const { chromium, firefox, webkit, request } = require("playwright");
 
 async function main() {
   const target = new URL(process.env.MASH_QA_STAGING_URL || "");
-  assert.match(
-    target.origin,
-    /^https:\/\/mash-staging-[a-z0-9-]+\.vercel\.app$/,
-  );
+  const isRender = target.origin === "https://mash-staging.onrender.com";
+  const isVercel = /^https:\/\/mash-staging-[a-z0-9-]+\.vercel\.app$/.test(target.origin);
+  assert.ok(isRender || isVercel, "Use an approved MASH staging origin.");
   assert.ok(
     !target.username && !target.password && !target.search && !target.hash,
   );
   const state = process.env.MASH_QA_STORAGE_STATE;
-  assert.ok(
-    state,
-    "Set the local path to an authenticated staging storage state.",
-  );
+  const password = process.env.MASH_QA_STAGING_PASSWORD;
   const anonymous = await request.newContext();
-  const unauthenticated = await anonymous.get(target.origin + "/es", {
-    maxRedirects: 0,
-  });
-  assert.ok(
-    [302, 303, 307, 308, 401, 403].includes(unauthenticated.status()),
-    "Staging must block anonymous access",
-  );
-  await anonymous.dispose();
+  try {
+    for (const path of ["/es", "/en", "/studio-mash/login", "/__preview__/enter"]) {
+      const response = await anonymous.get(target.origin + path, { maxRedirects: 0 });
+      if (isRender) {
+        assert.equal(response.status(), 401, path);
+        assert.match(response.headers()["www-authenticate"] || "", /^Basic /i);
+        assert.match(response.headers()["x-robots-tag"] || "", /noindex/i);
+        assert.match(response.headers()["cache-control"] || "", /no-store/i);
+      } else {
+        assert.ok([302, 303, 307, 308, 401, 403].includes(response.status()), path);
+      }
+    }
+    console.log("PASS: four staging routes reject anonymous access");
+  } finally {
+    await anonymous.dispose();
+  }
+  if (process.argv.includes("--anonymous-only")) return;
+  assert.ok(isRender ? password : state, isRender
+    ? "Provide the staging password through MASH_QA_STAGING_PASSWORD."
+    : "Set MASH_QA_STORAGE_STATE to an authenticated staging storage state.");
+  const httpCredentials = isRender
+    ? { username: "mash", password, origin: target.origin }
+    : undefined;
 
   const evidence = [];
   for (const [name, engine] of Object.entries({ chromium, firefox, webkit })) {
@@ -38,6 +49,7 @@ async function main() {
         const context = await browser.newContext({
           viewport,
           storageState: state,
+          httpCredentials: httpCredentials && { ...httpCredentials, send: "always" },
         });
         const page = await context.newPage();
         const errors = [];
@@ -52,6 +64,12 @@ async function main() {
             404,
             "Hosted fixture route must be absent",
           );
+          const robots = await context.request.get(target.origin + "/robots.txt");
+          assert.equal(robots.status(), 200);
+          assert.match(await robots.text(), /^Disallow:\s*\/\s*$/m);
+          const sitemap = await context.request.get(target.origin + "/sitemap.xml");
+          assert.equal(sitemap.status(), 200);
+          assert.doesNotMatch(await sitemap.text(), /<loc[\s>]/i);
           for (const locale of ["es", "en"]) {
             for (const suffix of [
               "",

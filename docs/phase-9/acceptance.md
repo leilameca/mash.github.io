@@ -2,14 +2,14 @@
 
 ## Control de entrada
 
-Referencia funcional `c6c24e869d52f5b348f38b9e82c9fe19953fbbae` en `feature/mash-3`. La rama y el remoto coincidían con el árbol limpio al comenzar la comprobación. La [matriz de Fase 8](../phase-8/acceptance.md) registra **14 aprobados y 18 parciales**. La aprobación del diseño y de la revisión del ensayo está registrada. Falta la aprobación definitiva de Fase 8 exigida por el prompt maestro.
+Referencia funcional `c6c24e869d52f5b348f38b9e82c9fe19953fbbae` en `feature/mash-3`. La [matriz de Fase 8](../phase-8/acceptance.md) conserva **14 aprobados y 18 parciales**. La titular autorizó continuar la Fase 9 en el ensayo con esos pendientes registrados.
 
-**Decisión de lanzamiento: NO GO.** Esta matriz se prepara como trabajo previo. La autorización de una fase, las aprobaciones técnicas y la autorización de lanzamiento se registran por separado. El techo autorizado para nuevos servicios es US$0.
+**Decisión de lanzamiento: NO GO.** El techo autorizado para nuevos servicios es US$0. La titular identificó Vercel como el alojamiento del MASH real con `mashoficial.com`. Render aloja el ensayo privado y aislado.
 
 ## Verificación previa
 
 - Pasaron las 108 pruebas de `npm run test:all`, `npm run typecheck` y `npm run build` con `MASH_VERIFICATION_BUILD=1`. Los once documentos base solicitados están presentes. La compilación local deja establecida la referencia para las regresiones posteriores.
-- La solicitud anónima a [Render de ensayo](https://mash-staging.onrender.com/es) devolvió HTTP 401, desafío Basic y `X-Robots-Tag: noindex, nofollow`. El despliegue actual y la sesión autenticada requieren verificación por separado. El runner existente de QA hospedado todavía valida solo el patrón de URL de Vercel.
+- El runner de QA hospedado admite ahora el Render de ensayo. Verificó cuatro rutas anónimas con HTTP 401, desafío Basic, `noindex` y `no-store`. También se comprobó que rechaza `mashoficial.com`. Quedan el SHA desplegado y el recorrido autenticado, que requiere la contraseña de ensayo por un canal seguro.
 - El repositorio tiene 17 archivos de migración. El [inventario de ensayo](readiness.md) documenta 14 migraciones de esquema aplicadas y tres semillas históricas omitidas. La producción histórica requiere inventario y conciliación antes de aplicar cambios.
 - Render Free queda como ensayo. Su documentación indica suspensión por inactividad y disco efímero. Vercel Hobby restringe el uso comercial. El coste de producción queda por decidir y no se contrató ningún servicio en esta revisión. [Render Free](https://render.com/docs/free) · [Vercel Hobby](https://vercel.com/docs/plans/hobby).
 
@@ -38,7 +38,7 @@ Referencia funcional `c6c24e869d52f5b348f38b9e82c9fe19953fbbae` en `feature/mash
 
 ## Orden de ejecución
 
-1. Resolver los criterios de Fase 8 aún parciales y registrar la aprobación definitiva.
+1. Resolver los criterios de Fase 8 aún parciales en paralelo al trabajo autorizado en ensayo y registrar su aprobación definitiva antes del lanzamiento.
 2. Confirmar infraestructura y condiciones comerciales. Verificar staging, inventario de datos y recuperación. Preparar CI y documentación en paralelo.
 3. Validar Auth, Storage, DeepL y analítica. Completar SEO y revisión defensiva. Ejecutar QA hospedado y las comprobaciones manuales.
 4. Consolidar monitorización, documentación y decisión GO/NO GO. Solicitar autorización aparte para el corte, verificarlo y preparar la entrega.
