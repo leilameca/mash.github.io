@@ -58,11 +58,10 @@ async function main() {
       .fill("Descripción sintética para comprobar el recorrido en español.");
     await page.locator("[name=slug]").fill(slug);
     await page.locator("[name=seo_title_es]").fill("Título SEO de prueba");
-    const membership = page.locator(
-      ".studio-product-memberships input[type=checkbox]",
-    );
-    for (let i = 0; i < 2; i++) await membership.nth(i).check();
-    await page.locator("[name=collection_id]").selectOption({ index: 2 });
+    const membership = page.locator(".studio-product-memberships");
+    await membership.getByRole("checkbox", { name: "Terraza", exact: true }).check();
+    await membership.getByRole("checkbox", { name: "Dining", exact: true }).check();
+    await page.locator("[name=collection_id]").selectOption({ label: "Dining" });
     const selectedIds = await page
       .locator("[name=collection_ids]")
       .inputValue();
@@ -330,6 +329,31 @@ async function main() {
     assert.equal(await page.locator('[name="existing_image_paths"]').inputValue(), order);
     assert.equal((await page.request.get(origin + "/es/productos/" + slug)).status(), 404);
     check.push("Cancelar papelera mantiene la versión pública; archivar y restaurar conserva fotos y colecciones");
+
+    const collectionSlug = "coleccion-" + slug;
+    const collectionName = "Colección · Jardín & Terráza " + slug.slice(-8);
+    const publicCollection = origin + "/es/colecciones/" + collectionSlug;
+    await page.goto(path("colecciones/nueva"));
+    await page.locator("[name=slug]").fill(collectionSlug);
+    await page.locator("[name=name_es]").fill(collectionName);
+    await page.locator("[name=description_es]").fill("Colección de exterior para terrazas.");
+    await page.locator("[name=cover_image]").setInputFiles({
+      name: "portada.jpg", mimeType: "image/jpeg", buffer: images[0],
+    });
+    await page.getByRole("button", { name: "Guardar borrador", exact: true }).click();
+    await page.waitForURL("**/studio-mash/colecciones");
+    assert.equal((await page.request.get(publicCollection)).status(), 404);
+    const collectionRow = page.locator(".studio-entry").filter({
+      has: page.getByRole("link", { name: collectionName, exact: true }),
+    });
+    await collectionRow.locator("summary").click();
+    page.once("dialog", (dialog) => dialog.accept());
+    await collectionRow.getByRole("button", { name: "Publicar versión", exact: true }).click();
+    await collectionRow.getByRole("link", { name: "Ver publicado" }).waitFor({ state: "attached" });
+    const published = await page.request.get(publicCollection);
+    assert.equal(published.status(), 200);
+    assert.ok((await published.text()).includes("Jardín"));
+    check.push("Crear colección con caracteres especiales, guardar borrador y publicar desde el menú");
     assert.deepEqual(errors, []);
     fs.writeFileSync(
       directory + "/phase4-browser.json",

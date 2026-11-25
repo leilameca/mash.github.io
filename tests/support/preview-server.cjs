@@ -25,6 +25,13 @@ async function main() {
   const config = (
     await import(pathToFileURL(path.resolve("next.config.mjs")).href)
   ).default;
+  const storage = new URL(backend.url);
+  config.images.remotePatterns.push({
+    protocol: "http",
+    hostname: storage.hostname,
+    port: storage.port,
+    pathname: "/storage/v1/object/public/**",
+  });
   const app = require("next")({
     dev: !production,
     dir: process.cwd(),

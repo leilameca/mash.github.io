@@ -8,10 +8,10 @@ Base `0a3ea367fb7ff95215d6f40ea229ecdcd4784051`. Las pruebas de escritura usan P
 | --- | --- | --- | --- |
 | Inicio | Acceder a módulos, tema y navegación lateral | — | Verificar cada acceso rápido con contenido pendiente y estados vacíos. |
 | Productos | Crear, guardar, publicar, buscar, cancelar duplicación, duplicar, elegir medio, ordenar galería y comprobar pertenencia a dos colecciones | Se incorporó Duplicar al menú actual. La copia conserva colecciones secundarias, galería y campos SEO. Se corrigió el envío de estado desde el menú compartido. | Probar paginación, combinaciones de filtros y estados de bloqueo. |
-| Colecciones | Editar, guardar y publicar y revisar la versión bilingüe | — | Crear desde cero y probar cambios de estado, orden y filtros. |
+| Colecciones | Crear desde cero con acentos y símbolos, guardar en privado y publicar desde el menú. La evidencia previa cubre edición y publicación bilingüe. | Se verificó en este módulo la corrección del envío de estado. | Probar ocultación, archivo, restauración, orden y filtros. |
 | Multimedia | Seleccionar, subir, consultar original y derivados y rechazar archivo inválido | — | Probar edición de metadatos, búsqueda, filtros y bloqueo con referencias activas. |
 | Sitio web | Crear, editar, ordenar, ocultar, duplicar, eliminar, guardar y publicar secciones | — | Verificar todas las operaciones en cada composición. |
-| Proyectos | Crear, publicar, duplicar, operar galería y comparación | Se comparte el control de duplicación del menú con Productos. | Probar todos los cambios de estado y cancelaciones del formulario. |
+| Proyectos | Crear, publicar, duplicar, operar galería y comparación. La suite editorial volvió a pasar tras compartir el menú de duplicación. | El entorno aislado admite ahora las imágenes del almacén local al reutilizar medios de otro módulo. | Probar todos los cambios de estado y cancelaciones del formulario. |
 | Noticias | Crear, guardar borrador, publicar, seleccionar imagen y archivar | — | Probar edición tras publicación, búsqueda y filtros combinados. |
 | Anuncios | Crear, publicar con alcance y horario y comprobar descarte | — | Probar edición, archivo y recuperación por Historial. |
 | Traducciones | Revisar textos, editar preferencias y probar diccionario | — | Comprobar todos los controles y conflictos para cada familia de contenido. |
@@ -21,9 +21,9 @@ Base `0a3ea367fb7ff95215d6f40ea229ecdcd4784051`. Las pruebas de escritura usan P
 
 Editar o eliminar un borrador y retirar una publicación tienen efectos distintos. La operación de papelera es reversible. Las operaciones que el módulo no expone no se contabilizan como verificadas.
 
-La regresión de navegador pasó al cancelar el envío a papelera y comprobar que la ficha sigue pública, confirmar el archivo y comprobar el 404, y restaurar como borrador con las dos colecciones y las fotos intactas. Antes de la corrección, el formulario de estados rechazaba la solicitud de archivo porque faltaba el estado en los datos enviados. La verificación cubre Productos. Colecciones y Proyectos reutilizan el formulario y quedan pendientes sus flujos específicos.
+La regresión de navegador pasó al cancelar el envío a papelera y comprobar que la ficha sigue pública, confirmar el archivo y comprobar el 404, y restaurar como borrador con las dos colecciones y las fotos intactas. Antes de la corrección, el formulario de estados rechazaba la solicitud de archivo porque faltaba el estado en los datos enviados. Se verificó archivar y restaurar en Productos y publicar en Colecciones. Quedan pendientes las demás transiciones.
 
-Evidencia local fuera de Git en `.test-artifacts/phase8-admin/s1/`. Para reproducir, usar `node tests/phase4-browser.cjs` con `MASH_PREVIEW_URL` apuntando a una instancia de ensayo local.
+Evidencia local fuera de Git en `.test-artifacts/phase8-admin/s1/` y `.test-artifacts/phase8-admin/s1-editorial/`. Para reproducir, usar `node tests/phase4-browser.cjs` y `node tests/phase7-browser.cjs` con `MASH_PREVIEW_URL` apuntando a una instancia de ensayo local.
 
 ## Criterios administrativos abiertos
 
