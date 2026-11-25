@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { StudioDialog } from "../StudioDialog";
 import { StudioIcon } from "../StudioIcon";
+import { targetLabels, pageTargets } from "@/lib/editorial/schema";
 import {
   entryHref,
   kindLabels,
@@ -25,6 +26,8 @@ type Entry = {
   error_code?: string | null;
   available_at?: string | null;
   job_mode?: "translate" | "regenerate" | "review";
+  editorial_summary?: string | null;
+  editorial_pages?: string[] | null;
 };
 type List = {
   entries: Entry[];
@@ -71,11 +74,25 @@ const fieldLabels: Record<string, string> = {
   seo_description: "Descripción SEO",
   copyright: "Copyright",
   cta: "Llamado a la acción",
+  message: "Texto del anuncio",
+  excerpt: "Extracto de la noticia",
   quote_label: "Cotización",
   location: "Ubicación",
 };
-const displayName = (entry: Entry) =>
-  entry.kind === "site" ? siteLabels[entry.slug] || entry.name : entry.name;
+const entrySection = (entry: Entry) => entry.kind === "site" && entry.slug.startsWith("announcement.")
+  ? "Anuncios"
+  : entry.kind === "site" && entry.slug.startsWith("news.")
+    ? "Noticias"
+    : kindLabels[entry.kind];
+const displayName = (entry: Entry) => {
+  if (entry.kind !== "site") return entry.name;
+  if (entry.name === entry.slug && entrySection(entry) === "Anuncios") return "Anuncio sin título";
+  if (entry.name === entry.slug && entrySection(entry) === "Noticias") return "Noticia sin título";
+  return siteLabels[entry.slug] || entry.name;
+};
+const entryPages = (entry: Entry) =>
+  pageTargets.filter((target) => entry.editorial_pages?.includes(target))
+    .map((target) => targetLabels[target]).join(", ");
 const fieldLabel = ({ path, label }: Field, i: number) =>
   label ??
   (path[0] === "alts"
@@ -417,8 +434,10 @@ export function TranslationWorkspace({
                 <div>
                   <strong>{displayName(entry)}</strong>
                   <small>
-                    {kindLabels[entry.kind]} · v{entry.revision}
+                    {entrySection(entry)} · v{entry.revision}
                   </small>
+                  {entry.editorial_summary && <p>{entry.editorial_summary}</p>}
+                  {entryPages(entry) && <small>Se muestra en {entryPages(entry)}</small>}
                 </div>
                 <span
                   className={`studio-status studio-translation-${entry.translation_state}`}
@@ -470,7 +489,11 @@ export function TranslationWorkspace({
       <StudioDialog
         wide
         open={Boolean(target)}
-        title={detail ? displayName(detail.entry) : "Revisar traducción"}
+        title={detail
+          ? detail.entry.name === detail.entry.slug
+            ? detail.fields.find(({ path }) => path.join(".") === "value.title")?.es || displayName(detail.entry)
+            : displayName(detail.entry)
+          : "Revisar traducción"}
         onClose={() => {
           setTarget(undefined);
           setDetail(undefined);
@@ -495,6 +518,11 @@ export function TranslationWorkspace({
               </span>
               <Link href={editHref(detail.entry)}>Abrir ficha ↗</Link>
             </div>
+            <p>{entrySection(detail.entry)}{entryPages(detail.entry) && " · " + entryPages(detail.entry)}</p>
+            {detail.entry.editorial_summary && <p>{detail.entry.editorial_summary}</p>}
+            {!list?.providerConfigured && (
+              <p>La traducción automática requiere configurar DeepL en el servidor.</p>
+            )}
             {detail.entry.error_code && (
               <p>
                 {translationErrors[detail.entry.error_code] ??

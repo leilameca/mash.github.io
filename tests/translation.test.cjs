@@ -150,7 +150,7 @@ test("SQL enqueues on save, protects manual English, reuses unchanged fields and
   const f = await setup();
   try {
     await f.sql(
-      "update translation_preferences set auto_on_save=true,terms=array['Fibra'] where singleton",
+      "update translation_preferences set terms=array['Fibra'] where singleton",
     );
     const provider = fixtureProvider();
     const original = {
@@ -344,6 +344,7 @@ test("concurrent reservations, provider failures and late replies preserve the e
 test("a batch persists independent jobs and records only usage returned by the provider", async () => {
   const f = await setup();
   try {
+    await f.sql("update translation_preferences set auto_on_save=false where singleton");
     const first = await f.write("page.about", {
       title: "Muebles",
       description: "Muebles exteriores",
@@ -379,6 +380,32 @@ test("a batch persists independent jobs and records only usage returned by the p
       [42, 42],
     );
     assert.ok(history.rows.every((row) => row.provider === provider.name));
+  } finally {
+    await f.db.close();
+  }
+});
+
+test("translation entries expose editorial title, summary and placements without public access", async () => {
+  const f = await setup();
+  try {
+    const saved = await f.write("announcement.a3e268d2-5085-4224-8045-8bcb0acc6bc4", {
+      title: "Descuento de temporada",
+      message: "En muebles seleccionados",
+    }, {}, {
+      data: {
+        key: "announcement.a3e268d2-5085-4224-8045-8bcb0acc6bc4",
+        value: {
+          active: true, start: "", end: "", href: "/contacto", priority: 20,
+          pages: ["home"], language: "both", presentation: "bar", dismissible: true, archived: false,
+        },
+      },
+    });
+    const query = "select name, editorial_summary, editorial_pages from studio_translation_entries where id=$1";
+    const row = (await f.sql(query, [saved.id])).rows[0];
+    assert.equal(row.name, "Descuento de temporada");
+    assert.equal(row.editorial_summary, "En muebles seleccionados");
+    assert.deepEqual(row.editorial_pages, ["home"]);
+    assert.equal((await f.sql(query, [saved.id], OUTSIDER)).rows.length, 0);
   } finally {
     await f.db.close();
   }
