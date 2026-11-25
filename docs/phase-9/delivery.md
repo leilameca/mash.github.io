@@ -22,7 +22,7 @@ Revisa mensualmente la cola de traducciones, revisiones, cuota de Storage y esta
 | --- | --- | --- |
 | Supabase Free existente | US$0 al mes cotizados; proyecto aislado y sujeto a límites del plan | Activo y verificado |
 | Vercel Hobby | US$0 para uso personal no comercial; Pro figura a partir de US$20/mes y puede tener consumo adicional | La cuenta y el plan de uso comercial deben confirmarse antes de publicar |
-| Render Free | US$0 dentro de su cuota para ensayos; servicio Node compatible en principio, arranque en frío y disco efímero | Candidato de QA hospedado. Falta cuenta autorizada, acceso privado, prueba de Sharp y límites de subida |
+| Render Free | US$0 dentro de su cuota para ensayos; arranque en frío y disco efímero | Ensayo privado activo y probado por la titular. Faltan prueba hospedada de Sharp y límites de subida |
 | Oracle Always Free | US$0 dentro de los límites y si hay capacidad en la región principal. La cuenta puede exigir verificación de pago, la VM puede ser recuperada por inactividad y requiere administrar HTTPS y actualizaciones | Candidato de alojamiento; falta cuenta, capacidad y autorización |
 | Cloudflare Workers Free | US$0 dentro de la cuota. App Router puede ejecutarse con OpenNext. El transporte de imágenes y Sharp requieren una prueba de compatibilidad con la carga binaria de MASH | Candidato técnico, sin aprobación de paridad |
 
