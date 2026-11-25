@@ -164,6 +164,28 @@ async function main() {
       .getByRole("link", { name: title })
       .click();
     await visitor.waitForURL(newsUrl);
+
+    const composer = await context.newPage();
+    await composer.goto(origin + "/studio-mash/contenido/editor");
+    await composer.locator(".visual-frame [data-section=legacy-news]").waitFor();
+    const publishComposition = composer.waitForResponse(
+      (response) => response.url().endsWith("/api/studio-visual") &&
+        response.request().method() === "POST",
+    );
+    composer.once("dialog", (dialog) => dialog.accept());
+    await composer.getByRole("button", { name: "Publicar", exact: true }).click();
+    const composition = await publishComposition;
+    assert.equal(composition.status(), 200, await composition.text());
+    await composer.close();
+    for (const locale of ["es", "en"]) {
+      await visitor.goto(origin + "/" + locale);
+      await visitor.locator("[data-section=legacy-news]").getByRole("link", { name: title }).waitFor();
+      assert.equal(await visitor.locator("header a[href$='/noticias']").count(), 0);
+      assert.equal(await visitor.locator("footer nav a[href='/" + locale + "/noticias']").count(), 1);
+    }
+    checks.push("First visual Home publication preserves recent news, with a footer-only navigation link in ES/EN");
+    await visitor.goto(newsUrl);
+
     await studio
       .getByRole("textbox", { name: /^(Obligatorio )?Título$/ })
       .fill("Cambio privado " + timestamp);

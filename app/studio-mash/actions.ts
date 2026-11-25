@@ -973,6 +973,7 @@ export async function upsertSiteSettings(
 
   const tx = await contentTransaction(formData);
   const admin = tx.client;
+  const settings = parsed.data;
   try {
     await saveSiteContentBlock(
       tx,
@@ -985,10 +986,28 @@ export async function upsertSiteSettings(
         instagram: parsed.data.instagram,
         instagram_handle: parsed.data.instagram_handle,
         email: parsed.data.email,
+        ...(settings.workshop_enabled !== undefined && {
+          workshop: {
+            visible: settings.workshop_enabled === "on",
+            latitude: settings.workshop_latitude,
+            longitude: settings.workshop_longitude,
+            directions: settings.workshop_directions,
+          },
+        }),
       },
       [
-        { locale: "es", value: { location: parsed.data.location_es } },
-        { locale: "en", value: { location: parsed.data.location_en } },
+        { locale: "es", value: {
+          location: settings.location_es,
+          workshop_name: settings.workshop_name_es,
+          workshop_address: settings.workshop_address_es,
+          workshop_button: settings.workshop_button_es,
+        } },
+        { locale: "en", value: {
+          location: settings.location_en,
+          workshop_name: settings.workshop_name_en,
+          workshop_address: settings.workshop_address_en,
+          workshop_button: settings.workshop_button_en,
+        } },
       ],
     );
     await saveSiteContentBlock(tx, currentAdmin.user_id, "site.footer", {}, [

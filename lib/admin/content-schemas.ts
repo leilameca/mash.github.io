@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { isHttpsUrl, isInternalPath } from "@/lib/security";
+import { isMapsLink } from "@/lib/workshop";
 
 export const emailSchema = z.object({
   email: z.string().trim().email("Escribe un correo valido."),
@@ -118,6 +119,16 @@ export const homeContentSchema = z.object({
 });
 
 export const siteSettingsSchema = z.object({
+  workshop_enabled: z.enum(["on", "off"]).optional(),
+  workshop_latitude: z.string().trim().regex(/^-?\d+(\.\d+)?$/).transform(Number).pipe(z.number().min(-90).max(90)).optional(),
+  workshop_longitude: z.string().trim().regex(/^-?\d+(\.\d+)?$/).transform(Number).pipe(z.number().min(-180).max(180)).optional(),
+  workshop_directions: z.string().trim().max(2048).refine(isMapsLink, "Usa un enlace HTTPS de Google Maps.").optional(),
+  workshop_name_es: z.string().trim().max(150).optional(),
+  workshop_name_en: z.string().trim().max(150).optional(),
+  workshop_address_es: z.string().trim().max(250).optional(),
+  workshop_address_en: z.string().trim().max(250).optional(),
+  workshop_button_es: z.string().trim().max(80).optional(),
+  workshop_button_en: z.string().trim().max(80).optional(),
   full_name: z.string().trim().min(2, "Agrega el nombre completo."),
   phone: z.string().trim().min(7, "Agrega un telefono valido."),
   whatsapp: z.string().refine(isHttpsUrl, "Usa una URL HTTPS válida."),

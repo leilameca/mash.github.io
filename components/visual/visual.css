@@ -62,7 +62,7 @@
 .visual-copy {
   min-width: 0;
   min-height: var(--min);
-  padding: var(--pad) min(5vw, 56px);
+  padding: var(--pad) min(5cqw, 56px);
   display: grid;
   gap: 0.72em;
   align-content: var(--visual-vertical);
@@ -185,7 +185,7 @@
   display: grid;
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
   gap: var(--visual-gap);
-  padding: 0 min(5vw, 56px) min(5vw, 56px);
+  padding: 0 min(5cqw, 56px) min(5cqw, 56px);
 }
 .visual-grid:empty {
   display: none;
@@ -205,13 +205,13 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
-  padding: 0 min(5vw, 56px) 2em;
+  padding: 0 min(5cqw, 56px) 2em;
 }
 .visual-contact a {
   color: inherit;
 }
 .visual-faq {
-  padding: 1em min(5vw, 56px);
+  padding: 1em min(5cqw, 56px);
   border-block-start: 1px solid #ddd2bf;
 }
 .visual-faq summary {
@@ -255,7 +255,7 @@
 }
 .visual-comparison,
 .visual-context {
-  padding: 0 min(5vw, 56px) min(5vw, 56px);
+  padding: 0 min(5cqw, 56px) min(5cqw, 56px);
 }
 .visual-comparison {
   display: var(--photo);

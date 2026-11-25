@@ -37,14 +37,8 @@ export default async function ContactPage({
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
   const visual = await readVisualPublication("contact");
-  const workshop = <WorkshopLocation locale={locale} />;
   if (visual)
-    return (
-      <>
-        <PublishedVisual doc={visual} locale={locale} />
-        {workshop}
-      </>
-    );
+    return <PublishedVisual doc={visual} locale={locale} />;
   const [site, content] = await Promise.all([
     getSiteChromeContent(locale),
     getMarketingPageContent("contact", locale),
@@ -70,7 +64,7 @@ export default async function ContactPage({
           <span>{site.location}</span>
         </address>
       </section>
-      {workshop}
+      <WorkshopLocation locale={locale} map={site.workshop} />
     </>
   );
 }

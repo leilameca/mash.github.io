@@ -9,6 +9,7 @@ import { PublicationProvider } from "../PublicationFields";
 import { StudioShell } from "../StudioShell";
 import { ThemePreferences } from "../StudioTheme";
 import { GeneralSettingsForm } from "./GeneralSettingsForm";
+import { workshopContent } from "@/lib/workshop";
 import { HomeContentForm } from "./HomeContentForm";
 import { NavigationForm } from "./NavigationForm";
 import { MarketingPagesForm } from "./MarketingPagesForm";
@@ -146,6 +147,18 @@ export async function ContentWorkspace({
           <>
             <section className="studio-card">
               <GeneralSettingsForm
+                workshop={{
+                  es: workshopContent("es", settingsRow?.value?.workshop, {
+                    name: settingsEs.workshop_name,
+                    address: settingsEs.workshop_address,
+                    button: settingsEs.workshop_button,
+                  }),
+                  en: workshopContent("en", settingsRow?.value?.workshop, {
+                    name: settingsEn.workshop_name,
+                    address: settingsEn.workshop_address,
+                    button: settingsEn.workshop_button,
+                  }),
+                }}
                 preferences={
                   <div id="cuenta">
                     <h2>Preferencias de interfaz</h2>

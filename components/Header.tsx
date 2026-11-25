@@ -84,6 +84,9 @@ export function Header({
     };
   }, [isOpen, preview]);
 
+  const primaryItems = content.navigation.filter(
+    (item) => !/^\/noticias\/?$/.test(item.href),
+  );
   return (
     <header
       className={
@@ -130,7 +133,7 @@ export function Header({
                 : "Main"
           }
         >
-          {content.navigation.map((item) => {
+          {primaryItems.map((item) => {
             const href = localizedPath(locale, item.href);
             const active =
               href === localizedPath(locale)

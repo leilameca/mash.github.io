@@ -225,6 +225,20 @@ async function main() {
         ),
       "1% 50%",
     );
+    for (const [device, width] of [["Escritorio", 1280], ["Tablet", 768], ["Móvil", 390]]) {
+      await page.getByRole("button", { name: device, exact: true }).click();
+      await publicPage.setViewportSize({ width, height: 900 });
+      const styles = async (root) => root.locator("[data-section=" + heroId + "] .visual-copy")
+        .evaluate((node) => {
+          const css = getComputedStyle(node);
+          return { left: parseFloat(css.paddingLeft), right: parseFloat(css.paddingRight), font: css.fontFamily };
+        });
+      const studioStyle = await styles(canvas);
+      const publicStyle = await styles(publicPage);
+      for (const side of ["left", "right"])
+        assert.ok(Math.abs(studioStyle[side] - publicStyle[side]) <= 1, device + " " + side);
+      assert.equal(studioStyle.font, publicStyle.font);
+    }
     await publicPage.close();
     checks.push(
       "Preview has no live links, persist responsive overrides, conflict 409, save does not publish, shared public markup after publish",

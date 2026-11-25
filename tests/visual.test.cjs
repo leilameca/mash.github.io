@@ -80,6 +80,36 @@ test("legacy adaptation keeps order, original photos, both languages and hidden 
   );
   assert.equal(doc.es["legacy-faq-1__body"], "Respuesta de prueba");
 });
+test("first Home adaptation includes recent news without restoring intentional removal", () => {
+  const original = adaptLegacy("home", {});
+  const news = original.layout.sections.filter((section) => section.type === "news-list");
+  assert.equal(news.length, 1);
+  assert.equal(news[0].href, "/noticias");
+  assert.equal(original.en["legacy-news__title"], "News");
+  const removed = removeSection(original, news[0].id);
+  const saved = fromSnapshot({
+    key: "visual.home",
+    value: { composition: removed.layout },
+    translations: [],
+    images: [],
+  }, 2);
+  assert.ok(saved);
+  assert.equal(saved.layout.sections.some((section) => section.type === "news-list"), false);
+});
+
+test("workshop defaults retain its location and reject unsafe map URLs", () => {
+  const { workshopDefaults, workshopContent, isMapsLink } = loadTs(resolve("lib/workshop.ts"));
+  assert.ok(isMapsLink(workshopDefaults.directions));
+  assert.ok(isMapsLink("https://www.google.com/maps?q=Santiago"));
+  assert.equal(isMapsLink("https://www.google.com.attacker.invalid/maps"), false);
+  assert.equal(isMapsLink("https://other.invalid/maps"), false);
+  const map = workshopContent("en", { latitude: 91, longitude: -181, visible: false }, { button: "Directions to the workshop" });
+  assert.equal(map.latitude, workshopDefaults.latitude);
+  assert.equal(map.longitude, workshopDefaults.longitude);
+  assert.equal(map.visible, false);
+  assert.equal(map.button, "Directions to the workshop");
+});
+
 test("editor operations keep chrome fixed, copy translated text and undo a grouped edit", () => {
   const doc = sample();
   const moved = moveSection(doc, "story", "photo-hero");

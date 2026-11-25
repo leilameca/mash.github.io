@@ -122,7 +122,7 @@ export function adaptLegacy(
       body: prefix + "Description",
     });
     const opts = (group: string, href?: string) => ({
-      visible: home.visible?.[group] !== false,
+      visible: home.visible?.[group] === true,
       href,
     });
     add(
@@ -249,6 +249,11 @@ export function adaptLegacy(
           [],
           opts("faq"),
         );
+    add("news-list", "legacy-news", key, {}, [], { href: "/noticias" });
+    es[fieldId("legacy-news", "title")] = "Noticias";
+    en[fieldId("legacy-news", "title")] = "News";
+    es[fieldId("legacy-news", "button")] = "Ver todas las noticias";
+    en[fieldId("legacy-news", "button")] = "View all news";
   } else {
     const key = "page." + page;
     add(

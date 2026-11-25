@@ -26,6 +26,7 @@ import {
   type VisualSection,
 } from "@/lib/visual/schema";
 import "./visual.css";
+import { WorkshopLocation } from "@/components/editorial/WorkshopLocation";
 
 const align = { left: "start", center: "center", right: "end" } as const;
 const vars = (d: Required<Design>, suffix = "") => ({
@@ -93,6 +94,9 @@ export function VisualDocument({
       (section.visible || (interactive && showHidden)) &&
       (preview || !blockRegistry[section.type].protected),
   );
+  const mapSection = doc.page === "contact"
+    ? blocks.find((block) => block.visible && block.type === "contact")
+    : undefined;
   const firstHeading = blocks.find(
     (b) => b.visible && doc.es[fieldId(b.id, "title")] && b.type !== "faq",
   )?.id;
@@ -155,7 +159,7 @@ export function VisualDocument({
           ? section.entities.flatMap(
               (id) => options.find((item) => item.id === id) ?? [],
             )
-          : optionsForBlock.slice(0, 6);
+          : optionsForBlock.slice(0, section.id === "legacy-news" ? 3 : 6);
         const href = section.href ? localizedPath(locale, section.href) : "";
         const action =
           text("button") && href ? (
@@ -281,8 +285,7 @@ export function VisualDocument({
                       preview={preview}
                       href={localizedPath(
                         locale,
-                        prefixes[card.kind] +
-                          (card.kind === "project" ? "" : card.slug),
+                        prefixes[card.kind] + card.slug,
                       )}
                     >
                       {card.image && <VisualPhoto path={card.image} alt="" />}
@@ -292,7 +295,7 @@ export function VisualDocument({
                           : card.title}
                       </strong>
                     </PreviewLink>
-                    {card.kind === "project" && (
+                    {(card.kind === "project" || card.kind === "news") && (
                       <p>
                         {locale === "en"
                           ? card.descriptionEn || card.description
@@ -330,11 +333,14 @@ export function VisualDocument({
             </details>
           );
         else node = copy;
+        if (section.id === "legacy-news" && !cards.length && !interactive)
+          return null;
         return (
           <section
             key={section.id}
             data-section={section.id}
             data-type={section.type}
+            aria-label={section.id === "legacy-news" ? text("title") : undefined}
             className={`visual-section${active ? " visual-section--active" : ""}${!section.visible ? " visual-section--hidden" : ""}`}
             style={style(section)}
             onClick={onSelect ? () => onSelect(section.id) : undefined}
@@ -350,9 +356,15 @@ export function VisualDocument({
               </button>
             )}
             {node}
+            {section === mapSection && (
+              <WorkshopLocation locale={locale} map={chrome.workshop} preview={preview} />
+            )}
           </section>
         );
       })}
+      {doc.page === "contact" && !mapSection && (
+        <WorkshopLocation locale={locale} map={chrome.workshop} preview={preview} />
+      )}
     </div>
   );
 }

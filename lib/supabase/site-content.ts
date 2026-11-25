@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/i18n";
+import { workshopContent } from "@/lib/workshop";
 import { ContentError } from "./errors";
 import { authenticatedContentClient } from "./persistence";
 import type { ContentSnapshot } from "./published";
@@ -25,6 +26,7 @@ export type SiteChromeContent = {
   email: string;
   emailHref: string;
   location: string;
+  workshop?: ReturnType<typeof workshopContent>;
   navigation: SiteNavigationItem[];
   quoteLabel: string;
   requestQuoteLabel: string;
@@ -264,6 +266,11 @@ export async function getSiteChromeContent(
       typeof settingsText.location === "string" && settingsText.location
         ? settingsText.location
         : defaults.location,
+    workshop: workshopContent(locale, settings.workshop, {
+      name: settingsText.workshop_name,
+      address: settingsText.workshop_address,
+      button: settingsText.workshop_button,
+    }),
     translationPending:
       locale === "en" &&
       [settingsRow, navigationRow, footerRow].some(

@@ -52,7 +52,7 @@ export function Footer({
         <nav aria-label="Footer">
           <h2>{content.footerNavigationTitle}</h2>
           {content.navigation
-            .filter((item) => item.href)
+            .filter((item) => item.href && !/^\/noticias\/?$/.test(item.href))
             .map((item) =>
               preview ? (
                 <span key={item.id}>{item.label}</span>
@@ -62,6 +62,7 @@ export function Footer({
                 </Link>
               ),
             )}
+          {local("/noticias", locale === "es" ? "Noticias" : "News")}
         </nav>
         <address>
           <h2>

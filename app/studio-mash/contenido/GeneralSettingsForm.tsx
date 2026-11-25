@@ -3,6 +3,7 @@ import { PublicationFields, PublishButton } from "../PublicationFields";
 
 import { useActionState, useEffect, useState, type ReactNode } from "react";
 import { upsertSiteSettings, type ActionState } from "../actions";
+import type { workshopContent } from "@/lib/workshop";
 
 export type GeneralSettingsValue = {
   full_name: string;
@@ -38,9 +39,11 @@ const initialState: ActionState = {};
 export function GeneralSettingsForm({
   value,
   preferences,
+  workshop,
 }: {
   value: GeneralSettingsValue;
   preferences: ReactNode;
+  workshop: Record<"es" | "en", ReturnType<typeof workshopContent>>;
 }) {
   const [state, action, pending] = useActionState(
     upsertSiteSettings,
@@ -60,7 +63,7 @@ export function GeneralSettingsForm({
   useEffect(() => {
     const field = Object.keys(state.errors ?? {})[0];
     if (field)
-      setTab(fieldTabs[field] ?? (/^footer_|^copyright_/.test(field) ? 3 : 0));
+      setTab(fieldTabs[field] ?? (field.startsWith("workshop_") ? 1 : /^footer_|^copyright_/.test(field) ? 3 : 0));
   }, [state.errors]);
   const panel = (index: number, children: ReactNode) => (
     <section
@@ -183,6 +186,38 @@ export function GeneralSettingsForm({
             />
             {error("email") && <span>{error("email")}</span>}
           </label>
+          <fieldset>
+            <legend>Mapa del taller</legend>
+            <label>Visibilidad
+              <select name="workshop_enabled" defaultValue={workshop.es.visible ? "on" : "off"}>
+                <option value="on">Visible</option>
+                <option value="off">Oculto</option>
+              </select>
+            </label>
+            <label>Latitud
+              <input name="workshop_latitude" type="number" step="any" min="-90" max="90" defaultValue={workshop.es.latitude} required />
+            </label>
+            <label>Longitud
+              <input name="workshop_longitude" type="number" step="any" min="-180" max="180" defaultValue={workshop.es.longitude} required />
+            </label>
+            <label>Enlace de Google Maps
+              <input name="workshop_directions" type="url" defaultValue={workshop.es.directions} required />
+              {state.errors?.workshop_directions && <span>{state.errors.workshop_directions}</span>}
+            </label>
+            {(["es", "en"] as const).map((locale) => (
+              <div key={locale}>
+                <label>Nombre del establecimiento {locale.toUpperCase()}
+                  <input name={`workshop_name_${locale}`} maxLength={150} defaultValue={workshop[locale].name} />
+                </label>
+                <label>Dirección del taller {locale.toUpperCase()}
+                  <input name={`workshop_address_${locale}`} maxLength={250} defaultValue={workshop[locale].address} />
+                </label>
+                <label>Botón Cómo llegar {locale.toUpperCase()}
+                  <input name={`workshop_button_${locale}`} maxLength={80} defaultValue={workshop[locale].button} />
+                </label>
+              </div>
+            ))}
+          </fieldset>
         </div>,
       )}
       {panel(

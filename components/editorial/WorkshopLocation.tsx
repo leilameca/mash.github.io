@@ -1,30 +1,40 @@
 import type { Locale } from "@/lib/i18n";
+import { workshopContent } from "@/lib/workshop";
 import "./workshop-location.css";
 
-const directions = "https://maps.app.goo.gl/boeE5xkJGyu5Pw4m9";
-const embed =
-  "https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1s19.486419,-70.664113!6i16";
-
-export function WorkshopLocation({ locale }: { locale: Locale }) {
+export function WorkshopLocation({
+  locale,
+  map = workshopContent(locale, null, null),
+  preview = false,
+}: {
+  locale: Locale;
+  map?: ReturnType<typeof workshopContent>;
+  preview?: boolean;
+}) {
   const es = locale === "es";
-  const title = es ? "Ubicación del taller" : "Workshop location";
+  if (!map.visible) return null;
+  const embed = "https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1s" +
+    map.latitude + "," + map.longitude + "!6i16";
 
   return (
     <section
       className="section-shell workshop-location"
-      aria-labelledby="workshop-location-title"
+      aria-label={map.name}
     >
       <div className="workshop-location__heading">
-        <h2 id="workshop-location-title">{title}</h2>
-        <a
+        <div>
+          <h2>{map.name}</h2>
+          {map.address && <p>{map.address}</p>}
+        </div>
+        {preview ? <span className="button button--gold">{map.button}</span> : <a
           className="button button--gold"
           data-analytics="click_directions"
-          href={directions}
+          href={map.directions}
           target="_blank"
           rel="noopener noreferrer"
         >
-          {es ? "Cómo llegar" : "Get directions"}
-        </a>
+          {map.button}
+        </a>}
       </div>
       <iframe
         className="workshop-location__map"
