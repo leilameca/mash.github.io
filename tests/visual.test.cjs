@@ -27,7 +27,10 @@ test("restores the original section order once and keeps later Studio arrangemen
     block("footer", "footer"),
   ];
   const composition = { schema: 1, sections };
-  const read = (value) => fromSnapshot({ key: "visual.home", value, translations: [] }, 4).layout.sections.map((section) => section.id);
+  const read = (value) => Array.from(
+    fromSnapshot({ key: "visual.home", value, translations: [] }, 4).layout.sections,
+    (section) => section.id,
+  );
   assert.deepEqual(read({ composition }).slice(1, 4), [
     "legacy-benefits", "legacy-faq", "legacy-materials",
   ]);

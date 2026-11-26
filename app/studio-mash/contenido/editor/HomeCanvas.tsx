@@ -4,7 +4,17 @@ import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "re
 import { createPortal } from "react-dom";
 import type { Locale } from "@/lib/i18n";
 
-export function HomeCanvas({ children, title, locale }: { children: ReactNode; title: string; locale: Locale }) {
+export function HomeCanvas({
+  children,
+  title,
+  locale,
+  onEscape,
+}: {
+  children: ReactNode;
+  title: string;
+  locale: Locale;
+  onEscape?: () => void;
+}) {
   const [host, setHost] = useState<HTMLElement | null>(null);
   const frame = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
@@ -35,6 +45,18 @@ export function HomeCanvas({ children, title, locale }: { children: ReactNode; t
   useEffect(() => {
     if (host) host.ownerDocument.documentElement.lang = locale;
   }, [host, locale]);
+  useEffect(() => {
+    if (!host || !onEscape) return;
+    const owner = host.ownerDocument;
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !host.querySelector('.menu-toggle[aria-expanded="true"]')) {
+        event.preventDefault();
+        onEscape();
+      }
+    };
+    owner.addEventListener("keydown", escape, true);
+    return () => owner.removeEventListener("keydown", escape, true);
+  }, [host, onEscape]);
   function preventNavigation(event: MouseEvent<HTMLDivElement>) {
     const target = event.target as HTMLElement;
     if (target.closest("a")) event.preventDefault();
@@ -48,15 +70,7 @@ export function HomeCanvas({ children, title, locale }: { children: ReactNode; t
         src="/studio-mash/contenido/lienzo"
       />
       {host && createPortal(
-        <div
-          onClickCapture={preventNavigation}
-          onAuxClickCapture={preventNavigation}
-          onKeyDown={(event) => {
-            if (event.key === "Escape" && !host.querySelector('.menu-toggle[aria-expanded="true"]')) {
-              document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
-            }
-          }}
-        >
+        <div onClickCapture={preventNavigation} onAuxClickCapture={preventNavigation}>
           {children}
         </div>,
         host,

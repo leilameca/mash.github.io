@@ -131,8 +131,8 @@ export function VisualEditor({
       });
     }
   };
-  const renderCanvas = (surface: ReactNode, title: string) =>
-    page === "home" ? <HomeCanvas title={title} locale={locale}>{surface}</HomeCanvas> : surface;
+  const renderCanvas = (surface: ReactNode, title: string, onEscape?: () => void) =>
+    page === "home" ? <HomeCanvas title={title} locale={locale} onEscape={onEscape}>{surface}</HomeCanvas> : surface;
   const askLeave = () =>
     !dirty ||
     window.confirm("Tienes cambios sin guardar. ¿Salir de esta composición?");
@@ -781,7 +781,7 @@ export function VisualEditor({
               locale={locale}
               preview
               home={data.home?.[locale]}
-            />, "Vista previa de Inicio")}
+            />, "Vista previa de Inicio", () => setPreview(false))}
           </MeasuredPreview>
         </div>
       </StudioDialog>
