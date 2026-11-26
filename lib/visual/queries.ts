@@ -19,6 +19,7 @@ import {
 import {
   visualKey,
   type VisualChrome,
+  type VisualDocumentData,
   type VisualItem,
   type VisualPage,
 } from "./schema";
@@ -179,7 +180,7 @@ export async function readVisualPublication(page: VisualPage) {
   );
   const doc = publication && fromSnapshot(publication.snapshot, 0);
   if (!doc || doc.englishReady) return doc ?? null;
-  const publicDocument = { ...doc, en: {} };
+  const publicDocument: VisualDocumentData = { ...doc, en: {} };
   if (page !== "home") return publicDocument;
   return recoverPublishedHomeEnglish(publicDocument, publicHomeSources(rows));
 }
