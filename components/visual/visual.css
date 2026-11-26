@@ -59,6 +59,28 @@
   outline: 3px solid #58a07d;
   outline-offset: 2px;
 }
+.visual-select-section--showroom {
+  left: auto;
+  right: 0;
+}
+.visual-section:hover .visual-select-section--showroom,
+.visual-select-section--showroom:focus-visible,
+.visual-select-section--showroom[aria-pressed="true"] {
+  opacity: 1;
+}
+.visual-lifestyle-select {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+.visual-lifestyle-select[aria-pressed="true"],
+.visual-lifestyle-select:focus-visible {
+  outline: 2px solid #58a07d;
+  outline-offset: 4px;
+}
 .visual-copy {
   min-width: 0;
   min-height: var(--min);

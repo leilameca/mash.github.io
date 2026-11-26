@@ -125,6 +125,15 @@ export async function readVisualDraft(page: VisualPage) {
           : null,
     };
   }
+  if (page === "home") {
+    const publicHome = (await readPublished("site")).filter(
+      (row) => row.slug === "home.hero" || row.slug === "home.sections",
+    );
+    return {
+      doc: adaptLegacy(page, Object.fromEntries(publicHome.map((row) => [row.slug, row.snapshot]))),
+      publishedRevision: null,
+    };
+  }
   return { doc: adaptLegacy(page, rows), publishedRevision: null };
 }
 export async function readVisualPublication(page: VisualPage) {

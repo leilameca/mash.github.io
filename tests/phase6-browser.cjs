@@ -55,12 +55,23 @@ async function main() {
     const canvas = page.locator(".visual-frame");
     await canvas.waitFor();
     await page.waitForFunction(() => {
-      const photo = document.querySelector(".visual-cover .visual-photo");
+      const photo = document.querySelector(".hero-media__image");
       return photo && photo.complete && photo.naturalWidth > 0;
     });
     await snap("01-editor-escritorio");
     const hero = canvas.locator("[data-type=hero]").first();
     const heroId = await hero.getAttribute("data-section");
+    assert.equal(await hero.locator(".hero-showroom img").count(), 2);
+    assert.equal(await canvas.locator("[data-section=legacy-showroom]").count(), 0);
+    const initial = await (await page.request.get(origin + "/api/studio-visual?page=home")).json();
+    const { layout, es, en, revision } = initial.doc;
+    const unchanged = await page.request.post(origin + "/api/studio-visual", {
+      headers: { origin },
+      data: { page: "home", layout, es, en, revision, intent: "publish" },
+    });
+    assert.equal(unchanged.status(), 200, await unchanged.text());
+    assert.equal((await unchanged.json()).unchanged, true);
+    assert.equal(await page.getByRole("button", { name: "Publicar", exact: true }).isDisabled(), true);
     await hero
       .getByRole("button", {
         name: "Seleccionar Portada en el lienzo",
@@ -74,11 +85,11 @@ async function main() {
     });
     await title.fill(text);
     await title.press("Tab");
-    assert.equal(await hero.locator(".visual-title").innerText(), text);
+    assert.equal(await hero.locator(".hero-title").innerText(), text);
     await page.getByRole("button", { name: "Deshacer", exact: true }).click();
-    assert.notEqual(await hero.locator(".visual-title").innerText(), text);
+    assert.notEqual(await hero.locator(".hero-title").innerText(), text);
     await page.getByRole("button", { name: "Rehacer", exact: true }).click();
-    assert.equal(await hero.locator(".visual-title").innerText(), text);
+    assert.equal(await hero.locator(".hero-title").innerText(), text);
     const stale = await context.newPage();
     await stale.goto(studio + "/contenido/editor");
     await stale.locator(".visual-frame").waitFor();
@@ -213,10 +224,12 @@ async function main() {
     await publicPage.goto(origin + "/es");
     assert.equal(
       await publicPage
-        .locator("[data-section=" + heroId + "] .visual-title")
+        .locator("[data-section=" + heroId + "] .hero-title")
         .innerText(),
       text,
     );
+    assert.equal(await publicPage.locator(".hero-showroom img").count(), 2);
+    assert.equal(await publicPage.locator("[data-section=legacy-showroom]").count(), 0);
     assert.equal(
       await publicPage
         .locator("[data-section=" + heroId + "]")
@@ -228,7 +241,7 @@ async function main() {
     for (const [device, width] of [["Escritorio", 1280], ["Tablet", 768], ["Móvil", 390]]) {
       await page.getByRole("button", { name: device, exact: true }).click();
       await publicPage.setViewportSize({ width, height: 900 });
-      const styles = async (root) => root.locator("[data-section=" + heroId + "] .visual-copy")
+      const styles = async (root) => root.locator("[data-section=" + heroId + "] .hero-copy")
         .evaluate((node) => {
           const css = getComputedStyle(node);
           return { left: parseFloat(css.paddingLeft), right: parseFloat(css.paddingRight), font: css.fontFamily };
@@ -238,6 +251,15 @@ async function main() {
       for (const side of ["left", "right"])
         assert.ok(Math.abs(studioStyle[side] - publicStyle[side]) <= 1, device + " " + side);
       assert.equal(studioStyle.font, publicStyle.font);
+      assert.equal(await canvas.locator(".hero-showroom").isVisible(), width > 920);
+      assert.equal(await publicPage.locator(".hero-showroom").isVisible(), width > 920);
+      if (device === "Tablet") {
+        const focus = (root) => root.locator(".hero-media__image").evaluate((image) =>
+          getComputedStyle(image).objectPosition,
+        );
+        assert.equal(await focus(canvas), "1% 52%");
+        assert.equal(await focus(publicPage), "1% 52%");
+      }
     }
     await publicPage.close();
     checks.push(

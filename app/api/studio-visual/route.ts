@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isDeepStrictEqual } from "node:util";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentAdmin } from "@/lib/supabase/auth";
@@ -104,7 +105,6 @@ export async function POST(req: NextRequest) {
         { error: "Agrega contenido visible en español antes de publicar." },
         400,
       );
-    const client = await authenticatedContentClient();
     const current = await readVisualDraft(next.page);
     if (current.doc.id !== next.id || current.doc.revision !== next.revision)
       return reply(
@@ -114,6 +114,20 @@ export async function POST(req: NextRequest) {
         },
         409,
       );
+    if (
+      next.page === "home" &&
+      !current.doc.id &&
+      isDeepStrictEqual(next.layout, current.doc.layout) &&
+      isDeepStrictEqual(next.es, current.doc.es) &&
+      isDeepStrictEqual(next.en, current.doc.en)
+    ) {
+      return reply({
+        revision: current.doc.revision,
+        publishedRevision: current.publishedRevision,
+        unchanged: true,
+      });
+    }
+    const client = await authenticatedContentClient();
     const known = new Set(
       current.doc.layout.sections.flatMap((section) => section.media),
     );

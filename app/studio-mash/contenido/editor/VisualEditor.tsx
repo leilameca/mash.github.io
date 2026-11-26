@@ -219,6 +219,10 @@ export function VisualEditor({
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
+      if (result.unchanged) {
+        setNotice("Inicio ya está publicado con este contenido.");
+        return;
+      }
       const committed = { ...doc, id: result.id, revision: result.revision };
       setData((current) => ({
         ...current,
@@ -361,7 +365,7 @@ export function VisualEditor({
           <button
             type="button"
             className="admin-button admin-button--secondary"
-            disabled={busy || uploading || (!dirty && !!doc.id)}
+            disabled={busy || uploading || !dirty}
             onClick={() => void save("save")}
           >
             Guardar
@@ -369,7 +373,7 @@ export function VisualEditor({
           <button
             type="button"
             className="admin-button"
-            disabled={busy || uploading}
+            disabled={busy || uploading || (page === "home" && !doc.id && !dirty)}
             onClick={() => void save("publish")}
           >
             Publicar

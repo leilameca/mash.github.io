@@ -1,4 +1,5 @@
 import { NewsCards } from "@/components/editorial/NewsCards";
+import { HomeHero, HomeLifestyle } from "@/components/editorial/HomeEditorial";
 import { ContactSection } from "@/components/editorial/ContactSection";
 import { getNews } from "@/lib/editorial/queries";
 import { PublishedVisual } from "@/components/visual/PublishedVisual";
@@ -128,67 +129,22 @@ export default async function HomePage({
   return (
     <>
       {structuredMarkup}
-      <section className="hero-section">
-        <div className="hero-media" data-image-motion>
-          {heroContent.image && (
-            <Image
-              src={heroContent.image}
-              alt={
-                locale === "es"
-                  ? "Muebles de exterior para terraza y piscina"
-                  : "Outdoor furniture for terrace and pool"
-              }
-              className="hero-media__image"
-              fill
-              priority
-              sizes="100vw"
-            />
-          )}
-        </div>
-        <div className="hero-content section-shell">
-          <div className="hero-copy" data-reveal>
-            <p className="eyebrow">MASH | {site.fullName}</p>
-            <h1>{heroContent.title}</h1>
-            <p>{heroContent.description}</p>
-            <div className="hero-actions">
-              <Link
-                href={localizedPath(locale, "/colecciones")}
-                className="button button--gold"
-              >
-                {t.viewCollections}
-              </Link>
-              <QuoteLink className="button button--light">{t.quote}</QuoteLink>
-            </div>
-          </div>
-          <div className="hero-showroom" aria-hidden="true" data-reveal>
-            <div className="hero-showroom__main">
-              {heroContent.showroomMainImage && (
-                <Image
-                  src={heroContent.showroomMainImage}
-                  alt=""
-                  fill
-                  sizes="(max-width: 920px) 0px, 24vw"
-                />
-              )}
-            </div>
-            <div className="hero-showroom__small">
-              {heroContent.showroomSmallImage && (
-                <Image
-                  src={heroContent.showroomSmallImage}
-                  alt=""
-                  fill
-                  sizes="(max-width: 920px) 0px, 14vw"
-                />
-              )}
-            </div>
-            <p>
-              {locale === "es"
-                ? "Terrazas, balcones y piscinas con presencia de showroom."
-                : "Terraces, balconies and pools with showroom presence."}
-            </p>
-          </div>
-        </div>
-      </section>
+      <HomeHero
+        locale={locale}
+        eyebrow={`MASH | ${site.fullName}`}
+        title={heroContent.title}
+        description={heroContent.description}
+        background={heroContent.image}
+        showroom={[heroContent.showroomMainImage, heroContent.showroomSmallImage]}
+        actions={
+          <>
+            <Link href={localizedPath(locale, "/colecciones")} className="button button--gold">
+              {t.viewCollections}
+            </Link>
+            <QuoteLink className="button button--light">{t.quote}</QuoteLink>
+          </>
+        }
+      />
 
       {homeSections.visible.intro && (
         <section className="section-shell showroom-intro" data-scrub-copy>
@@ -287,48 +243,18 @@ export default async function HomePage({
       )}
 
       {homeSections.visible.lifestyle && (
-        <section
-          className="lifestyle-band"
-          aria-label={
-            locale === "es" ? "Inspiracion exterior" : "Outdoor inspiration"
-          }
-        >
-          <div className="lifestyle-band__track" tabIndex={0}>
-            <span>{homeSections.lifestyleLabels[0]}</span>
-            <div>
-              {homeSections.lifestyleImageOne && (
-                <Image
-                  src={homeSections.lifestyleImageOne}
-                  alt=""
-                  fill
-                  sizes="15rem"
-                />
-              )}
-            </div>
-            <span>{homeSections.lifestyleLabels[1]}</span>
-            <div>
-              {homeSections.lifestyleImageTwo && (
-                <Image
-                  src={homeSections.lifestyleImageTwo}
-                  alt=""
-                  fill
-                  sizes="15rem"
-                />
-              )}
-            </div>
-            <span>{homeSections.lifestyleLabels[2]}</span>
-            <div>
-              {homeSections.lifestyleImageThree && (
-                <Image
-                  src={homeSections.lifestyleImageThree}
-                  alt=""
-                  fill
-                  sizes="15rem"
-                />
-              )}
-            </div>
-          </div>
-        </section>
+        <HomeLifestyle
+          locale={locale}
+          entries={[
+            homeSections.lifestyleImageOne,
+            homeSections.lifestyleImageTwo,
+            homeSections.lifestyleImageThree,
+          ].map((image, index) => ({
+            id: String(index),
+            label: homeSections.lifestyleLabels[index],
+            image,
+          }))}
+        />
       )}
 
       {homeSections.visible.philosophy && (

@@ -19,6 +19,7 @@ import {
   palette,
   pagePaths,
   type Design,
+  type Device,
   type TextField,
   type VisualChrome,
   type VisualDocumentData,
@@ -27,6 +28,49 @@ import {
 } from "@/lib/visual/schema";
 import "./visual.css";
 import { WorkshopLocation } from "@/components/editorial/WorkshopLocation";
+import { HomeHero, HomeLifestyle } from "@/components/editorial/HomeEditorial";
+import { QuoteLink } from "@/components/QuoteLink";
+import { dictionary } from "@/lib/content";
+
+const isLegacyLifestyle = (block: VisualSection) =>
+  block.type === "gallery" && /^legacy-lifestyle-(one|two|three)$/.test(block.id);
+
+function homeHeroDesign(section: VisualSection): CSSProperties {
+  const desktop = section.design;
+  const initial = blockRegistry.hero.preset ?? {};
+  const styles: Record<string, string> = {};
+  for (const device of ["desktop", "tablet", "mobile"] satisfies Device[]) {
+    const suffix = device === "desktop" ? "" : "-" + device;
+    const choices = device === "desktop" ? desktop : section[device];
+    if (choices.x !== undefined || choices.y !== undefined)
+      styles["--home-focus" + suffix] =
+        `${choices.x ?? desktop.x ?? 50}% ${choices.y ?? desktop.y ?? 52}%`;
+    if (choices.hideMedia !== undefined)
+      styles["--home-show-photo" + suffix] = choices.hideMedia ? "none" : "block";
+    if (choices.align !== undefined) {
+      styles["--home-align" + suffix] = choices.align;
+      styles["--home-justify" + suffix] = align[choices.align];
+    }
+    if (choices.titleSize !== undefined && (suffix || choices.titleSize !== initial.titleSize))
+      styles["--home-title-size" + suffix] = choices.titleSize + "px";
+    if (choices.height !== undefined && (suffix || choices.height !== initial.height))
+      styles["--home-height" + suffix] = choices.height + "px";
+    if (choices.padding !== undefined)
+      styles["--home-padding" + suffix] = choices.padding + "px";
+  }
+  if (desktop.fit !== undefined) styles["--home-fit"] = desktop.fit;
+  if (desktop.weight !== undefined) styles["--home-weight"] = String(desktop.weight);
+  if (desktop.textWidth !== undefined) styles["--home-copy-width"] = desktop.textWidth + "px";
+  if (desktop.textColor !== undefined && desktop.textColor !== initial.textColor)
+    styles["--home-ink"] = palette[desktop.textColor];
+  if (desktop.background !== undefined && desktop.background !== initial.background)
+    styles["--home-background"] = palette[desktop.background];
+  if (desktop.vertical !== undefined) styles["--home-vertical"] = desktop.vertical;
+  if (desktop.buttonAlign !== undefined) styles["--home-button-align"] = align[desktop.buttonAlign];
+  if (desktop.overlay !== undefined || desktop.opacity !== undefined)
+    styles["--home-overlay"] = `color-mix(in srgb, ${palette[desktop.overlay ?? "ink"]} ${desktop.opacity ?? 45}%, transparent)`;
+  return styles as CSSProperties;
+}
 
 const align = { left: "start", center: "center", right: "end" } as const;
 const vars = (d: Required<Design>, suffix = "") => ({
@@ -97,19 +141,42 @@ export function VisualDocument({
   const mapSection = doc.page === "contact"
     ? blocks.find((block) => block.visible && block.type === "contact")
     : undefined;
+  const homeHero = doc.page === "home"
+    ? blocks.find((block) => block.id === "legacy-hero" && block.type === "hero")
+    : undefined;
+  const showroom = doc.page === "home"
+    ? blocks.find((block) => block.id === "legacy-showroom" && block.type === "gallery")
+    : undefined;
+  const textFor = (section: VisualSection, field: TextField) => {
+    const key = fieldId(section.id, field);
+    return (locale === "en" && (preview || doc.englishReady) ? doc.en[key] : "") ||
+      doc.es[key] || "";
+  };
   const firstHeading = blocks.find(
     (b) => b.visible && doc.es[fieldId(b.id, "title")] && b.type !== "faq",
   )?.id;
   return (
     <div className="mash-visual" lang={locale}>
-      {blocks.map((section) => {
+      {blocks.map((section, index) => {
+        if (section === showroom) return null;
+        if (doc.page === "home" && isLegacyLifestyle(section)) {
+          if (index > 0 && isLegacyLifestyle(blocks[index - 1])) return null;
+          const entries = [];
+          for (let i = index; i < blocks.length && isLegacyLifestyle(blocks[i]); i++) {
+            const block = blocks[i];
+            const name = textFor(block, "title");
+            entries.push({
+              id: block.id,
+              image: block.media[0],
+              label: onSelect ? (
+                <button className="visual-lifestyle-select" type="button" onClick={() => onSelect(block.id)} aria-pressed={selected === block.id}>{name || "Foto de inspiración"}</button>
+              ) : name,
+            });
+          }
+          return <HomeLifestyle key={section.id} locale={locale} entries={entries} />;
+        }
         const active = selected === section.id && interactive;
-        const text = (field: TextField) =>
-          locale === "en" && (preview || doc.englishReady)
-            ? doc.en[fieldId(section.id, field)] ||
-              doc.es[fieldId(section.id, field)] ||
-              ""
-            : doc.es[fieldId(section.id, field)] || "";
+        const text = (field: TextField) => textFor(section, field);
         const content = (field: TextField) => {
           if (active && onText && (field === "title" || field === "body"))
             return (
@@ -203,6 +270,55 @@ export function VisualDocument({
           node = <Footer locale={locale} content={chrome} preview />;
         else if (section.type === "spacer")
           node = <div className="visual-spacer" aria-hidden="true" />;
+        else if (section === homeHero) {
+          const quote = dictionary[locale].common.quote;
+          node = (
+            <HomeHero
+              locale={locale}
+              eyebrow={text("eyebrow") || `MASH | ${chrome.fullName}`}
+              title={content("title")}
+              description={content("body")}
+              background={section.media[0]}
+              alt={text("alt")}
+              heading={heading}
+              design={homeHeroDesign(section)}
+              showroom={showroom?.visible ? showroom.media : []}
+              showroomControl={showroom && onSelect && (
+                <button
+                  type="button"
+                  className="visual-select-section visual-select-section--showroom"
+                  aria-pressed={selected === showroom.id}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onSelect(showroom.id);
+                  }}
+                >
+                  Fotos de portada
+                </button>
+              )}
+              actions={
+                <>
+                  {text("button") && href && (
+                    <PreviewLink
+                      preview={preview}
+                      href={href}
+                      className={section.design.buttonStyle && section.design.buttonStyle !== blockRegistry.hero.preset?.buttonStyle
+                        ? "visual-button visual-button--" + section.design.buttonStyle
+                        : "button button--gold"}
+                    >
+                      {text("button")}
+                    </PreviewLink>
+                  )}
+                  {preview ? (
+                    <span className="button button--light">{quote}</span>
+                  ) : (
+                    <QuoteLink className="button button--light">{quote}</QuoteLink>
+                  )}
+                </>
+              }
+            />
+          );
+        }
         else if (
           section.type === "hero" ||
           section.type === "carousel" ||

@@ -8,25 +8,6 @@
   background: var(--bg-soft);
 }
 
-.mash-public .hero-section {
-  min-height: min(86svh, 920px);
-}
-.mash-public .hero-section::after {
-  background: linear-gradient(
-    0deg,
-    rgb(32 22 17 / 86%),
-    rgb(32 22 17 / 15%) 85%
-  );
-}
-.mash-public .hero-copy h1 {
-  font-size: clamp(3.05rem, 6.6vw, 7rem);
-  max-width: 15ch;
-}
-.mash-public .hero-content {
-  padding-block-end: clamp(3rem, 8vw, 7rem);
-}
-.mash-public .hero-showroom__main,
-.mash-public .hero-showroom__small,
 .mash-public .editorial-published img,
 .mash-public .project-feature__image,
 .mash-public .workshop-location__map,
@@ -105,14 +86,9 @@
   .site-header .primary-nav a[aria-current="page"] {
     background: rgb(255 247 236 / 13%);
   }
-  .mash-public .hero-section {
-    min-height: min(82svh, 680px);
-  }
-  .mash-public .hero-content,
   .site-footer .footer-cta {
     grid-template-columns: minmax(0, 1fr);
   }
-  .mash-public .hero-copy,
   .site-footer .footer-cta > * {
     min-width: 0;
     max-width: 100%;
@@ -122,9 +98,6 @@
 @media (max-width: 640px) {
   .mash-public .editorial-public-list {
     grid-template-columns: 1fr;
-  }
-  .mash-public .hero-copy h1 {
-    font-size: clamp(2.65rem, 9vw, 4.25rem);
   }
 }
 @media (prefers-reduced-motion: reduce) {
