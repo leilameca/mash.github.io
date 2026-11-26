@@ -46,7 +46,9 @@ async function main() {
                 await page.getByRole("button", { name: locale.toUpperCase(), exact: true }).click();
                 await visitor.goto(new URL("/" + locale, origin).href);
                 const live = visitor.locator(".site-header .menu-toggle");
-                const preview = page.locator(".visual-preview-nav .menu-toggle");
+                const preview = page
+                  .frameLocator('iframe[title="Lienzo de Inicio"]')
+                  .locator(".site-header .menu-toggle");
                 for (const expanded of ["false", "true"]) {
                   assert.equal(await live.getAttribute("aria-expanded"), expanded);
                   assert.equal(await preview.getAttribute("aria-expanded"), expanded);
