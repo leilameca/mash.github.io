@@ -18,6 +18,8 @@ En otra terminal establece `MASH_PREVIEW_URL` al puerto de ensayo y ejecuta las 
 
 ## Continuidad del staging
 
+Producción ya sirve MASH 3.0 desde el 26 de noviembre de 2026. La migración, verificación y pendientes se registran en el [acta de despliegue](phase-9/delivery.md#despliegue-del-26-de-noviembre-de-2026). Los detalles de preparación que siguen son el historial del ensayo.
+
 El ensayo privado está activo en https://mash-staging.onrender.com. La titular confirmó que funciona después de conectar las credenciales de Supabase de ensayo. Se verificaron de forma independiente HTTPS, 401 sin contraseña para ambas portadas y la entrada de Studio, y las cabeceras de no indexación. El QA autenticado y las integraciones hospedadas quedan en la matriz de preparación. El lanzamiento público sigue sujeto a autorización expresa.
 
 Render conectó el Blueprint y el primer despliegue falló durante la descarga de Google Fonts. Las mismas familias tipográficas se incluyen ahora como archivos WOFF2 locales con sus licencias. El servicio tiene despliegues automáticos desactivados. Desde `mash-staging` usar **Manual Deploy → Deploy latest commit** y revisar **Events** hasta que el despliegue esté activo.

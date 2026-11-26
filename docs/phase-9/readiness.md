@@ -22,7 +22,7 @@ Base de la sesión: `78a63b13ff7ebeda09430d4152d47ac6c13fba24` en `feature/mash-
 | Analítica en Studio | Lectura real verificada en local | El 25 de noviembre de 2026 la Data API de la propiedad `565851644` devolvió HTTP 200 con cero filas durante los últimos 30 días completos. Studio mostró «Sin eventos en este periodo». La clave de la cuenta de servicio está en la configuración local privada. Queda verificar las métricas tras activar la etiqueta y preparar las credenciales del entorno hospedado. |
 | QA independiente hospedado | Protección verificada; pruebas administrativas pendientes | El entorno está activo. Falta una sesión autorizada para repetir el flujo autenticado ES/EN, Studio, Multimedia y permisos en Chromium, Firefox y WebKit. |
 | Revisión visual del sitio, Yascari y fibra | Aprobado en local | La titular aprobó la vista local, el retrato de Yascari en Nosotros y la fotografía original de fibra el 24 de noviembre de 2026. Queda la comprobación del encuadre de la fibra en la composición donde se publique. |
-| Lanzamiento | Bloqueado | Requiere QA hospedado, revisión de integraciones y autorización expresa. No se fusionó con `main`, modificó DNS ni promovió producción. |
+| Lanzamiento | MASH 3.0 activo | El 26 de noviembre Vercel promovió el candidato autorizado. Se verificaron HTTPS, rutas ES/EN y pantalla de acceso de Studio. Quedan las integraciones hospedadas y el seguimiento posterior. [Acta](delivery.md#despliegue-del-26-de-noviembre-de-2026). |
 
 ## Orden de continuación
 

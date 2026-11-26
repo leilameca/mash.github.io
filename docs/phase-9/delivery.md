@@ -1,5 +1,12 @@
 # Entrega técnica y operación de MASH 3.0
 
+## Despliegue del 26 de noviembre de 2026
+
+- Dominio activo en [Vercel](https://vercel.com/leilanys-projects-12493bd9/mash-github-io/4e5HsdepRgWtuCa7btryQ2YX3EG7) con el SHA de código `bd9037907f07d7391d7772ac1a820af2593d5736`. El candidato se construyó con la configuración de producción y sin asignar el dominio hasta la validación. Se promovió el despliegue `dpl_4e5HsdepRgWtuCa7btryQ2YX3EG7`. La versión anterior `dpl_53GgEveLPUhttXEXJ7b4F2191KAu` queda como referencia de reversión. El procedimiento de reintroducir compatibilidad con la versión anterior requiere pausar Studio y conciliar los cambios hechos después del corte.
+- Se cotejaron las filas de 13 tablas del respaldo contra producción antes de aplicar las ocho migraciones. Se conservó el acceso público de la versión anterior durante la pausa editorial. Tras promover y verificar el dominio, se retiraron las políticas SELECT temporales y todos los triggers de pausa. La base quedó con 17 migraciones, 22 publicaciones y un producto en borrador.
+- Pasaron 11 rutas en español e inglés y 8 revisiones de navegador a 390 y 1440 px. La entrada anónima de Studio redirige al login, la API privada de traducción deniega acceso anónimo y la ruta de demostración devuelve 404. Se comprobó redirección a www, robots y sitemap.
+- Siguen pendientes la sesión con OTP de Resend, la traducción real de DeepL, el flujo de archivos y restauración por la API hospedada, DebugView de GA4 y el seguimiento posterior. Se preservaron el presupuesto US$0, DNS y `main`.
+
 ## Manual administrativo
 
 1. En Studio, solicita un código en el correo autorizado. Usa el código de ocho dígitos y cierra sesión cuando termines. En el ensayo Docker, el correo llega a Mailpit.

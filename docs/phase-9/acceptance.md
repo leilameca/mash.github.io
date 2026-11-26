@@ -4,9 +4,9 @@
 
 Referencia funcional `c6c24e869d52f5b348f38b9e82c9fe19953fbbae` en `feature/mash-3`. La [matriz de Fase 8](../phase-8/acceptance.md) conserva **14 aprobados y 18 parciales**. La titular autorizó continuar la Fase 9 en el ensayo con esos pendientes registrados.
 
-**Decisión de lanzamiento: NO GO.** El techo autorizado para nuevos servicios es US$0. La titular identificó Vercel como el alojamiento del MASH real con `mashoficial.com`. Render aloja el ensayo privado y aislado.
+**MASH 3.0 publicado el 26 de noviembre de 2026.** La titular autorizó la promoción en Vercel y la pausa temporal de edición. `www.mashoficial.com` sirve el SHA `bd9037907f07d7391d7772ac1a820af2593d5736`. El techo autorizado para nuevos servicios es US$0. Render sigue como ensayo privado.
 
-La titular solicitó publicar en el dominio oficial. El 25 de noviembre de 2026 se verificó en lectura que `mashoficial.com` redirige a `www.mashoficial.com` y que Vercel sirve `/es` con HTTP 200. Falta acceso al proyecto de Vercel para identificar el despliegue actual y su reversión. Antes de sustituirlo, verificar por lectura que la base productiva tenga el esquema que requiere la rama y documentar una recuperación comprobada. La revisión histórica encontró tablas de publicación ausentes. La solicitud de publicación no especifica un plan de migración de datos.
+La entrega funcional inicial está verificada para el catálogo público y la protección de la entrada de Studio. Los criterios restantes de Fase 8 y las integraciones hospedadas se conservan en sus matrices. [Acta de despliegue y verificaciones](delivery.md#despliegue-del-26-de-noviembre-de-2026).
 
 ## Verificación previa
 
@@ -40,9 +40,9 @@ La titular solicitó publicar en el dominio oficial. El 25 de noviembre de 2026 
 | 9.12 Monitorización | NO INICIADO | Cobertura de disponibilidad, errores y consumo, responsables, alertas probadas y procedimiento de mantenimiento. | 9.1, 9.3 y 9.9. Evaluar herramientas solo tras confirmar utilidad, privacidad y coste. |
 | 9.13 GitHub y CI/CD | PARCIAL | Instalación, lint, tipos, pruebas, build y browser QA reproducibles en CI. Revisión de dependencias, artefactos y reglas de despliegue. | CI de la rama superado. Queda el smoke autenticado del despliegue hospedado y la revisión final del repositorio. |
 | 9.14 Documentación | PARCIAL | Manual administrativo, arquitectura, mantenimiento, recuperación y ruta de estudio vinculada a archivos reales, revisados con las administradoras. | Puede avanzar tras el cierre de Fase 8. Existen guías y documentación técnica. Revisar contra 9.2–9.13 antes de entregar. |
-| 9.15 Preparación | BLOQUEADO | Acta GO con integraciones y QA aprobados, cero incidencias críticas o altas conocidas, coste y reversión aprobados. | Fase 8 definitiva y 9.1–9.14. Estado inicial NO GO. |
-| 9.16 Dominio y lanzamiento | BLOQUEADO | Autorización de cambio, inventario DNS, respaldo final, SHA aprobado, HTTPS, canonical y reversión verificables. | 9.15 y autorización expresa para dominio y producción. |
-| 9.17 QA posterior | BLOQUEADO | Smoke no destructivo de producción, registros y responsables para 24 h, 72 h y 7 días. | 9.16. Verificar el dominio oficial solo después del corte autorizado. |
+| 9.15 Preparación | PARCIAL | Integraciones y QA aprobados, cero incidencias críticas o altas conocidas, coste y reversión aprobados. | La titular autorizó el corte. La preparación comprobó respaldo, ensayo de migración y candidato con configuración de producción. Siguen abiertas las integraciones no verificadas. |
+| 9.16 Dominio y lanzamiento | APROBADO TÉCNICAMENTE | Autorización, respaldo, SHA, HTTPS, canonical y procedimiento de reversión comprobados. | Supabase se migró en producción y Vercel promovió el candidato. DNS y `main` quedaron intactos. |
+| 9.17 QA posterior | PARCIAL | Smoke no destructivo de producción, registros y responsables para 24 h, 72 h y 7 días. | Pasaron 11 rutas ES/EN, 8 comprobaciones de navegador, acceso anónimo de Studio y verificación SEO básica. Faltan sesión autenticada y seguimiento. |
 | 9.18 Entrega | PARCIAL | Informe de alcance real, evidencias, costes, responsables, pendientes y caso de estudio divulgable. | Material previo en [entrega](delivery.md). Cierre tras 9.15–9.17 y aceptación de la titular. |
 
 ## Orden de ejecución
