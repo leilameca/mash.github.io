@@ -47,6 +47,18 @@ test("missing section images stay empty and never restore legacy defaults", asyn
   for (const key of ["lifestyleImageOne", "lifestyleImageTwo", "lifestyleImageThree"]) assert.equal(actual[key], "");
 });
 
+test("visible legacy lifestyle bands recover missing photos and respect cleared slots", async () => {
+  const legacy = contentFixture({ visible: { lifestyle: true } });
+  const cleared = contentFixture({ visible: { lifestyle: true }, lifestyleImageTwo: "" });
+  for (const locale of ["es", "en"]) {
+    const actual = await legacy.getHomeSectionsContent(locale);
+    assert.equal(actual.lifestyleImageOne, "/assets/images/cama-balinesa-trap.jpg");
+    assert.equal(actual.lifestyleImageTwo, "/assets/images/rombois-set.jpg");
+    assert.equal(actual.lifestyleImageThree, "/assets/images/oculus-chaise.jpg");
+    assert.equal((await cleared.getHomeSectionsContent(locale)).lifestyleImageTwo, "");
+  }
+});
+
 test("public hero and about page use the stored image URLs", async () => {
   const shared = { image_path: "https://media.test/new.jpg", showroom_main_image_path: "/new-main.jpg", showroom_small_image_path: "/new-small.jpg" };
   const content = contentFixture(shared);

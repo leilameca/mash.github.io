@@ -1,11 +1,9 @@
-import { WorkshopLocation } from "@/components/editorial/WorkshopLocation";
+import { ContactSection } from "@/components/editorial/ContactSection";
 import { PublishedVisual } from "@/components/visual/PublishedVisual";
 import { readVisualPublication } from "@/lib/visual/queries";
 import { routeAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { QuoteLink } from "@/components/QuoteLink";
-import { dictionary } from "@/lib/content";
 import { isLocale, type Locale } from "@/lib/i18n";
 import {
   getMarketingPageContent,
@@ -44,27 +42,5 @@ export default async function ContactPage({
     getMarketingPageContent("contact", locale),
   ]);
 
-  return (
-    <>
-      <section className="section-shell contact-page">
-        <div>
-          <p className="eyebrow">{content.eyebrow}</p>
-          <h1>{content.title}</h1>
-          <p>{content.description}</p>
-          <QuoteLink className="button button--gold">
-            {dictionary[locale].common.requestQuote}
-          </QuoteLink>
-        </div>
-        <address className="contact-card">
-          <a href={site.phoneHref}>{site.phone}</a>
-          <a href={site.emailHref}>{site.email}</a>
-          <a href={site.instagram} target="_blank" rel="noreferrer">
-            {site.instagramHandle}
-          </a>
-          <span>{site.location}</span>
-        </address>
-      </section>
-      <WorkshopLocation locale={locale} map={site.workshop} />
-    </>
-  );
+  return <ContactSection locale={locale} site={site} content={content} heading="h1" />;
 }

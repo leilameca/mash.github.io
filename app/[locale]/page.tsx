@@ -1,4 +1,5 @@
 import { NewsCards } from "@/components/editorial/NewsCards";
+import { ContactSection } from "@/components/editorial/ContactSection";
 import { getNews } from "@/lib/editorial/queries";
 import { PublishedVisual } from "@/components/visual/PublishedVisual";
 import { readVisualPublication } from "@/lib/visual/queries";
@@ -20,10 +21,12 @@ import {
 import {
   getHomeHeroContent,
   getHomeSectionsContent,
+  getMarketingPageContent,
   getSiteChromeContent,
 } from "@/lib/supabase/site-content";
 import { notFound } from "next/navigation";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { ContentError } from "@/lib/supabase/errors";
 
 function splitWords(text: string) {
   return text.split(" ").map((word, index) => (
@@ -62,12 +65,19 @@ export default async function HomePage({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
-  const [visual, heroContent, site] = await Promise.all([
+  const [visual, heroContent, site, contactContent] = await Promise.all([
     readVisualPublication("home"),
     getHomeHeroContent(locale),
     getSiteChromeContent(locale),
+    getMarketingPageContent("contact", locale).catch((error: unknown) => {
+      if (error instanceof ContentError && error.code === "missing") return null;
+      throw error;
+    }),
   ]);
   const t = dictionary[locale].common;
+  const contact = contactContent && (
+    <ContactSection locale={locale} site={site} content={contactContent} />
+  );
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -98,6 +108,7 @@ export default async function HomePage({
       <>
         {structuredMarkup}
         <PublishedVisual doc={visual} locale={locale} />
+        {contact}
       </>
     );
 
@@ -481,6 +492,7 @@ export default async function HomePage({
           <NewsCards entries={news.slice(0, 3)} locale={locale} heading="h3" />
         </section>
       )}
+      {contact}
     </>
   );
 }

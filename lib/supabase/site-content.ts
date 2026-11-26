@@ -349,6 +349,11 @@ export async function getHomeSectionsContent(
     typeof shared[key] === "string" && shared[key]
       ? shared[key]
       : fallbackValue;
+  // Some published legacy bands predate the three photo fields.
+  const lifestyleImage = (key: string, legacyImage: string) =>
+    imageValue(key, shared.visible?.lifestyle === true && !Object.hasOwn(shared, key)
+      ? legacyImage
+      : "");
   return {
     ...defaults,
     visible: { ...defaults.visible, ...(shared.visible ?? {}) },
@@ -384,17 +389,17 @@ export async function getHomeSectionsContent(
         ? text.lifestyleLabelThree
         : defaults.lifestyleLabels[2],
     ],
-    lifestyleImageOne: imageValue(
+    lifestyleImageOne: lifestyleImage(
       "lifestyleImageOne",
-      defaults.lifestyleImageOne,
+      "/assets/images/cama-balinesa-trap.jpg",
     ),
-    lifestyleImageTwo: imageValue(
+    lifestyleImageTwo: lifestyleImage(
       "lifestyleImageTwo",
-      defaults.lifestyleImageTwo,
+      "/assets/images/rombois-set.jpg",
     ),
-    lifestyleImageThree: imageValue(
+    lifestyleImageThree: lifestyleImage(
       "lifestyleImageThree",
-      defaults.lifestyleImageThree,
+      "/assets/images/oculus-chaise.jpg",
     ),
     philosophyEyebrow: stringValue(
       "philosophyEyebrow",

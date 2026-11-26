@@ -506,7 +506,7 @@ h3 {
 .page-hero h1,
 .editorial-split h1,
 .editorial-split h2,
-.contact-page h1,
+.contact-page :is(h1, h2),
 .legal-page h1,
 .not-found h1 {
   color: var(--charcoal);
@@ -1084,7 +1084,7 @@ h3 {
   padding-top: calc(var(--header-h) + clamp(4rem, 7vw, 7rem));
 }
 
-.contact-page h1 {
+.contact-page :is(h1, h2) {
   max-width: 12ch;
 }
 
@@ -1520,7 +1520,7 @@ h3 {
   .page-hero h1,
   .editorial-split h1,
   .editorial-split h2,
-  .contact-page h1,
+  .contact-page :is(h1, h2),
   .legal-page h1,
   .not-found h1 {
     font-size: clamp(2rem, 10vw, 3.2rem);
