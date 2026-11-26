@@ -167,7 +167,14 @@ async function main() {
 
     const composer = await context.newPage();
     await composer.goto(origin + "/studio-mash/contenido/editor");
-    await composer.locator(".visual-frame [data-section=legacy-news]").waitFor();
+    await composer
+      .frameLocator('iframe[title="Lienzo de Inicio"]')
+      .locator("[data-section=legacy-news]")
+      .waitFor();
+    await composer
+      .getByRole("complementary", { name: "Propiedades" })
+      .getByRole("textbox", { name: "Título ES", exact: true })
+      .fill("Inicio editorial de prueba " + timestamp);
     const publishComposition = composer.waitForResponse(
       (response) => response.url().endsWith("/api/studio-visual") &&
         response.request().method() === "POST",
