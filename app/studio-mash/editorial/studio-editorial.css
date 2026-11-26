@@ -28,6 +28,15 @@
   font-weight: 650;
   display: block;
 }
+.editorial-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+.editorial-row-actions [role="alert"] {
+  flex-basis: 100%;
+}
 .editorial-admin-entry small,
 .editorial-editor-bar small {
   color: var(--studio-muted);
@@ -214,6 +223,9 @@
   .editorial-admin-rows li > img {
     width: 48px;
     height: 42px;
+  }
+  .editorial-row-actions {
+    grid-column: 1 / -1;
   }
   .editorial-editor-bar {
     position: static;

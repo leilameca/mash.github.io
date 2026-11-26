@@ -47,7 +47,7 @@ async function main() {
         res.url().endsWith("/api/studio-editorial") &&
         res.request().method() === "POST",
     );
-    if (["Publicar", "Archivar"].includes(name))
+    if (["Publicar", "Mover a papelera"].includes(name))
       studio.once("dialog", (dialog) => dialog.accept());
     await studio.getByRole("button", { name, exact: true }).click();
     const result = await response;
@@ -435,11 +435,27 @@ async function main() {
       );
     });
     await screenshots(studio, "05-anuncios-movil");
+    const announcementRow = studio.locator(".editorial-admin-rows li").filter({ hasText: "Aviso local" });
+    const remove = announcementRow.getByRole("button", { name: "Eliminar", exact: true });
+    studio.once("dialog", (dialog) => dialog.dismiss());
+    await remove.click();
+    assert.ok(await announcementRow.isVisible());
+    studio.once("dialog", (dialog) => dialog.accept());
+    await remove.click();
+    await announcementRow.waitFor({ state: "detached" });
+    await fresh.goto(origin + "/es/proyectos");
+    assert.equal(await fresh.getByText(message, { exact: true }).count(), 0);
+    await studio.getByRole("link", { name: "Papelera", exact: true }).click();
+    await announcementRow.getByRole("link", { name: "Abrir para restaurar" }).click();
+    await editorial("Restaurar como borrador");
+    await studio.getByText("Borrador guardado.", { exact: true }).waitFor();
+    await fresh.reload();
+    assert.equal(await fresh.getByText(message, { exact: true }).count(), 0);
     await studio.goto(origin + "/studio-mash/noticias/" + newsDraft.id);
-    await editorial("Archivar");
+    await editorial("Mover a papelera");
     assert.equal((await visitor.goto(newsUrl)).status(), 404);
     checks.push(
-      "Mobile Studio list fits and archive removes the public article",
+      "Mobile trash actions support cancellation, public removal, and restoring an announcement as a private draft",
     );
     assert.deepEqual(failures, []);
     writeFileSync(

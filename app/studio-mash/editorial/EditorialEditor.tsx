@@ -21,6 +21,7 @@ import type { EntryCopy } from "@/lib/editorial/queries";
 import { PageHeader } from "../StudioPrimitives";
 import { MediaImage } from "../multimedia/MediaImage";
 import { AssetField, RelatedChoices, type RelatedOption } from "./AssetFields";
+import { confirmEditorialTrash } from "./EditorialTrash";
 import "./studio-editorial.css";
 
 const emptyArticle: NewsData = {
@@ -192,7 +193,7 @@ export function EditorialEditor({
     setFeedback(null);
     setBusy(true);
     try {
-      const value = article
+      const value = intent === "archive" ? undefined : article
         ? { ...news, archived: false }
         : {
             ...announcement,
@@ -235,7 +236,7 @@ export function EditorialEditor({
         error: false,
         message:
           intent === "archive"
-            ? "Ficha archivada."
+            ? "Ficha movida a la papelera."
             : intent === "publish"
               ? "Versión publicada."
               : "Borrador guardado.",
@@ -256,7 +257,7 @@ export function EditorialEditor({
     draft: "Borrador",
     pending: "Cambios pendientes",
     published: "Publicado",
-    archived: "Archivado",
+    archived: "En papelera",
   };
   return (
     <>
@@ -295,7 +296,7 @@ export function EditorialEditor({
               className="admin-button admin-button--secondary"
               disabled={busy || uploading}
             >
-              Guardar borrador
+              {status === "archived" ? "Restaurar como borrador" : "Guardar borrador"}
             </button>
             <button
               type="submit"
@@ -797,11 +798,11 @@ export function EditorialEditor({
                     type="button"
                     className="admin-button admin-button--secondary"
                     onClick={() => {
-                      if (window.confirm("¿Archivar la versión guardada?"))
+                      if (confirmEditorialTrash(kind))
                         void commit("archive");
                     }}
                   >
-                    Archivar
+                    Mover a papelera
                   </button>
                 )}
               </section>

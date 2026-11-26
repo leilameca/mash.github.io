@@ -9,6 +9,7 @@ import {
 import { studioDate } from "@/lib/admin/presentation";
 import { PageHeader } from "../StudioPrimitives";
 import { MediaImage } from "../multimedia/MediaImage";
+import { EditorialTrash } from "./EditorialTrash";
 import "./studio-editorial.css";
 
 export type EditorialQuery = {
@@ -21,7 +22,7 @@ const states = {
   draft: "Borrador",
   pending: "Cambios pendientes",
   published: "Publicado",
-  archived: "Archivado",
+  archived: "Papelera",
 };
 export async function EditorialList({
   kind,
@@ -46,7 +47,7 @@ export async function EditorialList({
       (!q ||
         row.es.title?.toLocaleLowerCase().includes(q) ||
         row.key.includes(q)) &&
-      (!query.state || row.status === query.state) &&
+      (query.state ? row.status === query.state : row.status !== "archived") &&
       (!news || !query.category || row.value.category === query.category),
   );
   const page = Math.min(index, Math.max(1, Math.ceil(entries.length / 12)));
@@ -78,6 +79,9 @@ export async function EditorialList({
             Ver noticias públicas ↗
           </Link>
         )}
+        <Link className="admin-button admin-button--secondary" href={root + (query.state === "archived" ? "" : "?state=archived")}>
+          {query.state === "archived" ? "Volver al listado" : "Papelera"}
+        </Link>
         <Link className="admin-button" href={root + "/nuevo"}>
           ＋ {news ? "Nueva noticia" : "Nuevo anuncio"}
         </Link>
@@ -96,7 +100,7 @@ export async function EditorialList({
           <label>
             Estado{" "}
             <select name="state" defaultValue={query.state ?? ""}>
-              <option value="">Todos</option>
+              <option value="">Activos y borradores</option>
               {Object.entries(states).map(([key, label]) => (
                 <option key={key} value={key}>
                   {label}
@@ -166,12 +170,15 @@ export async function EditorialList({
                   >
                     {states[entry.status]}
                   </span>
-                  <Link
-                    className="admin-button admin-button--secondary"
-                    href={root + "/" + entry.id}
-                  >
-                    Editar
-                  </Link>
+                  <div className="editorial-row-actions">
+                    <Link
+                      className="admin-button admin-button--secondary"
+                      href={root + "/" + entry.id}
+                    >
+                      {entry.status === "archived" ? "Abrir para restaurar" : "Editar"}
+                    </Link>
+                    {entry.status !== "archived" && <EditorialTrash kind={kind} id={entry.id} revision={entry.revision} />}
+                  </div>
                 </li>
               );
             })}
@@ -179,7 +186,9 @@ export async function EditorialList({
         ) : (
           <div className="studio-empty">
             <h2>
-              {q || query.state || query.category
+              {query.state === "archived" && !q && !query.category
+                ? "La papelera está vacía"
+                : q || query.state || query.category
                 ? "No hay coincidencias"
                 : news
                   ? "Aún no hay noticias"
