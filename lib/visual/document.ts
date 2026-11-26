@@ -60,6 +60,35 @@ export function fromSnapshot(
 }
 
 export type LegacyRows = Record<string, ContentSnapshot>;
+
+export function recoverPublishedHomeEnglish(
+  doc: VisualDocumentData,
+  rows: LegacyRows,
+): VisualDocumentData {
+  if (doc.page !== "home" || doc.englishReady) return doc;
+  const approved = Object.fromEntries(
+    Object.entries(rows).map(([key, row]) => [
+      key,
+      {
+        ...row,
+        translations: row.translations.filter(
+          (entry) => entry.locale === "es" || entry.translation_status === "complete",
+        ),
+      },
+    ]),
+  );
+  const original = adaptLegacy("home", approved);
+  const inheritedEnglish = Object.fromEntries(
+    Object.entries(doc.es).flatMap(([key, current]) => {
+      const english = original.en[key];
+      return english && current.trim() === original.es[key]?.trim()
+        ? [[key, english]]
+        : [];
+    }),
+  );
+  return { ...doc, inheritedEnglish };
+}
+
 export function adaptLegacy(
   page: VisualPage,
   rows: LegacyRows,

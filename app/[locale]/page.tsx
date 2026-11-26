@@ -44,14 +44,21 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const hero = await getHomeHeroContent(locale);
+  const [hero, visual] = await Promise.all([
+    getHomeHeroContent(locale),
+    readVisualPublication("home"),
+  ]);
+  const english = visual?.englishReady ? visual.en : visual?.inheritedEnglish;
+  const content = locale === "en" ? english : visual?.es;
+  const title = content?.["legacy-hero__title"] || hero.title;
+  const description = content?.["legacy-hero__body"] || hero.description;
   return {
-    title: hero.title,
-    description: hero.description,
+    title,
+    description,
     alternates: routeAlternates(locale),
     openGraph: {
-      title: hero.title,
-      description: hero.description,
+      title,
+      description,
       url: `${siteOrigin()}/${locale}`,
       images: hero.image ? [{ url: hero.image }] : [],
     },

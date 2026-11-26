@@ -14,11 +14,14 @@ export async function PublishedVisual({
     visualItems(),
     visualChrome(locale),
   ]);
+  const pendingEnglish = !doc.englishReady && Object.entries(doc.es).some(
+    ([key, value]) => value && !doc.inheritedEnglish?.[key],
+  );
   return (
     <>
-      {locale === "en" && !doc.englishReady && (
+      {locale === "en" && pendingEnglish && (
         <p role="status" className="section-shell">
-          English translation pending review. Showing the Spanish original.
+          Some sections may appear in Spanish while their English translations are reviewed.
         </p>
       )}
       <VisualDocument doc={doc} items={items} chrome={chrome} locale={locale} />

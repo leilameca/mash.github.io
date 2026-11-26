@@ -149,8 +149,11 @@ export function VisualDocument({
     : undefined;
   const textFor = (section: VisualSection, field: TextField) => {
     const key = fieldId(section.id, field);
-    return (locale === "en" && (preview || doc.englishReady) ? doc.en[key] : "") ||
-      doc.es[key] || "";
+    if (locale === "en") {
+      const english = preview || doc.englishReady ? doc.en : doc.inheritedEnglish;
+      return english?.[key] || doc.es[key] || "";
+    }
+    return doc.es[key] || "";
   };
   const firstHeading = blocks.find(
     (b) => b.visible && doc.es[fieldId(b.id, "title")] && b.type !== "faq",

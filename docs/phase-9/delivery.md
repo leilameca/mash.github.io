@@ -1,5 +1,11 @@
 # Entrega técnica y operación de MASH 3.0
 
+## Corrección de Inicio del 26 de noviembre de 2026
+
+- La portada y la franja de inspiración comparten componentes entre la composición de Studio y la web. Las fotos de la portada quedan dentro de sus dos marcos. La publi­cación de una composición inicial sin cambios conserva la versión vigente. La sección Contacto se muestra antes de la llamada a cotizar en el pie.
+- La migración marcó como pendientes traducciones que el sitio anterior ya mostraba. Inicio conserva los textos ingleses de las instantáneas históricas identificadas por sus huellas y solo cuando el español coincide. Un texto nuevo sigue el proceso de revisión. El cambio no modifica traducciones ni publicaciones en Supabase.
+- GA4 Data API respondió para 7, 30 y 90 días sin devolver eventos comerciales. Las credenciales de lectura se configuraron en Vercel Production. La recogida de visitas sigue pendiente de contrastar Medición mejorada y GTM. La traducción automática requiere la variable sensible `MASH_DEEPL_API_KEY`.
+
 ## Despliegue del 26 de noviembre de 2026
 
 - Dominio activo en [Vercel](https://vercel.com/leilanys-projects-12493bd9/mash-github-io/4e5HsdepRgWtuCa7btryQ2YX3EG7) con el SHA de código `bd9037907f07d7391d7772ac1a820af2593d5736`. El candidato se construyó con la configuración de producción y sin asignar el dominio hasta la validación. Se promovió el despliegue `dpl_4e5HsdepRgWtuCa7btryQ2YX3EG7`. La versión anterior `dpl_53GgEveLPUhttXEXJ7b4F2191KAu` queda como referencia de reversión. El procedimiento de reintroducir compatibilidad con la versión anterior requiere pausar Studio y conciliar los cambios hechos después del corte.

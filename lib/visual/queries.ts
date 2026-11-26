@@ -1,21 +1,60 @@
 import { getNews, getAnnouncements } from "@/lib/editorial/queries";
 import "server-only";
+import { createHash } from "node:crypto";
 import { cache } from "react";
 import { authenticatedContentClient } from "@/lib/supabase/persistence";
 import {
   localizedTranslation,
   readPublished,
-  type ContentSnapshot,
+  type Publication,
 } from "@/lib/supabase/published";
 import { getSiteChromeContent } from "@/lib/supabase/site-content";
 import type { Locale } from "@/lib/i18n";
-import { adaptLegacy, fromSnapshot, type LegacyRows } from "./document";
+import {
+  adaptLegacy,
+  fromSnapshot,
+  recoverPublishedHomeEnglish,
+  type LegacyRows,
+} from "./document";
 import {
   visualKey,
   type VisualChrome,
   type VisualItem,
   type VisualPage,
 } from "./schema";
+
+// The migration set a review status on both languages of the legacy public
+// Home. These digests identify the exact bilingual version-0 text served before
+// cutover. Any later edit must follow the regular review flow.
+const historicHomeText: Record<string, string> = {
+  "home.hero": "2d5767fa7cc498cdb16279123bc4b3e91b1216d920f3daa7bc9091048c8789d2",
+  "home.sections": "540b91efef3a338769c7caa7dce73664317e9a22fb75776cdeff9a24a958368a",
+};
+
+function publicHomeSources(rows: Publication[]): LegacyRows {
+  return Object.fromEntries(
+    rows
+      .filter(({ slug }) => slug === "home.hero" || slug === "home.sections")
+      .map(({ slug, snapshot }) => {
+        const contents = ["es", "en"].map((locale) =>
+          Object.entries(
+            snapshot.translations.find((row) => row.locale === locale)?.value ?? {},
+          ).sort(([left], [right]) => left.localeCompare(right, "en")),
+        );
+        const digest = createHash("sha256").update(JSON.stringify(contents)).digest("hex");
+        if (digest !== historicHomeText[slug]) return [slug, snapshot];
+        return [
+          slug,
+          {
+            ...snapshot,
+            translations: snapshot.translations.map((row) =>
+              row.locale === "en" ? { ...row, translation_status: "complete" } : row,
+            ),
+          },
+        ];
+      }),
+  );
+}
 
 export const visualItems = cache(async (): Promise<VisualItem[]> => {
   const groups = await Promise.all(
@@ -126,21 +165,21 @@ export async function readVisualDraft(page: VisualPage) {
     };
   }
   if (page === "home") {
-    const publicHome = (await readPublished("site")).filter(
-      (row) => row.slug === "home.hero" || row.slug === "home.sections",
-    );
     return {
-      doc: adaptLegacy(page, Object.fromEntries(publicHome.map((row) => [row.slug, row.snapshot]))),
+      doc: adaptLegacy(page, publicHomeSources(await readPublished("site"))),
       publishedRevision: null,
     };
   }
   return { doc: adaptLegacy(page, rows), publishedRevision: null };
 }
 export async function readVisualPublication(page: VisualPage) {
-  const publication = (await readPublished("site")).find(
+  const rows = await readPublished("site");
+  const publication = rows.find(
     (row) => row.slug === visualKey(page),
   );
-  return publication
-    ? fromSnapshot(publication.snapshot as ContentSnapshot, 0)
-    : null;
+  const doc = publication && fromSnapshot(publication.snapshot, 0);
+  if (!doc || doc.englishReady) return doc ?? null;
+  const publicDocument = { ...doc, en: {} };
+  if (page !== "home") return publicDocument;
+  return recoverPublishedHomeEnglish(publicDocument, publicHomeSources(rows));
 }

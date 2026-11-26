@@ -216,6 +216,7 @@ export type VisualDocumentData = {
   revision: number;
   id?: string;
   englishReady?: boolean;
+  inheritedEnglish?: VisualText;
 };
 type Meta = {
   label: string;

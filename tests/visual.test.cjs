@@ -4,7 +4,7 @@ const { resolve } = require("node:path");
 const { loadTs } = require("./support/load-ts.cjs");
 const { database, OUTSIDER } = require("./support/database.cjs");
 const registry = loadTs(resolve("lib/visual/schema.ts"));
-const { adaptLegacy, fromSnapshot } = loadTs(resolve("lib/visual/document.ts"));
+const { adaptLegacy, fromSnapshot, recoverPublishedHomeEnglish } = loadTs(resolve("lib/visual/document.ts"));
 const {
   historyReducer,
   beginHistory,
@@ -15,6 +15,31 @@ const {
 } = loadTs(resolve("lib/visual/history.ts"));
 const { translationFields } = loadTs(resolve("lib/translation/content.ts"));
 const block = (type, id) => registry.newSection(type, id);
+test("a pending Home composition can inherit only matching, previously approved English", () => {
+  const rows = {
+    "home.hero": {
+      value: {},
+      translations: [
+        { locale: "es", value: { title: "Exterior", description: "Descripción anterior" } },
+        { locale: "en", translation_status: "complete", value: { title: "Outdoors", description: "Previous description" } },
+      ],
+    },
+    "home.sections": {
+      value: {},
+      translations: [
+        { locale: "es", value: { introTitle: "Bienvenidos" } },
+        { locale: "en", translation_status: "pending", value: { introTitle: "Unreviewed text" } },
+      ],
+    },
+  };
+  const doc = adaptLegacy("home", rows);
+  doc.es["legacy-hero__body"] = "Descripción nueva";
+  doc.englishReady = false;
+  const { inheritedEnglish } = recoverPublishedHomeEnglish(doc, rows);
+  assert.equal(inheritedEnglish["legacy-hero__title"], "Outdoors");
+  assert.equal(inheritedEnglish["legacy-hero__body"], undefined);
+  assert.equal(inheritedEnglish["legacy-intro__title"], undefined);
+});
 test("saved legacy home galleries recover missing lifestyle photos without changing custom galleries", () => {
   const first = block("gallery", "legacy-lifestyle-one");
   const second = { ...block("gallery", "legacy-lifestyle-two"), media: ["/assets/images/oasis-set.jpg"] };
