@@ -15,6 +15,23 @@ const {
 } = loadTs(resolve("lib/visual/history.ts"));
 const { translationFields } = loadTs(resolve("lib/translation/content.ts"));
 const block = (type, id) => registry.newSection(type, id);
+test("saved legacy home galleries recover missing lifestyle photos without changing custom galleries", () => {
+  const first = block("gallery", "legacy-lifestyle-one");
+  const second = { ...block("gallery", "legacy-lifestyle-two"), media: ["/assets/images/oasis-set.jpg"] };
+  const third = { ...block("gallery", "legacy-lifestyle-three"), visible: false };
+  const custom = block("gallery", "custom-gallery");
+  const composition = { schema: 1, sections: [
+    block("navigation", "header"), first, second, third, custom, block("footer", "footer"),
+  ] };
+  const doc = fromSnapshot({ key: "visual.home", value: { composition }, translations: [] }, 0);
+  assert.ok(doc);
+  assert.equal(doc.layout.sections[1].media[0], "/assets/images/cama-balinesa-trap.jpg");
+  assert.equal(doc.layout.sections[2].media[0], "/assets/images/oasis-set.jpg");
+  assert.equal(doc.layout.sections[3].visible, false);
+  assert.equal(doc.layout.sections[3].media[0], "/assets/images/oculus-chaise.jpg");
+  assert.equal(doc.layout.sections[4].media.length, 0);
+});
+
 function sample() {
   const hero = {
     ...block("hero", "photo-hero"),

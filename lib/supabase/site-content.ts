@@ -16,6 +16,8 @@ export type SiteNavigationItem = {
   label: string;
 };
 
+import { legacyLifestylePhotos } from "@/lib/lifestyle-images";
+
 export type SiteChromeContent = {
   fullName: string;
   phone: string;
@@ -391,15 +393,15 @@ export async function getHomeSectionsContent(
     ],
     lifestyleImageOne: lifestyleImage(
       "lifestyleImageOne",
-      "/assets/images/cama-balinesa-trap.jpg",
+      legacyLifestylePhotos.one,
     ),
     lifestyleImageTwo: lifestyleImage(
       "lifestyleImageTwo",
-      "/assets/images/rombois-set.jpg",
+      legacyLifestylePhotos.two,
     ),
     lifestyleImageThree: lifestyleImage(
       "lifestyleImageThree",
-      "/assets/images/oculus-chaise.jpg",
+      legacyLifestylePhotos.three,
     ),
     philosophyEyebrow: stringValue(
       "philosophyEyebrow",

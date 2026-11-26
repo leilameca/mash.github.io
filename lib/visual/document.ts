@@ -1,4 +1,5 @@
 import { dictionary } from "@/lib/content";
+import { legacyLifestylePhotos } from "@/lib/lifestyle-images";
 import type { Locale } from "@/lib/i18n";
 import type { ContentSnapshot } from "@/lib/supabase/published";
 import {
@@ -22,6 +23,14 @@ export function fromSnapshot(
 ): VisualDocumentData | null {
   const layout = layoutSchema.safeParse(snapshot.value?.composition);
   if (!layout.success) return null;
+  const page = pageSchema.catch("home").parse(snapshot.key?.slice(7));
+  const sections = layout.data.sections.map((section) => {
+    if (page !== "home" || section.type !== "gallery" || section.media.length)
+      return section;
+    const slot = /^legacy-lifestyle-(one|two|three)$/.exec(section.id)?.[1] as
+      keyof typeof legacyLifestylePhotos | undefined;
+    return slot ? { ...section, media: [legacyLifestylePhotos[slot]] } : section;
+  });
   const read = (locale: Locale) => {
     const row = snapshot.translations.find((t) => t.locale === locale);
     const value = visualTextSchema.safeParse(row?.value ?? {});
@@ -38,8 +47,8 @@ export function fromSnapshot(
     );
   };
   return {
-    layout: layout.data,
-    page: pageSchema.catch("home").parse(snapshot.key?.slice(7)),
+    layout: { ...layout.data, sections },
+    page,
     es: read("es"),
     en: read("en"),
     revision,
