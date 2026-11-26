@@ -1,0 +1,50 @@
+{
+  "capturedAt": "2026-11-24T15:15:09.122261+00:00",
+  "branch": "feature/mash-3",
+  "baseCommit": "fc2a2b499afc2db4f46d0bac12c65104683090ec",
+  "typecheck": {
+    "command": "npm run typecheck",
+    "passed": true
+  },
+  "build": {
+    "command": "npm run build",
+    "passed": true,
+    "next": "15.5.29"
+  },
+  "automatedTests": {
+    "total": 68,
+    "passed": 68,
+    "failed": 0,
+    "originalScenariosPreserved": 43,
+    "realPostgreSQL": true,
+    "hostedAuthVerified": false,
+    "authAndStorageBoundariesSimulatedInActionIntegration": true
+  },
+  "browser": {
+    "publicResponsiveGalleryQuote": true,
+    "adminComponentsResponsiveAndErrors": true,
+    "pwaInstallOfflineRecovery": true,
+    "adminServicesSimulated": true
+  },
+  "httpEvidence": "http-evidence.json",
+  "restoreEvidence": "restore-evidence.json",
+  "backupEvidence": "backup-verification.json",
+  "runtimeDependencyAudit": {
+    "vulnerabilities": 0,
+    "command": "npm audit --omit=dev"
+  },
+  "production": {
+    "deployed": false,
+    "migrationsApplied": false,
+    "environmentChanged": false,
+    "authChanged": false,
+    "dnsChanged": false
+  },
+  "pending": [
+    "Full Supabase staging integration with hosted Auth/PostgREST/Storage",
+    "Hosted eight-digit OTP configuration and Resend delivery: configuration read denied",
+    "Full platform/Auth backup before any live migration",
+    "Approval for Production configuration/migration/deployment"
+  ],
+  "phase3Started": false
+}

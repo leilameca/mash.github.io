@@ -17,8 +17,10 @@ async function availablePort() {
 async function main() {
   const port = await availablePort();
   const origin = `http://localhost:${port}`;
+  const backend=await require('./support/data-api.cjs').dataApi();
+  const isolatedEnv={...process.env,NEXT_PUBLIC_SUPABASE_URL:backend.url,NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:'isolated-test-key',NEXT_PUBLIC_SUPABASE_ANON_KEY:'',SUPABASE_SERVICE_ROLE_KEY:''};
   const server = spawn(process.execPath, [require.resolve("next/dist/bin/next"), "start", "--port", String(port)], {
-    windowsHide: true, stdio: ["ignore", "pipe", "pipe"]
+    env:isolatedEnv, windowsHide: true, stdio: ["ignore", "pipe", "pipe"]
   });
   let serverOutput = "";
   server.stdout.on("data", (chunk) => { serverOutput += chunk; });
@@ -89,7 +91,7 @@ async function main() {
     console.log("Offline notices pass in both languages; reconnecting restores the live site. No catalog or admin pages were cached.");
   } finally {
     await browser?.close();
-    server.kill();
+    server.kill(); await backend.close();
     const profileRelative = path.relative(profileRoot, path.resolve(profileDir));
     if (!profileRelative.startsWith("..") && !path.isAbsolute(profileRelative) && path.basename(profileDir).startsWith("mash-pwa-test-")) {
       fs.rmSync(profileDir, { recursive: true, force: true });

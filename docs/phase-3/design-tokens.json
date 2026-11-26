@@ -1,0 +1,50 @@
+{
+  "font": "Outfit",
+  "baseUnitPx": 8,
+  "spacingPx": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    32,
+    40,
+    48
+  ],
+  "typePx": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    18,
+    25,
+    28,
+    36
+  ],
+  "radiiPx": [
+    4,
+    6,
+    8,
+    10
+  ],
+  "light": {
+    "background": "#f5f6f3",
+    "surface": "#ffffff",
+    "text": "#202a25",
+    "muted": "#5e6b63",
+    "border": "#dce3dc",
+    "accent": "#235d43"
+  },
+  "dark": {
+    "background": "#141b17",
+    "surface": "#1c2520",
+    "text": "#edf2ed",
+    "muted": "#aebdb2",
+    "border": "#35443a",
+    "accent": "#9ed2ae"
+  },
+  "motion": "Reduced-motion disables transitions and animations",
+  "responsive": "Mobile drawer at <=800px; compact desktop sidebar can collapse"
+}

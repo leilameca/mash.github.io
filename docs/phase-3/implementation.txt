@@ -1,0 +1,74 @@
+MASH 3.0 — Fase 3: reconstrucción de MASH Studio
+Fecha: 24 de noviembre de 2026. Rama: feature/mash-3.
+Base de esta fase: 4443e23361c9452bf93ba1888d019ed9eb52081d.
+main preservada en fc2a2b499afc2db4f46d0bac12c65104683090ec.
+
+ALCANCE Y ENTORNO
+Implementación local del Studio y de una migración complementaria. No se ha desplegado, aplicado SQL remoto, cambiado Auth, OTP, Resend, DNS, allowlist ni otros proyectos. La aprobación local de Fase 2 se conserva. No comienza Fase 4.
+La carpeta privada .audit-backups mantiene el respaldo de Fase 2. Se repitió su restauración en PostgreSQL/WASM con todas las migraciones, el mapper público y los ocho productos publicados: ver restore-evidence.json. No se afirma un nuevo backup remoto ni una recuperación PITR/Auth que no se haya realizado.
+
+DECISIONES DE DISEÑO
+Interfaz administrativa con superficies neutras, tipografía Outfit ya instalada, acento verde y jerarquía compacta. Sidebar agrupada, tabla en escritorio y filas adaptadas como tarjetas en móvil. Se tomaron patrones de navegación y edición de las referencias, sin copiar su identidad ni sus datos.
+Tokens semánticos para fondo, superficie, texto, texto secundario, borde, acento, estados, radio y sombra. Tema inicial del sistema, cambio claro/oscuro y preferencia persistida por navegador. Barra lateral contraíble con preferencia persistida; en móvil se convierte en un diálogo con Escape, gestión de foco, bloqueo del fondo y devolución del foco al botón de apertura.
+El CSS público se importa desde el layout de idioma. El layout raíz comparte únicamente el reset base; los estilos nuevos administrativos se limitan a studio-root. Se conserva la presentación pública y la PWA.
+
+COMPONENTES Y DATOS
+StudioShell, StudioSidebar, StudioNav y StudioHeader: navegación, breadcrumb, sesión, cierre de sesión y acceso al sitio público.
+StudioTheme, ThemeToggle y ThemePreferences: sistema/tema y persistencia.
+PageHeader, StatusBadge y EmptyState: estados y encabezados compartidos.
+EntryList: búsqueda GET, filtro de publicación, orden y paginación de 20 registros en el servidor; miniatura, colección, fecha, estado de trabajo, estado público y acciones contextuales.
+PublicationNotice: revisión de trabajo, revisión pública que sigue visible, historial y enlace público.
+El catálogo confirma el guardado en la respuesta de la acción y carga una página nueva después de COMMIT. Esto actualiza las revisiones del editor y evita conservar una vista pendiente tras la operación. La restauración vuelve al historial actualizado, conservando la publicación anterior.
+FormActions, FormSafety, SubmissionIntent y ConflictHelp: acciones editoriales, intención explícita, prevención de duplicados, advertencias de cambios sin guardar y acceso a la versión reciente sin perder los campos actuales.
+lib/admin/queries: lecturas administrativas y agregados; presentation: etiquetas, fechas y diferencias; navigation: definición de módulos.
+El dashboard muestra totales reales de productos, colecciones y proyectos, estados, publicaciones, trabajo pendiente, traducciones y actividad disponible. Una lectura fallida lanza el estado de error; no se sustituye por contadores cero.
+Historial global y por entidad, revisión pública identificada, autor disponible o autor no registrado, fecha persistida, comparación editorial con la revisión anterior disponible, snapshot legible y restauración confirmada a una nueva copia de trabajo. Cuando la revisión anterior queda fuera de la página se indica expresamente.
+Configuración separa identidad/contacto/redes/footer, preferencias y cuenta/seguridad. Sitio web conserva los formularios de portada, navegación, páginas y secciones. Noticias, API de traducción y analítica se identifican como pendientes, sin métricas ni controles simulados.
+
+INTEGRIDAD Y SEGURIDAD
+Migración nueva: supabase/migrations/20261124152602_mash_studio_security_contract.sql. No se modifica la migración histórica de Fase 2.
+1. Se revoca DML directo de anon/authenticated sobre contenido, traducciones, galerías, publicaciones, revisiones y redirecciones. El contrato transaccional sigue siendo obligatorio incluso para un administrador.
+2. public.save_mash_content sigue siendo invoker. Delega a una única función privada definer, con search_path vacío, identidad Auth y allowlist obligatorias, que valida y llama al motor transaccional original. No permite SQL arbitrario ni privilegios generales. restore sigue siendo invoker.
+3. anon no puede leer las tablas de snapshots completos. published_content y published_redirects son proyecciones con derechos del propietario, predicado publicado obligatorio y columnas editoriales expresamente seleccionadas. No exponen autores, versiones internas ni IDs internos de traducciones/galerías. Los IDs opacos de entidad/colección siguen disponibles para relacionar el catálogo.
+4. studio_entries y studio_summary son vistas security_invoker: aplican los permisos/RLS del administrador actual. Un usuario autenticado ajeno no puede leer el trabajo privado.
+5. El origen HTTPS de Storage se registra por el propietario en private.mash_environment, sin acceso de clientes. Las imágenes deben usar ese origen exacto, bucket y carpeta permitidos; se rechazan otros proyectos, dominios parecidos, esquemas no autorizados y traversal. La publicación vuelve a validar las imágenes efectivas existentes. Las rutas locales se restringen a assets/images.
+6. Restaurar CMS reemplaza valores compartidos y traducidos; elimina propiedades añadidas después de la revisión elegida.
+7. Las rutas publicadas e históricas quedan reservadas a la entidad original. Bloqueos de reserva y el contrato de concurrencia evitan apropiaciones; recuperar la ruta propia no crea una redirección a sí misma.
+
+Referencia técnica de las decisiones de vistas y funciones:
+https://www.postgresql.org/docs/17/sql-createview.html
+https://supabase.com/docs/guides/database/functions
+
+MIGRACIÓN HOSTED PENDIENTE
+Esta migración solo se ejecutó en PostgreSQL/WASM aislado. Antes de una futura aplicación autorizada: verificar respaldo del entorno destino, revisar grants/roles y probar la migración en staging. El propietario debe provisionar private.mash_environment.storage_origin con el origen HTTPS exacto del mismo proyecto configurado en la aplicación. Hasta entonces las escrituras HTTPS de medios fallan de forma explícita. La UI y las vistas nuevas requieren aplicar este contrato antes de un despliegue conjunto.
+No se afirma validación de PostgREST hospedado, entrega OTP, correo real ni uploads contra Storage real. Esas pruebas requieren el entorno hosted y su autorización de cambio correspondiente.
+
+VALIDACIÓN Y EVIDENCIA
+Los 68 escenarios anteriores se conservan. Se actualizan las aserciones de navegación de las acciones de catálogo para comprobar el acuse de éxito después de COMMIT; los mismos escenarios siguen verificando los datos y las transacciones. Las pruebas SQL nuevas cubren DML prohibido, proyección pública, aislamiento, origen, restauración exacta y propiedad de rutas.
+SQL real: PostgreSQL/WASM, migraciones, funciones, restricciones, RLS, revisiones, rollback y concurrencia.
+Integración de acciones: código real de acciones/persistencia/decodificación de imagen, con Auth y Storage simulados y SQL real.
+Navegador Studio: build de producción real y páginas/componentes reales; fachada Data API/Auth solo de pruebas sobre SQL real. El listado vacío de Storage se simula para comprobar la navegación del módulo Multimedia; no se afirman uploads hosted. El token y los usuarios son sintéticos y no validan Supabase Auth hosted. No existe acceso alternativo en el código de producción.
+Ver validation.json, unit-results.txt, browser-evidence.json y public-http-regression.json para los resultados finales. Los contactos del fixture administrativo usan datos reservados isolated.invalid.
+
+LÍMITES
+Sin biblioteca multimedia avanzada, multicolecciones, variantes de imagen, traducción automática, drag and drop de páginas, programación de noticias, editor avanzado del mapa ni Analytics real. El orden de imágenes existente y la biblioteca básica se conservan.
+La comparación de historial usa diferencias de campos y arrays completos; no ofrece un editor de fusiones. Un conflicto conserva las entradas y permite abrir la versión reciente; no sobrescribe ni reintenta automáticamente.
+No se ejecuta una auditoría completa con lector de pantalla ni en dispositivos físicos. La evidencia responsive procede de Chrome real con viewports emulados; las pruebas de teclado, foco, cambios sin guardar y movimiento reducido complementan esa revisión.
+
+CHECKLIST DE ACEPTACIÓN
+[x] Arquitectura de publicación explícita y transacciones preservadas.
+[x] Navegación agrupada, sidebar desktop/móvil y cuenta.
+[x] Tema claro/oscuro/sistema persistido.
+[x] Dashboard con lecturas reales y errores explícitos.
+[x] Listados de productos/colecciones/proyectos con estados y controles reales.
+[x] Formularios con guardado separado de publicación y conflicto sin perder entradas.
+[x] Historial global/por entidad y restauración como nueva copia de trabajo.
+[x] Configuración y módulos futuros claramente identificados.
+[x] Migración complementaria, sin DML remoto ni cambios en Auth/correo/DNS.
+[x] Capturas reales y distinción de pruebas locales/simuladas/hosted.
+[ ] Validación hosted y despliegue: pendientes de una autorización futura.
+
+ENTREGA GIT
+El SHA final y la verificación del push se informan en la respuesta de entrega. Los cambios previos en skills-lock.json, .agents/skills/brag y brag-output no forman parte del commit de esta fase.
+
+Comandos de reproducción: npm run typecheck; npm run build; npm run test:all; npm run test:phase3:browser; npm run test:ux; npm run test:pwa:browser; npm run test:phase2:http. Para dirigir evidencia HTTP/restore a esta fase, establecer MASH_EVIDENCE_DIR=docs/phase-3.

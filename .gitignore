@@ -5,3 +5,26 @@ dist
 *.tsbuildinfo
 .env*
 !.env.example
+
+.audit-backups/
+.test-artifacts/
+
+.next-preview/
+.next-verify/
+
+.next-preview-*/
+
+# Regenerable browser recordings, traces and performance reports
+/docs/phase-*/screenshots/
+/docs/phase-*/regression/screenshots/
+/playwright-report/
+/playwright/.cache/
+/test-results/
+/coverage/
+/brag-output-*/
+*.har
+*.log
+*.trace
+
+# Private browser sessions used for protected staging verification
+/playwright/.auth/

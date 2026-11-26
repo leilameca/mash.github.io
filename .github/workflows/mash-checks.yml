@@ -1,0 +1,62 @@
+name: MASH checks
+
+on:
+  push:
+    branches: ["feature/mash-3"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mash-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      MASH_VERIFICATION_BUILD: "1"
+      MASH_PREVIEW_PORT: "3051"
+      MASH_PREVIEW_URL: http://localhost:3051
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:all
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npx playwright install --with-deps chromium
+      - name: Run isolated browser regressions
+        shell: bash
+        run: |
+          mkdir -p .test-artifacts/ci
+          node tests/support/preview-server.cjs >.test-artifacts/ci/preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..45}; do
+            if curl --silent --fail --max-time 2 "$MASH_PREVIEW_URL/__preview__/enter" >/dev/null; then
+              break
+            fi
+            kill -0 "$preview_pid"
+            sleep 1
+          done
+          curl --silent --show-error --fail --max-time 2 "$MASH_PREVIEW_URL/__preview__/enter" >/dev/null
+          node tests/phase8-public-media.cjs
+          node tests/phase8-studio-themes.cjs
+          node tests/phase8-quote-browser.cjs
+      - uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: mash-checks-diagnostics
+          path: |
+            .test-artifacts/ci/preview.log
+            .test-artifacts/phase8-close/
+          retention-days: 3
+          if-no-files-found: ignore

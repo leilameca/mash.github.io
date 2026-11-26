@@ -1,0 +1,13 @@
+{
+  "testedAt": "2026-11-24T18:19:05.216Z",
+  "browser": "Chrome",
+  "syntheticData": true,
+  "environment": "Next local, PostgreSQL aislado, Auth y Storage simulados",
+  "checks": [
+    "Dos originales cargados con progreso individual y Sharp",
+    "Selección de biblioteca, orden por teclado, portada, borrador y colecciones persistentes",
+    "Publicación explícita en español con SEO y presencia en ambas colecciones",
+    "Detalle con derivados y original exacto, rechazo visible de archivo inválido",
+    "Pestañas por teclado y filtro de entidad con comparación expandible"
+  ]
+}

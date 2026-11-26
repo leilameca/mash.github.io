@@ -1,0 +1,69 @@
+{
+  "capturedAt": "2026-11-24T16:21:01.615280+00:00",
+  "phase": 3,
+  "scope": "Local implementation only; no hosted migrations or deployment",
+  "branch": "feature/mash-3",
+  "phaseBaseCommit": "4443e23361c9452bf93ba1888d019ed9eb52081d",
+  "mainUnchanged": "fc2a2b499afc2db4f46d0bac12c65104683090ec",
+  "productionModified": false,
+  "typecheck": {
+    "passed": true,
+    "command": "npm run typecheck"
+  },
+  "build": {
+    "passed": true,
+    "command": "npm run build",
+    "next": "15.5.29"
+  },
+  "automatedTests": {
+    "total": 74,
+    "passed": 74,
+    "failed": 0,
+    "previousPhaseScenariosPreserved": 68,
+    "additionalTestsIncludingSuiteParent": 6,
+    "evidence": "unit-results.txt",
+    "realPostgreSQL": true,
+    "authAndStorageBoundariesSimulated": true,
+    "hostedAuthVerified": false
+  },
+  "browser": {
+    "passed": true,
+    "command": "npm run test:phase3:browser",
+    "evidence": "browser-evidence.json",
+    "screenshots": 10,
+    "viewports": 10,
+    "nativeActionTransport": true,
+    "realNextProductionPages": true,
+    "authDataApiFacade": true,
+    "storageListSimulatedEmpty": true,
+    "hostedSupabaseVerified": false,
+    "passedFlowChecks": 15,
+    "minimumMeasuredContrast": 5.15
+  },
+  "regressions": {
+    "adminClientComponents": true,
+    "publicResponsiveGalleryQuote": true,
+    "publicHttp404308503AndDraftIsolation": true,
+    "pwaInstallOfflineRecovery": true,
+    "phase2EvidenceUnchanged": true
+  },
+  "backupRestore": {
+    "passed": true,
+    "evidence": "restore-evidence.json",
+    "hostedAuthRestored": false,
+    "publishedProducts": 8
+  },
+  "migration": {
+    "file": "supabase/migrations/20261124152602_mash_studio_security_contract.sql",
+    "appliedOnlyToIsolatedPostgreSQL": true,
+    "hostedApplicationPending": true,
+    "trustedStorageOriginMustBeProvisionedByOwner": true
+  },
+  "phase4Started": false,
+  "limitations": [
+    "Hosted Auth/OTP and Storage integration remain unverified",
+    "No deployment or real database mutation",
+    "Screen-reader and physical-device audits are not claimed",
+    "Advanced modules remain outside Phase 3"
+  ]
+}

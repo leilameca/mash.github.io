@@ -1,0 +1,252 @@
+MASH 3.0 — Fase 2: integridad, sincronización y publicación
+Fecha: 24 de noviembre de 2026
+Rama: feature/mash-3
+
+ESTADO Y ALCANCE
+
+Implementación local y pruebas aisladas. No se aplicó ninguna migración remota,
+no se modificaron datos reales, DNS, Auth, OTP, Resend ni variables de Vercel.
+No se desplegó en Production, no se hizo merge a main y no comenzó la Fase 3.
+La producción existente mantiene su comportamiento hasta aprobar la puesta en marcha.
+
+La configuración remota de Auth no pudo consultarse: config pull --dry-run devolvió
+Access denied / ConfigPullReadStatusError. No se intentó modificarla ni sortear sus
+permisos. La longitud hosted del OTP y la entrega efectiva por Resend quedan pendientes
+de comprobación por alguien con acceso. El código sigue validando ocho dígitos.
+
+IMPLEMENTACIÓN
+
+1. Supabase es la única fuente operativa del contenido administrable.
+   Los lectores públicos consultan content_publications. No leen los arrays legacy,
+   el JSON de Decap ni valores editoriales predeterminados para recuperar errores.
+   NEXT_PUBLIC_ENABLE_SUPABASE_CATALOG queda obsoleta e ignorada.
+
+2. Un mismo modelo sirve productos, colecciones, proyectos y bloques de sitio:
+   - Tablas normalizadas: copia administrativa de trabajo.
+   - content_revisions: historial inmutable de snapshots JSON, versión y autor.
+   - content_publications: revisión pública fijada, estado, fecha y responsable.
+   - content_redirects: slug anterior -> entidad; se resuelve su slug publicado actual.
+   Guardar no mueve la revisión pública. Publicar cambios es una operación explícita.
+   Borrador, oculto y archivado se excluyen de lectura anónima. Un administrador que
+   navega la web pública tampoco obtiene borradores: los lectores filtran published.
+
+3. save_mash_content recibe uno o varios cambios en una única transacción PostgreSQL.
+   Incluye entidad, traducciones, galería, revisión y publicación. Bloquea filas en
+   orden estable y exige expected_version. Un conflicto devuelve SQLSTATE 40001;
+   el usuario debe recargar y conciliar, no sobrescribir silenciosamente.
+   Los formularios de configuración/footer y páginas institucionales son lotes atómicos.
+
+4. Inspeccionadas las RPC anteriores, se conservan en el esquema para referencia,
+   pero se revoca su ejecución a authenticated para evitar saltarse las revisiones.
+   La nueva RPC es SECURITY INVOKER y exige auth.uid() + is_admin(). Los cambios
+   habituales y Storage usan la sesión con RLS. Service role permanece en el login
+   para la allowlist y vinculación, no en el guardado del contenido.
+
+5. Restaurar desde /studio-mash/revisiones crea una nueva revisión de trabajo;
+   nunca publica automáticamente ni cambia la revisión pública que ya esté activa.
+   El contenido recuperado se revisa y se publica por separado. Las traducciones
+   adicionales que no figuren en un snapshot antiguo se conservan, no se borran.
+
+6. Se conservan materiales y cuidados ingleses cuando un formulario no los envía.
+   Campos ingleses vacíos significan conservar, no borrar ni copiar español a inglés.
+   Cambiar el original español marca inglés needs_review; guardar textos idénticos
+   conserva el estado revisado anterior. El original es español. La web inglesa usa
+   una traducción complete o muestra el original español con aviso de revisión pendiente.
+   No se conectó ningún proveedor de traducción ni se inventaron traducciones.
+
+7. Se conserva el orden de fotos, la principal y alt_es/alt_en; los alt de productos
+   y portadas de proyectos se usan públicamente. Las etiquetas de colección se leen
+   de las colecciones publicadas actuales, no de lib/content.ts. Los enlaces desde
+   Studio apuntan al slug publicado aunque el borrador tenga un slug nuevo.
+
+8. Las rutas se invalidan después de confirmar la RPC. No hay fallback ante fallo
+   de configuración/conexión. El service worker sigue almacenando únicamente avisos
+   offline e iconos. React.cache deduplica consultas dentro del render, no publicaciones.
+
+9. Se neutraliza JSON-LD con escape de <, U+2028 y U+2029. Se validan HTTPS y rutas
+   internas; los errores internos de BD no se envían al formulario. Sharp decodifica
+   imágenes, comprueba formato real, una sola página y máximo de 40 millones de píxeles.
+   Los fallos de transporte pueden ocurrir después de COMMIT: se conserva el archivo
+   subido si no existe SQLSTATE que confirme rollback, y se pide recargar antes de reintentar.
+   Las revisiones conservan referencias históricas; no existe purga de fotografías.
+
+10. SEO: canonical/hreflang por ruta, lang en HTML inicial, robots.txt, sitemap de
+    publicaciones, 404 real en fichas ausentes y redirects 308 de slugs publicados.
+    El middleware verifica existencia sin sesión administrativa para evitar soft 404
+    causados por streaming. Un fallo en esa comprobación responde 503.
+    Se retiró la declaración automática InStock y la oferta sin precio verificado.
+    La portada utiliza datos de contacto administrables en JSON-LD.
+
+CONTRATO DE ERRORES
+
+- Consulta válida sin filas: lista vacía; nunca catálogo anterior.
+- Slug inexistente o no publicado: 404, sin revelar al visitante el estado privado.
+- En Studio: draft / published / hidden / archived se muestran y gestionan explícitamente.
+- Bloque CMS no publicado/inexistente: ContentError(missing); no vuelve un bloque legacy.
+- Configuración incompleta: ContentError(configuration).
+- Consulta fallida: ContentError(connection), mensaje controlado sin datos internos.
+- Conflicto de versión: error de concurrencia; conservar formulario y recargar para revisar.
+- Respuesta de guardado incierta: no afirmar rollback ni borrar medios a ciegas.
+
+MIGRACIÓN PREPARADA, NO APLICADA REMOTAMENTE
+
+supabase/migrations/20261124141948_mash_publication_integrity.sql
+
+Creada con Supabase CLI migration new. Añade revisión a las cuatro familias de entidades,
+estado de traducción a colecciones y bloques, tres tablas comunes, índices, RLS y RPC.
+Inicializa revisión 0 desde los registros existentes de Supabase. Solo los estados
+published / is_public generan publicaciones iniciales. No importa contenido legacy.
+Conserva los identificadores, administradores y archivos. No elimina tablas ni entidades.
+Los errores de lectura administrativos no se presentan como listas vacías ni contadores cero.
+Las modificaciones de SELECT policies son reemplazos de permisos, no borrados de datos.
+La edición explícita de una galería puede desvincular referencias actuales; el archivo
+y las referencias en snapshots históricos se conservan.
+
+Las fechas iniciales de publicación usan published_at existente o updated_at como
+referencia de importación. No se inventa un administrador histórico. Las publicaciones
+nuevas registran now() y auth.uid(). La fecha de publicación autoritativa está en
+content_publications; los published_at históricos nulos no se presentan como fechas probadas.
+
+CONCILIACIÓN
+
+catalog-reconciliation.json: inventario por fuente, traducciones, medios, colecciones,
+proyectos, claves CMS y referencias de Storage, sin cuentas administrativas ni contactos.
+catalog-differences.csv: tabla de diferencias para revisión editorial.
+
+Datos capturados: 9 productos Supabase, 8 publicados, Oculus Mare en draft; 4 colecciones,
+2 proyectos y 8 bloques CMS. Legacy: 8 productos en lib/content.ts y 20 referencias en
+data/colecciones.json. Cinco slugs solo legacy quedan pendientes de aprobación:
+oasis-set, media-luna, rombois-set, balinesa-trap y chaise-candor.
+No hay fusiones por similitud de nombre ni equivalencias de slugs inventadas.
+Los defaults retirados de site-content.ts están archivados en legacy-site-content.ts.txt.
+Los arrays de contenido legacy, JSON, HTML, CSS y medios originales se conservan.
+
+RESPALDO Y RESTAURACIÓN
+
+Ruta privada local, ignorada por Git: .audit-backups/2026-11-24/
+Incluye export JSON de las 12 tablas públicas, allowlist, metadatos del bucket/objetos,
+los 16 objetos originales de mash-media y copias originales de ambos catálogos legacy.
+scripts/export-catalog.sql conserva la consulta de exportación de solo lectura.
+manifest.json contiene tamaños y SHA-256. Se verificaron 19 archivos.
+backup-verification.json publica solo el resumen y hash del export, no los correos.
+
+La prueba restore-catalog-backup.cjs restauró el catálogo en PostgreSQL aislado y aplicó
+la migración: ocho productos públicos correctos, Oculus excluido y las dos filas originales
+de administradores conservadas. restore-evidence.json registra el resultado.
+
+Este es un respaldo lógico del catálogo + Storage. NO contiene usuarios/sesiones Auth,
+secretos SMTP, credenciales, todo el esquema hosted ni un respaldo PITR completo.
+Antes de modificar Production debe obtenerse además un respaldo completo administrado
+o pg_dump autorizado, con restauración y retención verificadas. No se modificaron datos
+reales basándose únicamente en el respaldo parcial disponible.
+
+Rollback editorial: restaurar una revisión a borrador, revisar y publicar explícitamente.
+Rollback técnico: mantener esquema aditivo y una versión saludable de esta arquitectura;
+no ejecutar DROP ni restaurar a ciegas un dump sobre producción. No reactivar el fallback.
+No volver directamente al main antiguo tras cambiar RLS: sus lectores de tablas normales
+podrían dejar de leer contenido y recuperar defaults. Requiere plan de mantenimiento.
+
+ENTORNOS Y CAMBIOS MANUALES PENDIENTES
+
+.env.example es el contrato. En cada entorno configurar:
+NEXT_PUBLIC_SUPABASE_URL = URL del proyecto de ese entorno
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = clave pública del mismo proyecto (preferida)
+SUPABASE_SERVICE_ROLE_KEY = clave servidor de ese proyecto, solo para login existente
+NEXT_PUBLIC_SITE_URL = origen canónico elegido
+
+NEXT_PUBLIC_SUPABASE_ANON_KEY sigue admitida como alias de compatibilidad si no existe
+publishable key. No hace falta mantener ambas en un entorno nuevo. No se descifraron
+ni imprimieron claves de servicio. No hay migración obligatoria a un método distinto de OTP.
+
+Desarrollo/pruebas: PostgreSQL aislado de las suites; para desarrollo completo usar
+Supabase local o un proyecto staging dedicado con la migración. Nunca datos reales
+de Production para pruebas de escritura.
+
+Staging y Preview: preparar un proyecto aislado, aplicar migraciones y fixtures aprobados;
+usar su URL, una clave pública y su credencial servidor. La configuración Preview heredada
+apuntaba al proyecto real y no es un entorno de integración aprobado. No ejecutar pruebas
+de escritura allí. No se creó ningún proyecto de pago ni se modificó otro proyecto Supabase.
+
+Production, solo después de autorización:
+- Comprobar que URL y publishable key existentes pertenecen al proyecto MASH.
+- Mantener service role y los dos administradores, sin cambios de Auth/OTP/Resend.
+- Definir NEXT_PUBLIC_SITE_URL=https://www.mashoficial.com si se adopta ese canonical.
+- La bandera del catálogo deja de ser necesaria; no activarla como sustituto de migrar.
+- Mantener ANON_KEY durante la transición: el main antiguo todavía la necesita.
+  Retirarla solo después de desplegar esta versión y verificar login, con aprobación.
+- Coordinar migración de RLS y despliegue en una ventana controlada; verificar ambas
+  versiones y evitar que un despliegue anterior quede sirviendo defaults tras cambiar permisos.
+
+El push de la rama puede generar un Preview por la integración Git de Vercel; eso no es
+un despliegue autorizado a Production ni demuestra que Preview tenga BD aislada configurada.
+
+PRUEBAS Y EVIDENCIA
+
+Comandos reproducibles:
+npm run typecheck
+npm run test:admin
+npm run test:pwa
+npm run test:phase2
+npm run build
+npm run test:ux
+npm run test:pwa:browser
+npm run test:phase2:http
+node tests/restore-catalog-backup.cjs [ruta del export privado]
+
+Se conservan los 43 escenarios originales. Se adaptaron sus contratos cuando esperaban
+un fallback legacy o un guardado parcial: ahora exigen ausencia de fallback y rollback.
+No se preservó como requisito el comportamiento defectuoso anterior.
+
+El cierre registra 68 pruebas automatizadas correctas, typecheck y build correctos, y las suites de navegador/HTTP correctas. El test de refresco de sesión verifica cookies hacia servidor y navegador sin modificar Auth hosted.
+
+Los tests SQL usan PostgreSQL/WASM real (PGlite): transacciones, funciones PL/pgSQL,
+constraints, roles y RLS reales. El bootstrap Auth/extension se representa localmente;
+citext se sustituye por text en el arnés, pgcrypto por gen_random_uuid nativo. No es una
+certificación de Supabase hosted, PostgREST, SMTP ni del login real de la administradora.
+
+action-db.test.cjs ejecuta la Server Action y persistencia reales contra PostgreSQL.
+La autorización externa de sesión y Storage se simulan en ese test; la decodificación
+de archivos y el guardado SQL sí son reales. La suite de componentes usa servicios simulados.
+
+phase2-http.cjs utiliza el build Next de producción local y una fachada Data API de pruebas
+sobre PostgreSQL aislado. Verifica guardar/publicar, nombres, fotos, alt, etiquetas dinámicas,
+canonical/hreflang/lang, sitemap, ausencia de Oculus, 404/308/503 y denegación anónima.
+http-evidence.json distingue explícitamente esta infraestructura de Supabase hosted.
+
+Las pruebas de navegador existentes verifican desktop/tablet/móvil, galería, cotización,
+sidebar, reordenamiento, errores y PWA. No envían OTP ni escriben en servicios de producción.
+
+Dependencias: Next actualizado a 15.5.29, eslint-config-next alineado, Zod a 4.6.7 y
+Sharp a 0.35.5. Overrides PostCSS 8.5.33 y source-map-js 1.2.4 corrigen avisos transitivos
+sin migrar de major de Next. npm audit --omit=dev devolvió cero vulnerabilidades.
+El audit completo mantiene avisos moderados de herramientas de desarrollo; no se aplicó
+un cambio de major automático fuera de alcance. Las advertencias Webpack de serialización
+de cadenas grandes no son errores de compilación.
+
+CHECKLIST DE ACEPTACIÓN
+
+1. Fuente pública exclusiva Supabase: implementada; falta aplicar schema/desplegar con aprobación.
+2. Ocho productos publicados válidos: verificados restaurando el respaldo en aislamiento.
+3. Borrador/oculto/archivado excluidos: verificados con RLS y HTTP; Oculus excluido.
+4. Nombres/descripciones/fotografías publicados: verificados en SQL, Server Action y HTTP local.
+5. Etiquetas dinámicas de colecciones: verificadas por lectura y HTTP.
+6. Fallos sin catálogo anterior: verificados con error de configuración/conexión y HTTP.
+7. Guardado transaccional: verificado con rollback de padres, traducciones, imágenes y lotes.
+8. Traducciones existentes: conservación y obsolescencia verificadas; no API externa.
+9. Acceso admin: contratos/regresión de ocho dígitos y allowlist verificados con simulación;
+   longitud hosted, entrega Resend y login real de ambos administradores pendientes.
+10. SEO/XSS prioritarios: corregidos; verificaciones automatizadas y HTTP local.
+11. Typecheck/build/suites: resultados finales en validation.json; no prueba de despliegue hosted.
+12. Respaldo/rollback: catálogo+Storage verificados y restaurados en aislamiento; respaldo
+    completo de plataforma/Auth pendiente antes de cualquier modificación real.
+
+PENDIENTES FUERA DE ESTA RAMA / FASE 6
+
+- Aplicación y verificación en Supabase staging completo con Auth/PostgREST/Storage reales.
+- Verificación hosted del OTP y entrega de Resend, sin cambiar configuración funcional.
+- Aprobación editorial de cinco productos legacy y revisión de traducciones pendientes.
+- Aprobación separada de respaldo completo, migración, configuración y despliegue Production.
+- Fase 6: renderer compartido por bloques, preview responsive fiel, edición visual, árbol
+  de secciones y UX de revisiones más completa. Reutilizará estas mismas revisiones y RPC;
+  no se incorpora JavaScript ni HTML arbitrario desde contenido.
+- Fases posteriores: biblioteca de variantes/referencias completa, noticias, mapa y rediseño.

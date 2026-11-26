@@ -14,13 +14,18 @@ function contentFixture(value, translations = []) {
     select() { return query; }, eq() { return query; },
     maybeSingle: async () => ({ data: { value, site_content_translations: translations }, error: null })
   };
-  const module = { exports: {} };
-  const mocks = {
-    "@/lib/content": {},
-    "./server": { createSupabaseServerClient: async () => ({ from: () => query }) }
-  };
-  vm.runInNewContext(source, { module, exports: module.exports, require: (name) => mocks[name] ?? require(name) });
-  return module.exports;
+  const {loadTs}=require('./support/load-ts.cjs');
+  return loadTs(path.join(__dirname,"../lib/supabase/site-content.ts"),{
+    "@/lib/content":{},"./persistence":{},
+    "./published": {
+      readPublished: async () => [{ slug: "home.sections", snapshot: { value, translations } }],
+      readPublishedSite: async () => ({ value, translations }),
+      localizedTranslation: (rows, locale) => ({
+        text: rows.find((row) => row.locale === locale) ?? rows.find((row) => row.locale === "es"),
+        pending: false,
+      }),
+    },
+  });
 }
 
 test("public home reads every saved section image in both languages", async () => {
@@ -34,12 +39,24 @@ test("public home reads every saved section image in both languages", async () =
   assert.equal((await content.getHomeSectionsContent("es")).lifestyleLabels[0], "Patios nuevos");
 });
 
-test("legacy sections keep defaults only for images that have never been replaced", async () => {
+test("missing section images stay empty and never restore legacy defaults", async () => {
   const content = contentFixture({ introImage: "/new-intro.jpg", lifestyleImageTwo: "" });
   const actual = await content.getHomeSectionsContent("es");
-  const defaults = content.getFallbackHomeSections("es");
+
   assert.equal(actual.introImage, "/new-intro.jpg");
-  for (const key of ["lifestyleImageOne", "lifestyleImageTwo", "lifestyleImageThree"]) assert.equal(actual[key], defaults[key]);
+  for (const key of ["lifestyleImageOne", "lifestyleImageTwo", "lifestyleImageThree"]) assert.equal(actual[key], "");
+});
+
+test("visible legacy lifestyle bands recover missing photos and respect cleared slots", async () => {
+  const legacy = contentFixture({ visible: { lifestyle: true } });
+  const cleared = contentFixture({ visible: { lifestyle: true }, lifestyleImageTwo: "" });
+  for (const locale of ["es", "en"]) {
+    const actual = await legacy.getHomeSectionsContent(locale);
+    assert.equal(actual.lifestyleImageOne, "/assets/images/cama-balinesa-trap.jpg");
+    assert.equal(actual.lifestyleImageTwo, "/assets/images/rombois-set.jpg");
+    assert.equal(actual.lifestyleImageThree, "/assets/images/oculus-chaise.jpg");
+    assert.equal((await cleared.getHomeSectionsContent(locale)).lifestyleImageTwo, "");
+  }
 });
 
 test("public hero and about page use the stored image URLs", async () => {

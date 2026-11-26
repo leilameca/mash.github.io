@@ -1,90 +1,36 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export function MotionEnhancer() {
+  const path = usePathname();
+
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      document.documentElement.classList.add("motion-ready");
-      return;
-    }
-
-    let cleanup = () => {};
-
-    async function run() {
-      const gsapModule = await import("gsap");
-      const scrollTriggerModule = await import("gsap/ScrollTrigger");
-      const gsap = gsapModule.gsap;
-      const ScrollTrigger = scrollTriggerModule.ScrollTrigger;
-
-      gsap.registerPlugin(ScrollTrigger);
-      document.documentElement.classList.add("motion-ready");
-
-      const revealItems = gsap.utils.toArray<HTMLElement>("[data-reveal]");
-      revealItems.forEach((item) => {
-        gsap.fromTo(
-          item,
-          { y: 28, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.9,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 88%",
-              once: true
-            }
-          }
-        );
-      });
-
-      gsap.utils.toArray<HTMLElement>("[data-image-motion]").forEach((item) => {
-        gsap.fromTo(
-          item,
-          { scale: 0.96, opacity: 0.82 },
-          {
-            scale: 1,
-            opacity: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 92%",
-              end: "bottom 16%",
-              scrub: true
-            }
-          }
-        );
-      });
-
-      const scrubWords = gsap.utils.toArray<HTMLElement>("[data-scrub-word]");
-      if (scrubWords.length) {
-        gsap.fromTo(
-          scrubWords,
-          { opacity: 0.24 },
-          {
-            opacity: 1,
-            stagger: 0.08,
-            ease: "none",
-            scrollTrigger: {
-              trigger: "[data-scrub-copy]",
-              start: "top 82%",
-              end: "bottom 48%",
-              scrub: true
-            }
-          }
-        );
-      }
-
-      cleanup = () => {
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      };
-    }
-
-    run();
-
-    return () => cleanup();
-  }, []);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          observer.unobserve(entry.target);
+          entry.target.animate(
+            [
+              { transform: "translateY(8px)", opacity: 0.86 },
+              { transform: "translateY(0)", opacity: 1 },
+            ],
+            { duration: 360, easing: "ease-out" },
+          );
+        }
+      },
+      { threshold: 0.12 },
+    );
+    document
+      .querySelectorAll(
+        ".mash-public [data-reveal]:not(.hero-copy, .hero-showroom)",
+      )
+      .forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, [path]);
 
   return null;
 }

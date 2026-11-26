@@ -1,0 +1,44 @@
+{
+  "capturedAt": "2026-11-24T18:54:43.094288+00:00",
+  "phase": 5,
+  "branch": "feature/mash-3",
+  "phase4Commit": "b3ef358cdcc11d013d5d4ff6bd993a4a3ad8fdeb",
+  "migration": "20261124183828_mash_translation_workflow.sql",
+  "productionModified": false,
+  "hostedMigrationsApplied": false,
+  "typecheck": true,
+  "productionBuildLocal": true,
+  "unit": {
+    "passed": 94,
+    "failed": 0,
+    "previous": 88,
+    "phase5": 6,
+    "evidence": "unit-results.txt"
+  },
+  "browser": {
+    "passed": true,
+    "screenshots": 6,
+    "evidence": "browser-evidence.json"
+  },
+  "publicHttp": "http-evidence.json",
+  "responsivePublicAndAdmin": true,
+  "pwaBrowser": true,
+  "boundaries": {
+    "postgresql": true,
+    "providerTransport": "simulated in tests only",
+    "deeplLiveCredentialsAvailable": false,
+    "hostedStorageVerified": false,
+    "hostedLargeUploadsVerified": false,
+    "providerCredentialsAbsentFromStaticJavascript": true
+  },
+  "publicDemoRoute": {
+    "url": "https://www.mashoficial.com/__preview__/enter",
+    "status": 404,
+    "setCookie": false,
+    "readOnly": true
+  },
+  "studioRegression": {
+    "evidence": "studio-regression.json",
+    "passedChecks": 15
+  }
+}

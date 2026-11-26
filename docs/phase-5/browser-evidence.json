@@ -1,0 +1,9 @@
+{
+  "environment": "Chrome, isolated PostgreSQL and simulated Auth, no translation provider configured",
+  "checks": [
+    "Keyboard review, original/English comparison and manually approved working revision",
+    "Persistent brand dictionary and automatic-on-save preferences",
+    "Responsive at 1440, 768 and 390 pixels",
+    "All 20 visible-page legacy image URLs decoded after scroll; simulated image failure renders a fallback"
+  ]
+}

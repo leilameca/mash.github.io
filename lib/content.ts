@@ -22,6 +22,13 @@ export type Product = {
   slug: string;
   name: string;
   collectionSlug: string;
+  collectionSlugs?: string[];
+  collectionLabel?: LocalizedText;
+  galleryAlts?: string[];
+  galleryVariants?: Partial<Record<"thumbnail" | "catalog" | "gallery" | "large", string>>[];
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  translationPending?: boolean;
   image: string;
   gallery: string[];
   alt: LocalizedText;
@@ -41,6 +48,8 @@ export type Collection = {
   image: string;
   alt: LocalizedText;
   note: LocalizedText;
+  seoTitle?: LocalizedText;
+  seoDescription?: LocalizedText;
 };
 
 export type Project = {
@@ -359,5 +368,5 @@ export function getProductsByCollection(collectionSlug: string) {
 }
 
 export function getCollectionLabel(product: Product, locale: Locale) {
-  return getCollection(product.collectionSlug)?.label[locale] ?? product.collectionSlug;
+  return product.collectionLabel?.[locale] ?? product.collectionSlug;
 }

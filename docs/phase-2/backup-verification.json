@@ -1,0 +1,13 @@
+{
+  "capturedAt": "2026-11-24T14:24:02.620Z",
+  "project": "guzuqitvzkenzsvcuttg",
+  "scope": "public catalog tables + admin allowlist + Storage originals; not Auth/PITR",
+  "verified": true,
+  "fileCount": 19,
+  "totalBytes": 40685297,
+  "catalogSha256": "22c4d455b52f491d61425bf760d1acd18d075775395cf69be1e506b5c3e62615",
+  "storageObjectCount": 16,
+  "activeAdministrators": 2,
+  "remoteWritesPerformed": false,
+  "authBackupIncluded": false
+}

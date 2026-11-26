@@ -5,14 +5,27 @@ import type { Product } from "@/lib/content";
 import { dictionary, getCollectionLabel } from "@/lib/content";
 import { localizedPath, type Locale } from "@/lib/i18n";
 
-export function ProductCard({ product, locale, priority = false }: { product: Product; locale: Locale; priority?: boolean }) {
+export function ProductCard({
+  product,
+  locale,
+  priority = false,
+}: {
+  product: Product;
+  locale: Locale;
+  priority?: boolean;
+}) {
   const t = dictionary[locale].common;
+  const catalogImage = product.galleryVariants?.[0]?.catalog;
 
   return (
     <article className="product-card">
-      <Link href={localizedPath(locale, `/productos/${product.slug}`)} className="product-card__image">
+      <Link
+        href={localizedPath(locale, `/productos/${product.slug}`)}
+        className="product-card__image"
+      >
         <Image
-          src={product.image}
+          src={catalogImage ?? product.image}
+          unoptimized={Boolean(catalogImage)}
           alt={product.alt[locale]}
           fill
           sizes="(max-width: 720px) 88vw, (max-width: 1180px) 42vw, 28vw"
@@ -22,9 +35,14 @@ export function ProductCard({ product, locale, priority = false }: { product: Pr
       <div className="product-card__body">
         <p>{getCollectionLabel(product, locale)}</p>
         <h3>
-          <Link href={localizedPath(locale, `/productos/${product.slug}`)}>{product.name}</Link>
+          <Link href={localizedPath(locale, `/productos/${product.slug}`)}>
+            {product.name}
+          </Link>
         </h3>
-        <Link className="text-link" href={localizedPath(locale, `/productos/${product.slug}`)}>
+        <Link
+          className="text-link"
+          href={localizedPath(locale, `/productos/${product.slug}`)}
+        >
           {t.viewDetails}
         </Link>
         <AddToQuote slug={product.slug} name={product.name} locale={locale} />

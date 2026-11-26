@@ -1,40 +1,41 @@
-import Link from "next/link";
+import { FormSafety } from "./FormSafety";
 import { StudioSidebar } from "./StudioSidebar";
+import { StudioHeader } from "./StudioHeader";
 import { StudioIcon } from "./StudioIcon";
+import { studioNavigation } from "@/lib/admin/navigation";
 import { logoutAdmin } from "./actions";
 import type { AdminProfile } from "@/lib/supabase/auth";
-
-const nav = [
-  { href: "/studio-mash", label: "Resumen" },
-  { href: "/studio-mash/productos", label: "Productos" },
-  { href: "/studio-mash/colecciones", label: "Colecciones" },
-  { href: "/studio-mash/contenido", label: "Contenido" },
-  { href: "/studio-mash/proyectos", label: "Proyectos" },
-  { href: "/studio-mash/multimedia", label: "Multimedia" }
-];
-
-export function StudioShell({ children, admin }: { children: React.ReactNode; admin: AdminProfile }) {
+export function StudioShell({
+  children,
+  admin,
+}: {
+  children: React.ReactNode;
+  admin: AdminProfile;
+}) {
+  const logout = (
+    <form action={logoutAdmin}>
+      <button className="studio-logout" type="submit">
+        <StudioIcon name="logout" />
+        Cerrar sesión
+      </button>
+    </form>
+  );
   return (
-    <main className="studio">
-      <StudioSidebar items={nav}>
-        <form action={logoutAdmin}>
-          <button className="studio-logout" type="submit">
-            <StudioIcon name="logout" /> Cerrar sesión
-          </button>
-        </form>
-      </StudioSidebar>
-      <section className="studio-main">
-        <header className="studio-topbar">
-          <div>
-            <p>Sesion activa</p>
-            <strong>{admin.email}</strong>
-          </div>
-          <Link href="/es" className="studio-public-link">
-            Ver sitio <StudioIcon name="external" />
-          </Link>
-        </header>
-        {children}
-      </section>
-    </main>
+    <div className="studio">
+      <FormSafety />
+      <a className="studio-skip" href="#studio-content">
+        Saltar al contenido
+      </a>
+      <StudioSidebar items={studioNavigation}>{logout}</StudioSidebar>
+      <div className="studio-main">
+        <StudioHeader email={admin.email} logout={logout} />
+        <main id="studio-content" className="studio-content" tabIndex={-1}>
+          {children}
+        </main>
+        <footer className="studio-footnote">
+          MASH Studio <span>Gestión de catálogo y contenido</span>
+        </footer>
+      </div>
+    </div>
   );
 }

@@ -1,7 +1,14 @@
+import "../globals.css";
+import "./editorial-theme.css";
+import { getAnnouncements } from "@/lib/editorial/queries";
+import { ScheduledAnnouncements } from "@/components/editorial/Announcements";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { isPrivatePreview } from "@/lib/seo";
+import { GoogleMeasurement } from "@/components/GoogleMeasurement";
+import { PublicAnalytics } from "@/components/PublicAnalytics";
 import { MotionEnhancer } from "@/components/MotionEnhancer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { SiteSettingsProvider } from "@/components/SiteSettingsProvider";
@@ -16,7 +23,11 @@ export function generateStaticParams() {
   return [{ locale: "es" }, { locale: "en" }];
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
@@ -29,8 +40,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       canonical: `/${locale}`,
       languages: {
         es: "/es",
-        en: "/en"
-      }
+        en: "/en",
+      },
     },
     openGraph: {
       title: meta.homeTitle,
@@ -44,16 +55,19 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
           url: "/assets/images/oasis-hero-v2.jpg",
           width: 1672,
           height: 941,
-          alt: locale === "es" ? "Muebles de exterior MASH" : "MASH outdoor furniture"
-        }
-      ]
-    }
+          alt:
+            locale === "es"
+              ? "Muebles de exterior MASH"
+              : "MASH outdoor furniture",
+        },
+      ],
+    },
   };
 }
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -61,21 +75,44 @@ export default async function LocaleLayout({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
-  const siteContent = await getSiteChromeContent(locale);
+  const [siteContent, announcements] = await Promise.all([
+    getSiteChromeContent(locale),
+    getAnnouncements(locale, Date.now()),
+  ]);
 
   return (
     <SiteSettingsProvider value={{ whatsapp: siteContent.whatsapp }}>
-      <QuoteSelectionProvider locale={locale}>
-      <a href="#main-content" className="skip-link">
-        {locale === "es" ? "Saltar al contenido" : "Skip to content"}
-      </a>
-      <Header locale={locale} content={siteContent} />
-      <main id="main-content" className="page-shell">
-        {children}
-      </main>
-      <Footer locale={locale} content={siteContent} />
-      <WhatsAppFloat locale={locale} href={siteContent.whatsapp} label={siteContent.requestQuoteLabel} />
-      <MotionEnhancer />
+      <QuoteSelectionProvider locale={locale} quoteMessage={siteContent.quoteMessage}>
+        <a href="#main-content" className="skip-link">
+          {locale === "es" ? "Saltar al contenido" : "Skip to content"}
+        </a>
+        <Header locale={locale} content={siteContent} />
+        {siteContent.translationPending && (
+          <p role="status" className="section-shell">
+            English translation pending review. Showing the Spanish original
+            where needed.
+          </p>
+        )}
+        <main id="main-content" className="page-shell mash-public">
+          <ScheduledAnnouncements initial={announcements} locale={locale} />
+          {children}
+        </main>
+        <Footer locale={locale} content={siteContent} />
+        <WhatsAppFloat
+          locale={locale}
+          href={siteContent.whatsapp}
+          label={siteContent.requestQuoteLabel}
+        />
+        <MotionEnhancer />
+        {process.env.MASH_GA_ENABLED === "1" &&
+          !isPrivatePreview() &&
+          process.env.NEXT_PUBLIC_MASH_GA_ID && (
+            <GoogleMeasurement
+              id={process.env.NEXT_PUBLIC_MASH_GA_ID}
+              locale={locale}
+            />
+          )}
+        <PublicAnalytics />
       </QuoteSelectionProvider>
     </SiteSettingsProvider>
   );

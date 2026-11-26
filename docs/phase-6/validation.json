@@ -1,0 +1,44 @@
+{
+  "phase": 6,
+  "capturedAt": "2026-11-24T19:24:30.979200+00:00",
+  "branch": "feature/mash-3",
+  "base": "441db0ea52db569f9a7dc0dfc603f36de175bc39",
+  "migration": "20261124190716_mash_visual_composition.sql",
+  "typecheck": true,
+  "localProductionBuild": true,
+  "unit": {
+    "passed": 99,
+    "failed": 0,
+    "preserved": 94,
+    "phase6": 5,
+    "evidence": "unit-results.txt"
+  },
+  "browser": {
+    "passed": true,
+    "engine": "Chrome",
+    "productionNextBuild": true,
+    "evidence": "browser-evidence.json",
+    "screenshots": 6,
+    "widths": [
+      1440,
+      768,
+      390,
+      320
+    ],
+    "measurements": [
+      "Preferencias",
+      "Filtrar",
+      "Revisar",
+      "Traducir selección deshabilitado",
+      "Multimedia (menú)"
+    ],
+    "minContrast": 4.9
+  },
+  "publicHttp": "http-evidence.json",
+  "studioRegression": "studio-regression.json",
+  "pwaBrowser": true,
+  "syntheticPhrasesInShippingSources": false,
+  "localOnly": true,
+  "hostedMigrationsApplied": false,
+  "productionModified": false
+}

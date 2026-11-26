@@ -1,14 +1,34 @@
 "use client";
 
-import { site } from "@/lib/content";
+import { isHttpsUrl } from "@/lib/security";
 import { useSiteSettings } from "@/components/SiteSettingsProvider";
 
-export function QuoteLink({ children, className, message }: { children: React.ReactNode; className?: string; message?: string }) {
+export function QuoteLink({
+  children,
+  className,
+  message,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  message?: string;
+}) {
   const settings = useSiteSettings();
-  const url = new URL(settings?.whatsapp ?? site.whatsapp);
+  if (!settings?.whatsapp || !isHttpsUrl(settings.whatsapp))
+    return (
+      <span className={className} aria-disabled="true">
+        {children}
+      </span>
+    );
+  const url = new URL(settings.whatsapp);
   if (message) url.searchParams.set("text", message);
   return (
-    <a href={url.toString()} target="_blank" rel="noreferrer" className={className}>
+    <a
+      data-analytics="click_whatsapp"
+      href={url.toString()}
+      target="_blank"
+      rel="noreferrer"
+      className={className}
+    >
       {children}
     </a>
   );

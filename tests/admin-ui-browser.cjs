@@ -23,8 +23,8 @@ function bundle(id, raw) {
     if (mocks[name]) return `require(${bundle(name, mocks[name])})`;
     if (name.endsWith('/actions')) return `require(${bundle('actions', mocks.actions)})`;
     let resolved;
-    if (name.startsWith('.')) {
-      const base = path.resolve(path.dirname(id), name);
+    if (name.startsWith('.') || name.startsWith('@/')) {
+      const base = name.startsWith("@/") ? path.resolve(root, name.slice(2)) : path.resolve(path.dirname(id), name);
       resolved = [base, base + '.tsx', base + '.ts', base + '.js'].find(file => fs.existsSync(file) && fs.statSync(file).isFile());
     } else resolved = require.resolve(name, { paths: [root] });
     if (!resolved) throw new Error(`Cannot bundle ${name} from ${id}`);
@@ -41,7 +41,7 @@ const {ProductForm}=require('../app/studio-mash/productos/ProductForm');
 const {ProductList}=require('../app/studio-mash/productos/ProductList');
 const {StudioNav}=require('../app/studio-mash/StudioNav');
 const {StudioSidebar}=require('../app/studio-mash/StudioSidebar');
-const Loading=require('../app/studio-mash/loading').default;
+const Loading=require('../app/studio-mash/StudioLoading').default;
 const nav=[['','Resumen'],['/productos','Productos'],['/colecciones','Colecciones'],['/contenido','Contenido'],['/proyectos','Proyectos'],['/multimedia','Multimedia']].map(([suffix,label])=>({href:'/studio-mash'+suffix,label}));
 const product={id:'11111111-1111-4111-8111-111111111111',slug:'oasis',name_es:'Oasis',description_es:'Un conjunto para tu terraza.',collection_id:'c1',status:'draft',hero_image_path:${JSON.stringify(imageA)},image_paths:${JSON.stringify([imageA, imageB])}};
 const list=[{id:'1',slug:'oasis',name:'Oasis',collection:'Terraza',status:'draft',image:product.hero_image_path},{id:'2',slug:'candor',name:'Candor',collection:'Comedor',status:'archived',image:product.hero_image_path}];
@@ -110,12 +110,14 @@ const css = fs.readFileSync(path.join(root,'app/globals.css'),'utf8') + fs.readF
     await page.getByRole('button',{name:'Mover imagen 2 antes',exact:true}).click();
     assert.equal(JSON.parse(await page.locator('[name=existing_image_paths]').inputValue())[0],imageB);
     await page.getByRole('button',{name:'Elegir de Multimedia'}).click();
-    await page.getByRole('button',{name:'Oasis reutilizable'}).waitFor();
+    await page.getByText('Oasis reutilizable',{exact:true}).waitFor();
+    await page.keyboard.press('Escape');
     await page.locator('input[type=file]').setInputFiles(path.join(root,'public/assets/images/oasis-set.jpg'));
     await page.getByRole('button',{name:'Reintentar',exact:true}).waitFor();
     await page.getByRole('button',{name:'Reintentar',exact:true}).click();
-    await page.getByText('Lista para guardar en el producto',{exact:true}).waitFor();
-    await page.getByRole('button',{name:'Guardar producto',exact:true}).click();
+    await page.locator('[data-upload-state=done]').waitFor();
+    assert.equal(await page.locator('form.studio-product-editor').evaluate(form=>new FormData(form).get('status')),'draft');
+    await page.getByRole('button',{name:'Guardar cambios',exact:true}).click();
     await page.getByText('Prueba aislada: no se guardaron datos.',{exact:true}).waitFor();
     assert.equal(await page.locator('[name=name_es]').inputValue(),'Oasis actualizado','A failed save must preserve entered values');
     assert.deepEqual(errors,[]);

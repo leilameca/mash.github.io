@@ -1,17 +1,30 @@
+import { routeAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LegalDocument } from "@/components/LegalDocument";
 import { getLegalDocument } from "@/lib/legal";
 import { isLocale, type Locale } from "@/lib/i18n";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
   const { locale: rawLocale } = await params;
-  if (!isLocale(rawLocale)) return {};
+  if (!isLocale(rawLocale)) notFound();
   const copy = getLegalDocument(rawLocale, "privacy");
-  return { title: copy.title, description: copy.summary };
+  return {
+    alternates: routeAlternates(rawLocale, "/privacidad"),
+    title: copy.title,
+    description: copy.summary,
+  };
 }
 
-export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function PrivacyPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;

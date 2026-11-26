@@ -1,0 +1,208 @@
+{
+  "capturedAt": "2026-11-24T19:21:53.311Z",
+  "environment": "Local Next production build + PostgreSQL/WASM. Test-only simulated Auth and Data API; not hosted Supabase.",
+  "productionModified": false,
+  "checks": [
+    {
+      "capture": "dashboard-light",
+      "route": "/studio-mash"
+    },
+    {
+      "flow": "text and primary-action contrast light",
+      "ratios": [
+        13.64,
+        5.15,
+        7.73
+      ],
+      "passed": true
+    },
+    {
+      "flow": "desktop sidebar collapse persists after reload",
+      "passed": true
+    },
+    {
+      "capture": "dashboard-dark",
+      "route": "/studio-mash"
+    },
+    {
+      "flow": "text and primary-action contrast dark",
+      "ratios": [
+        15.45,
+        8.94,
+        9.2
+      ],
+      "passed": true
+    },
+    {
+      "capture": "products-list",
+      "route": "/studio-mash/productos"
+    },
+    {
+      "capture": "empty",
+      "route": "/studio-mash/productos"
+    },
+    {
+      "capture": "collections",
+      "route": "/studio-mash/colecciones"
+    },
+    {
+      "capture": "product-edit",
+      "route": "/studio-mash/productos/54f919af-d738-4c82-a69f-dee938f18df0"
+    },
+    {
+      "flow": "browser draft save leaves live snapshot unchanged",
+      "passed": true
+    },
+    {
+      "flow": "browser explicit publication",
+      "passed": true
+    },
+    {
+      "flow": "stale revision preserves browser inputs and exposes latest-version link",
+      "passed": true
+    },
+    {
+      "flow": "unsaved navigation can be cancelled",
+      "passed": true
+    },
+    {
+      "flow": "browser restore creates working revision and preserves live snapshot",
+      "passed": true
+    },
+    {
+      "capture": "history",
+      "route": "/studio-mash/revisiones"
+    },
+    {
+      "capture": "settings",
+      "route": "/studio-mash/configuracion"
+    },
+    {
+      "flow": "module navigation proyectos",
+      "passed": true
+    },
+    {
+      "flow": "module navigation multimedia",
+      "passed": true
+    },
+    {
+      "flow": "module navigation contenido",
+      "passed": true
+    },
+    {
+      "flow": "module navigation noticias",
+      "passed": true
+    },
+    {
+      "flow": "module navigation traducciones",
+      "passed": true
+    },
+    {
+      "flow": "module navigation analitica",
+      "passed": true
+    },
+    {
+      "flow": "initial theme follows operating system",
+      "passed": true
+    },
+    {
+      "capture": "dashboard-mobile",
+      "route": "/studio-mash"
+    },
+    {
+      "capture": "error",
+      "route": "/studio-mash/productos"
+    }
+  ],
+  "viewports": [
+    {
+      "width": 320,
+      "height": 568,
+      "noHorizontalOverflow": true,
+      "surfacesTested": [
+        "dashboard",
+        "productos",
+        "productos/54f919af-d738-4c82-a69f-dee938f18df0",
+        "configuracion"
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "noHorizontalOverflow": true,
+      "surfacesTested": [
+        "dashboard"
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "noHorizontalOverflow": true,
+      "surfacesTested": [
+        "dashboard",
+        "productos",
+        "productos/54f919af-d738-4c82-a69f-dee938f18df0",
+        "configuracion"
+      ]
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "noHorizontalOverflow": true,
+      "surfacesTested": [
+        "dashboard",
+        "productos",
+        "productos/54f919af-d738-4c82-a69f-dee938f18df0",
+        "configuracion"
+      ]
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "noHorizontalOverflow": true,
+      "surfacesTested": [
+        "dashboard"
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "noHorizontalOverflow": true,
+      "surfacesTested": [
+        "dashboard"
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "noHorizontalOverflow": true,
+      "surfacesTested": [
+        "dashboard"
+      ]
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "noHorizontalOverflow": true,
+      "surfacesTested": [
+        "dashboard"
+      ]
+    },
+    {
+      "width": 900,
+      "height": 900,
+      "noHorizontalOverflow": true,
+      "surfacesTested": [
+        "dashboard"
+      ]
+    },
+    {
+      "width": 540,
+      "height": 720,
+      "noHorizontalOverflow": true,
+      "surfacesTested": [
+        "dashboard"
+      ]
+    }
+  ]
+}
