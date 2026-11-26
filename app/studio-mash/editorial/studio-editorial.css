@@ -214,18 +214,27 @@
 }
 @media (max-width: 540px) {
   .editorial-admin-rows li {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "entry status" "actions actions";
     gap: 0.4rem;
   }
+  .editorial-admin-rows li:has(> img) {
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    grid-template-areas: "photo entry status" "actions actions actions";
+  }
   .editorial-admin-entry {
-    grid-column: auto;
+    grid-area: entry;
+  }
+  .editorial-admin-rows .studio-status {
+    grid-area: status;
   }
   .editorial-admin-rows li > img {
+    grid-area: photo;
     width: 48px;
     height: 42px;
   }
   .editorial-row-actions {
-    grid-column: 1 / -1;
+    grid-area: actions;
   }
   .editorial-editor-bar {
     position: static;

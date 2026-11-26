@@ -38,6 +38,7 @@ async function main() {
   const title = "Noticia de prueba " + timestamp;
   const newsUrl = origin + "/es/noticias/noticia-de-prueba-" + timestamp;
   const message = "Aviso programado de prueba " + timestamp;
+  const announcementTitle = "Aviso local " + timestamp;
   const failures = [];
   studio.on("pageerror", (error) => failures.push(error.message));
   visitor.on("pageerror", (error) => failures.push(error.message));
@@ -211,7 +212,7 @@ async function main() {
     await studio.goto(origin + "/studio-mash/anuncios/nuevo");
     await studio
       .getByRole("textbox", { name: "Título interno" })
-      .fill("Aviso local");
+      .fill(announcementTitle);
     await studio
       .getByRole("textbox", { name: "Texto del anuncio" })
       .fill(message);
@@ -442,13 +443,17 @@ async function main() {
       );
     });
     await screenshots(studio, "05-anuncios-movil");
-    const announcementRow = studio.locator(".editorial-admin-rows li").filter({ hasText: "Aviso local" });
+    const announcementRow = studio.locator(".editorial-admin-rows li").filter({ hasText: announcementTitle });
     const remove = announcementRow.getByRole("button", { name: "Eliminar", exact: true });
-    studio.once("dialog", (dialog) => dialog.dismiss());
-    await remove.click();
+    const confirmRemove = async (method) => {
+      const confirmation = studio.waitForEvent("dialog");
+      const click = remove.click();
+      await (await confirmation)[method]();
+      await click;
+    };
+    await confirmRemove("dismiss");
     assert.ok(await announcementRow.isVisible());
-    studio.once("dialog", (dialog) => dialog.accept());
-    await remove.click();
+    await confirmRemove("accept");
     await announcementRow.waitFor({ state: "detached" });
     await fresh.goto(origin + "/es/proyectos");
     assert.equal(await fresh.getByText(message, { exact: true }).count(), 0);
