@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { createSupabaseServerClient } from "./server";
 import { ContentError } from "./errors";
+import { restorePublicEnglish } from "./public-english";
 
 export type ContentKind = "product" | "collection" | "project" | "site";
 export type TranslationRow = {
@@ -80,7 +81,10 @@ export const readPublished = cache(
         "connection",
         "No pudimos consultar el contenido publicado.",
       );
-    return data as Publication[];
+    return (data as Publication[]).map((row) => ({
+      ...row,
+      snapshot: restorePublicEnglish(kind, row.slug, row.snapshot),
+    }));
   },
 );
 export async function readPublishedSite(key: string): Promise<ContentSnapshot> {

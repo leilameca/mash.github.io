@@ -7,6 +7,7 @@ export function HomeHero({
   locale,
   eyebrow,
   title,
+  tagline,
   description,
   actions,
   background,
@@ -19,6 +20,7 @@ export function HomeHero({
   locale: Locale;
   eyebrow: string;
   title: ReactNode;
+  tagline?: ReactNode;
   description: ReactNode;
   actions: ReactNode;
   background?: string;
@@ -47,7 +49,8 @@ export function HomeHero({
           <div className="hero-copy" data-reveal>
             <p className="eyebrow">{eyebrow}</p>
             <Heading className="hero-title">{title}</Heading>
-            <p>{description}</p>
+            {tagline && <p className="hero-tagline">{tagline}</p>}
+            <p className="hero-description">{description}</p>
             <div className="hero-actions">{actions}</div>
           </div>
           {showroom.some(Boolean) && (

@@ -5,6 +5,29 @@ const { test } = require("node:test");
 const vm = require("node:vm");
 const ts = require("typescript");
 
+test("historical public English is recovered only for matching bilingual copy", () => {
+  const { loadTs } = require("./support/load-ts.cjs");
+  const { restorePublicEnglish } = loadTs(path.join(__dirname, "../lib/supabase/public-english.ts"));
+  const snapshot = {
+    images: [],
+    translations: [
+      { locale: "es", value: { location: "Santiago, Republica Dominicana" }, translation_status: "needs_review" },
+      { locale: "en", value: { location: "Santiago, Dominican Republic" }, translation_status: "needs_review" },
+    ],
+  };
+  const restored = restorePublicEnglish("site", "site.settings", snapshot);
+  assert.equal(restored.translations[1].translation_status, "complete");
+  assert.equal(snapshot.translations[1].translation_status, "needs_review");
+  const edited = {
+    ...snapshot,
+    translations: [
+      { ...snapshot.translations[0], value: { location: "Otra ubicación" } },
+      snapshot.translations[1],
+    ],
+  };
+  assert.equal(restorePublicEnglish("site", "site.settings", edited), edited);
+});
+
 const source = ts.transpileModule(readFileSync(path.join(__dirname, "../lib/supabase/site-content.ts"), "utf8"), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 }
 }).outputText;

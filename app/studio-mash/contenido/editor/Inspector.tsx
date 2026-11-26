@@ -235,7 +235,7 @@ export function Inspector({
                 <span className="visual-field-language">
                   {locale.toUpperCase()}
                 </span>
-                {field === "body" ? (
+                {field === "body" || (field === "title" && doc.page === "home" && section.id === "legacy-hero") ? (
                   <textarea
                     rows={5}
                     maxLength={10000}

@@ -2,6 +2,7 @@ import type { Collection, Product, Project } from "@/lib/content";
 import type { Locale } from "@/lib/i18n";
 import { cache } from "react";
 import { ContentError } from "./errors";
+import { restorePublicEnglish, restoredProductSpecs } from "./public-english";
 import {
   readPublished,
   publicContentClient,
@@ -11,14 +12,20 @@ import {
 } from "./published";
 
 const pair = (es = "", en = es) => ({ es, en });
+const outdatedEnglishAlts: Record<string, string> = {
+  "trap-set": "Oasis terrace set for a spacious patio",
+  "dulce-luna": "Media Luna terrace set",
+};
 export function mapProduct(
-  row: ContentSnapshot,
+  snapshot: ContentSnapshot,
   locale: Locale,
   collections: Publication[],
 ): Product | null {
+  const row = restorePublicEnglish("product", snapshot.slug ?? "", snapshot);
   const { text, pending } = localizedTranslation(row.translations, locale);
   const original = localizedTranslation(row.translations, "es").text;
   const english = localizedTranslation(row.translations, "en").text;
+  const specs = restoredProductSpecs(row);
   const images = [...row.images].sort(
     (a, b) =>
       Number(Boolean(b.is_primary)) - Number(Boolean(a.is_primary)) ||
@@ -30,11 +37,12 @@ export function mapProduct(
     collection?.snapshot.translations ?? [],
     locale,
   ).text;
-  const alts = images.map((i) =>
-    locale === "en"
-      ? i.alt_en || i.alt_es || text.name!
-      : i.alt_es || text.name!,
-  );
+  const fallbackAlt = text.name;
+  const outdatedAlt = outdatedEnglishAlts[row.slug ?? ""];
+  const alts = images.map((image) => {
+    if (locale === "es") return image.alt_es || fallbackAlt;
+    return image.alt_en && image.alt_en !== outdatedAlt ? image.alt_en : fallbackAlt;
+  });
   return {
     slug: row.slug!,
     name: text.name,
@@ -54,8 +62,8 @@ export function mapProduct(
     alt: pair(alts[0]),
     description: pair(original?.description ?? "", english?.description ?? ""),
     materials: pair(original?.materials ?? "", english?.materials ?? ""),
-    dimensions: pair(row.dimensions ?? ""),
-    finishes: pair(row.finishes?.join(", ") ?? ""),
+    dimensions: pair(row.dimensions ?? "", specs?.dimensions),
+    finishes: pair(row.finishes?.join(", ") ?? "", specs?.finishes),
     care: pair(original?.care ?? "", english?.care ?? ""),
     featured: row.featured,
     translationPending: pending,

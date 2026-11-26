@@ -195,24 +195,29 @@ export function VisualDocument({
         }
         const active = selected === section.id && interactive;
         const text = (field: TextField) => textFor(section, field);
-        const contentFor = (part: VisualSection, field: TextField) => {
+        const contentFor = (
+          part: VisualSection,
+          field: TextField,
+          segment?: { value: string; label: string; merge: (text: string) => string },
+        ) => {
           if (interactive && selected === part.id && onText && (field === "title" || field === "body"))
             return (
               <span
-                key={part.id + field + locale}
+                key={part.id + field + locale + (segment?.label ?? "")}
                 className="visual-inline-edit"
                 contentEditable
                 suppressContentEditableWarning
                 aria-label={
-                  field === "title"
+                  segment?.label ?? (field === "title"
                     ? "Editar título en el lienzo"
-                    : "Editar texto en el lienzo"
+                    : "Editar texto en el lienzo")
                 }
                 role="textbox"
                 tabIndex={0}
-                onBlur={(e) =>
-                  onText(part.id, field, e.currentTarget.textContent ?? "")
-                }
+                onBlur={(e) => {
+                  const next = e.currentTarget.textContent ?? "";
+                  onText(part.id, field, segment ? segment.merge(next) : next);
+                }}
                 onPaste={(e) => {
                   e.preventDefault();
                   e.currentTarget.ownerDocument.execCommand(
@@ -222,10 +227,10 @@ export function VisualDocument({
                   );
                 }}
               >
-                {textFor(part, field)}
+                {segment?.value ?? textFor(part, field)}
               </span>
             );
-          return textFor(part, field);
+          return segment?.value ?? textFor(part, field);
         };
         const content = (field: TextField) => contentFor(section, field);
         const heading = firstHeading === section.id ? "h1" : "h2";
@@ -298,11 +303,22 @@ export function VisualDocument({
           node = <div className="visual-spacer" aria-hidden="true" />;
         else if (section === homeHero) {
           const quote = dictionary[locale].common.quote;
+          const [headline, ...intro] = text("title").split(/\r?\n[ \t]*\r?\n/);
+          const tagline = intro.join("\n\n").trim();
           node = (
             <HomeHero
               locale={locale}
               eyebrow={text("eyebrow") || `MASH | ${chrome.fullName}`}
-              title={content("title")}
+              title={tagline ? contentFor(section, "title", {
+                value: headline,
+                label: "Editar título en el lienzo",
+                merge: (next) => next + "\n\n" + tagline,
+              }) : content("title")}
+              tagline={tagline ? contentFor(section, "title", {
+                value: tagline,
+                label: "Editar subtítulo de portada",
+                merge: (next) => headline + (next.trim() ? "\n\n" + next : ""),
+              }) : undefined}
               description={content("body")}
               background={section.media[0]}
               alt={text("alt")}
