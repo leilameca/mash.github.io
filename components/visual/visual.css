@@ -10,6 +10,29 @@
 .mash-visual * {
   box-sizing: border-box;
 }
+.mash-visual--home {
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.visual-section.visual-section--editorial {
+  --pad: inherit;
+  background: transparent;
+  color: inherit;
+  overflow-wrap: normal;
+}
+.visual-home-child {
+  position: relative;
+}
+.visual-home-child-control {
+  left: auto;
+  right: 0;
+}
+.visual-home-child:hover > .visual-home-child-control,
+.visual-home-child-control:focus-visible,
+.visual-home-child-control[aria-pressed="true"] {
+  opacity: 1;
+}
 .visual-section {
   --align: var(--visual-align);
   --justify: var(--visual-justify);

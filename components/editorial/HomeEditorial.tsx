@@ -89,7 +89,11 @@ export function HomeLifestyle({
         className="lifestyle-band"
         aria-label={locale === "es" ? "Inspiración exterior" : "Outdoor inspiration"}
       >
-        <div className="lifestyle-band__track" tabIndex={0}>
+        <div
+          className="lifestyle-band__track"
+          style={{ gridTemplateColumns: entries.map(({ image }) => image ? "auto minmax(8rem, 14rem)" : "auto").join(" ") }}
+          tabIndex={0}
+        >
           {entries.map(({ id, label, image }) => (
             <Fragment key={id}>
               <span>{label}</span>

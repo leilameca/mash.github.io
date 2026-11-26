@@ -167,13 +167,13 @@
 }
 
 .home-editorial-frame .lifestyle-band__track {
-  display: flex;
+  display: grid;
   gap: clamp(0.8rem, 2cqw, 1.4rem);
   align-items: center;
   justify-content: space-between;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
+  scrollbar-width: none;
 }
 
 .home-editorial-frame .lifestyle-band__track > span {
@@ -221,9 +221,6 @@
     display: none;
   }
 
-  .home-editorial-frame .lifestyle-band__photo {
-    flex: 0 0 11rem;
-  }
 }
 
 @container (max-width: 640px) {
@@ -236,7 +233,7 @@
     --hero-show-photo: var(--home-show-photo-mobile, var(--home-show-photo, block));
     --hero-align: var(--home-align-mobile, var(--home-align, start));
     --hero-justify: var(--home-justify-mobile, var(--home-justify, start));
-    --hero-title-size: var(--home-title-size-mobile, var(--home-title-size, clamp(2.55rem, 12cqw, 4rem)));
+    --hero-title-size: var(--home-title-size-mobile, var(--home-title-size, clamp(2.65rem, 9cqw, 4.25rem)));
     --hero-height: var(--home-height-mobile, var(--home-height, min(82svh, 680px)));
     --hero-padding: var(--home-padding-mobile, var(--home-padding));
   }
@@ -244,5 +241,22 @@
   .home-editorial-frame .hero-actions {
     display: grid;
     justify-content: stretch;
+  }
+
+  .home-editorial-frame .lifestyle-band__track {
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 0.35rem;
+  }
+
+  .home-editorial-frame .lifestyle-band__photo {
+    flex: 0 0 11rem;
+  }
+}
+
+@container (max-width: 390px) {
+  .home-editorial-frame .hero-copy p:not(.eyebrow) {
+    font-size: 0.95rem;
+    line-height: 1.72;
   }
 }

@@ -15,6 +15,24 @@ const {
 } = loadTs(resolve("lib/visual/history.ts"));
 const { translationFields } = loadTs(resolve("lib/translation/content.ts"));
 const block = (type, id) => registry.newSection(type, id);
+test("restores the original section order once and keeps later Studio arrangements", () => {
+  const sections = [
+    block("navigation", "header"),
+    block("editorial", "legacy-materials"),
+    block("image-text", "legacy-material-one"),
+    block("image-text", "legacy-material-two"),
+    block("editorial", "legacy-benefits"),
+    block("editorial", "legacy-faq"),
+    block("news-list", "legacy-news"),
+    block("footer", "footer"),
+  ];
+  const composition = { schema: 1, sections };
+  const read = (value) => fromSnapshot({ key: "visual.home", value, translations: [] }, 4).layout.sections.map((section) => section.id);
+  assert.deepEqual(read({ composition }).slice(1, 4), [
+    "legacy-benefits", "legacy-faq", "legacy-materials",
+  ]);
+  assert.deepEqual(read({ composition, homeLayout: "editorial" }), sections.map((section) => section.id));
+});
 test("a pending Home composition can inherit only matching, previously approved English", () => {
   const rows = {
     "home.hero": {

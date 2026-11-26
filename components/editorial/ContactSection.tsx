@@ -9,11 +9,13 @@ export function ContactSection({
   site,
   content,
   heading: Heading = "h2",
+  preview = false,
 }: {
   locale: Locale;
   site: SiteChromeContent;
   content: Awaited<ReturnType<typeof getMarketingPageContent>>;
   heading?: "h1" | "h2";
+  preview?: boolean;
 }) {
   return (
     <>
@@ -22,9 +24,9 @@ export function ContactSection({
           <p className="eyebrow">{content.eyebrow}</p>
           <Heading id="contact-section-title">{content.title}</Heading>
           <p>{content.description}</p>
-          <QuoteLink className="button button--gold">
-            {dictionary[locale].common.requestQuote}
-          </QuoteLink>
+          {preview ? <span className="button button--gold">{dictionary[locale].common.requestQuote}</span> : (
+            <QuoteLink className="button button--gold">{dictionary[locale].common.requestQuote}</QuoteLink>
+          )}
         </div>
         <address className="contact-card">
           <a href={site.phoneHref}>{site.phone}</a>
@@ -35,7 +37,7 @@ export function ContactSection({
           <span>{site.location}</span>
         </address>
       </section>
-      <WorkshopLocation locale={locale} map={site.workshop} />
+      <WorkshopLocation locale={locale} map={site.workshop} preview={preview} />
     </>
   );
 }

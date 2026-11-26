@@ -34,6 +34,10 @@ const nextConfig = {
           ]
         : []),
       {
+        source: "/studio-mash/contenido/lienzo",
+        headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }],
+      },
+      {
         source: "/sw.js",
         headers: [
           {

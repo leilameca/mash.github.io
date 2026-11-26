@@ -11,17 +11,19 @@ export function Header({
   locale,
   content,
   previewPath,
+  publicLayout = false,
 }: {
   locale: Locale;
   content: SiteChromeContent;
   previewPath?: string;
+  publicLayout?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
   const nav = useRef<HTMLElement>(null);
   const livePath = usePathname();
-  const preview = previewPath !== undefined;
+  const preview = previewPath !== undefined && !publicLayout;
   const pathname = previewPath ?? livePath;
   const generatedId = useId();
   const navId = preview ? generatedId : "primary-navigation";
@@ -29,10 +31,12 @@ export function Header({
 
   useEffect(() => {
     if (preview) return;
-    const onScroll = () => setIsScrolled(window.scrollY > 24);
+    const win = toggle.current?.ownerDocument.defaultView;
+    if (!win) return;
+    const onScroll = () => setIsScrolled(win.scrollY > 24);
     onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    win.addEventListener("scroll", onScroll, { passive: true });
+    return () => win.removeEventListener("scroll", onScroll);
   }, [preview]);
 
   useEffect(() => {
@@ -41,7 +45,10 @@ export function Header({
 
   useEffect(() => {
     if (!isOpen) return;
-    const mobile = window.matchMedia("(max-width: 920px)");
+    const owner = toggle.current?.ownerDocument;
+    const win = owner?.defaultView;
+    if (!owner || !win) return;
+    const mobile = win.matchMedia("(max-width: 920px)");
     const close = () => setIsOpen(false);
     const escape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -51,9 +58,8 @@ export function Header({
     };
     const outside = (event: PointerEvent) => {
       if (
-        event.target instanceof Node &&
-        !nav.current?.contains(event.target) &&
-        !toggle.current?.contains(event.target)
+        !nav.current?.contains(event.target as Node) &&
+        !toggle.current?.contains(event.target as Node)
       )
         close();
     };
@@ -63,10 +69,10 @@ export function Header({
       if (
         !firstLink ||
         !toggle.current ||
-        getComputedStyle(toggle.current).display === "none"
+        win.getComputedStyle(toggle.current).display === "none"
       )
         return;
-      if (getComputedStyle(firstLink).visibility === "visible") {
+      if (win.getComputedStyle(firstLink).visibility === "visible") {
         firstLink.focus({ preventScroll: true });
       } else {
         focusFrame = requestAnimationFrame(focusMenu);
@@ -74,13 +80,13 @@ export function Header({
     };
     focusFrame = requestAnimationFrame(focusMenu);
     mobile.addEventListener("change", close);
-    document.addEventListener("keydown", escape);
-    document.addEventListener("pointerdown", outside);
+    owner.addEventListener("keydown", escape);
+    owner.addEventListener("pointerdown", outside);
     return () => {
       cancelAnimationFrame(focusFrame);
       mobile.removeEventListener("change", close);
-      document.removeEventListener("keydown", escape);
-      document.removeEventListener("pointerdown", outside);
+      owner.removeEventListener("keydown", escape);
+      owner.removeEventListener("pointerdown", outside);
     };
   }, [isOpen, preview]);
 

@@ -52,17 +52,16 @@ async function main() {
       name: "Propiedades",
       exact: true,
     });
-    const canvas = page.locator(".visual-frame");
-    await canvas.waitFor();
-    await page.waitForFunction(() => {
-      const photo = document.querySelector(".hero-media__image");
-      return photo && photo.complete && photo.naturalWidth > 0;
-    });
+    const frame = page.locator(".visual-frame");
+    await frame.waitFor();
+    const canvas = frame.frameLocator('iframe[title="Lienzo de Inicio"]');
+    await canvas.locator(".hero-media__image").evaluate((photo) => photo.decode());
+    assert.equal(await canvas.locator(".showroom-intro").count(), 1);
     await snap("01-editor-escritorio");
     const hero = canvas.locator("[data-type=hero]").first();
     const heroId = await hero.getAttribute("data-section");
     assert.equal(await hero.locator(".hero-showroom img").count(), 2);
-    assert.equal(await canvas.locator("[data-section=legacy-showroom]").count(), 0);
+    assert.equal(await canvas.locator("section[data-section=legacy-showroom]").count(), 0);
     const initial = await (await page.request.get(origin + "/api/studio-visual?page=home")).json();
     const { layout, es, en, revision } = initial.doc;
     const unchanged = await page.request.post(origin + "/api/studio-visual", {
@@ -167,7 +166,7 @@ async function main() {
     await page.keyboard.press("Home");
     await page.keyboard.press("ArrowRight");
     assert.equal(await range.inputValue(), "1");
-    assert.equal(await canvas.evaluate((el) => el.style.width), "768px");
+    assert.equal(await frame.evaluate((el) => el.style.width), "768px");
     await snap("03-tablet-ajustes");
     await page.getByRole("button", { name: "Móvil", exact: true }).click();
     assert.equal(await range.inputValue(), "50");
@@ -194,27 +193,21 @@ async function main() {
       .getByRole("button", { name: "Previsualizar", exact: true })
       .click();
     const render = page.getByRole("dialog", { name: /Previsualización/ });
-    await render
+    const previewFrame = render.frameLocator('iframe[title="Vista previa de Inicio"]');
+    await previewFrame
       .locator("[data-section=" + heroId + "]")
       .getByRole("heading", { name: text })
       .waitFor();
-    assert.equal(await render.getByRole("link").count(), 0);
+    await previewFrame.locator(".brand-mark").first().click();
+    assert.equal(await previewFrame.locator(".mash-visual").count(), 1);
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: "EN", exact: true }).click();
     await page
       .getByRole("button", { name: "Previsualizar", exact: true })
       .click();
-    await page
-      .getByRole("dialog", { name: /Previsualización/ })
+    await previewFrame
       .locator(".mash-visual[lang=en]")
       .waitFor();
-    assert.equal(
-      await page
-        .getByRole("dialog", { name: /Previsualización/ })
-        .getByRole("link")
-        .count(),
-      0,
-    );
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: "ES", exact: true }).click();
     await push("Publicar", 200);
@@ -222,6 +215,7 @@ async function main() {
     assert.match(await result.text(), new RegExp(text));
     const publicPage = await context.newPage();
     await publicPage.goto(origin + "/es");
+    assert.equal(await publicPage.locator(".showroom-intro").count(), 1);
     assert.equal(
       await publicPage
         .locator("[data-section=" + heroId + "] .hero-title")
@@ -251,6 +245,10 @@ async function main() {
       for (const side of ["left", "right"])
         assert.ok(Math.abs(studioStyle[side] - publicStyle[side]) <= 1, device + " " + side);
       assert.equal(studioStyle.font, publicStyle.font);
+      const introGrid = (root) => root.locator(".showroom-intro").evaluate(
+        (section) => getComputedStyle(section).gridTemplateColumns.split(" ").length,
+      );
+      assert.equal(await introGrid(canvas), await introGrid(publicPage));
       assert.equal(await canvas.locator(".hero-showroom").isVisible(), width > 920);
       assert.equal(await publicPage.locator(".hero-showroom").isVisible(), width > 920);
       if (device === "Tablet") {

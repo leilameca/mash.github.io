@@ -1,8 +1,10 @@
 "use client";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { VisualDocument } from "@/components/visual/VisualDocument";
+import { HomeCanvas } from "./HomeCanvas";
+import type { HomeView } from "@/lib/visual/home";
 import {
   blockRegistry,
   fieldId,
@@ -36,6 +38,7 @@ export type EditorData = {
   publishedRevision: number | null;
   items: VisualItem[];
   chrome: Record<Locale, VisualChrome>;
+  home?: Record<Locale, HomeView>;
 };
 const deviceLabels = {
   desktop: "Escritorio",
@@ -122,13 +125,14 @@ export function VisualEditor({
     setSelected(id);
     if (scroll) {
       setPanel("canvas");
-      requestAnimationFrame(() =>
-        canvas.current
-          ?.querySelector(`[data-section="${CSS.escape(id)}"]`)
-          ?.scrollIntoView({ block: "nearest" }),
-      );
+      requestAnimationFrame(() => {
+        const surface = canvas.current?.querySelector("iframe")?.contentDocument ?? canvas.current;
+        surface?.querySelector(`[data-section="${CSS.escape(id)}"]`)?.scrollIntoView({ block: "nearest" });
+      });
     }
   };
+  const renderCanvas = (surface: ReactNode, title: string) =>
+    page === "home" ? <HomeCanvas title={title} locale={locale}>{surface}</HomeCanvas> : surface;
   const askLeave = () =>
     !dirty ||
     window.confirm("Tienes cambios sin guardar. ¿Salir de esta composición?");
@@ -675,7 +679,7 @@ export function VisualEditor({
             ref={canvas}
             style={{ width: frame, zoom }}
           >
-            <VisualDocument
+            {renderCanvas(<VisualDocument
               doc={doc}
               items={data.items}
               chrome={data.chrome[locale]}
@@ -687,7 +691,8 @@ export function VisualEditor({
               }}
               onText={busy ? undefined : updateText}
               showHidden={showHidden}
-            />
+              home={data.home?.[locale]}
+            />, "Lienzo de Inicio")}
           </div>
         </div>
         <aside className="visual-inspector" aria-label="Propiedades">
@@ -769,13 +774,14 @@ export function VisualEditor({
             {locale.toUpperCase()} · {deviceLabels[device]}
           </span>
           <MeasuredPreview width={frame}>
-            <VisualDocument
+            {renderCanvas(<VisualDocument
               doc={doc}
               items={data.items}
               chrome={data.chrome[locale]}
               locale={locale}
               preview
-            />
+              home={data.home?.[locale]}
+            />, "Vista previa de Inicio")}
           </MeasuredPreview>
         </div>
       </StudioDialog>

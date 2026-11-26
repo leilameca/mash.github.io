@@ -18,6 +18,7 @@ import {
 } from "@/lib/visual/schema";
 import {
   readVisualDraft,
+  readHomeView,
   visualChrome,
   visualItems,
 } from "@/lib/visual/queries";
@@ -45,13 +46,14 @@ export async function GET(req: NextRequest) {
   const page = pageSchema.safeParse(req.nextUrl.searchParams.get("page"));
   if (!page.success) return reply({ error: "Página no válida." }, 400);
   try {
-    const [draft, items, es, en] = await Promise.all([
+    const [draft, items, es, en, home] = await Promise.all([
       readVisualDraft(page.data),
       visualItems(),
       visualChrome("es"),
       visualChrome("en"),
+      page.data === "home" ? Promise.all([readHomeView("es"), readHomeView("en")]) : undefined,
     ]);
-    return reply({ ...draft, items, chrome: { es, en } });
+    return reply({ ...draft, items, chrome: { es, en }, home: home && { es: home[0], en: home[1] } });
   } catch {
     return reply(
       { error: "No pudimos cargar la composición. Intenta de nuevo." },
@@ -155,7 +157,7 @@ export async function POST(req: NextRequest) {
         intent: next.intent,
         data: {
           key: visualKey(next.page),
-          value: { composition: next.layout },
+          value: { composition: next.layout, ...(next.page === "home" ? { homeLayout: "editorial" } : {}) },
         },
         translations: [
           { locale: "es", value: next.es },

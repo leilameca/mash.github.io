@@ -29,6 +29,9 @@ import {
 import "./visual.css";
 import { WorkshopLocation } from "@/components/editorial/WorkshopLocation";
 import { HomeHero, HomeLifestyle } from "@/components/editorial/HomeEditorial";
+import { HomeSection } from "@/components/editorial/HomeSections";
+import { ContactSection } from "@/components/editorial/ContactSection";
+import { homeParent, isOriginalHomeSection, type HomeView } from "@/lib/visual/home";
 import { QuoteLink } from "@/components/QuoteLink";
 import { dictionary } from "@/lib/content";
 
@@ -121,6 +124,7 @@ export function VisualDocument({
   onSelect,
   onText,
   showHidden = false,
+  home,
 }: {
   doc: VisualDocumentData;
   items: VisualItem[];
@@ -131,6 +135,7 @@ export function VisualDocument({
   onSelect?: (id: string) => void;
   onText?: (id: string, field: TextField, text: string) => void;
   showHidden?: boolean;
+  home?: HomeView;
 }) {
   const interactive = Boolean(onSelect);
   const blocks = doc.layout.sections.filter(
@@ -158,10 +163,20 @@ export function VisualDocument({
   const firstHeading = blocks.find(
     (b) => b.visible && doc.es[fieldId(b.id, "title")] && b.type !== "faq",
   )?.id;
+  const attached = new Map<string, VisualSection[]>();
+  if (home) {
+    for (const block of blocks) {
+      const parent = homeParent(block.id);
+      if (parent && isOriginalHomeSection(block) && doc.layout.sections.some(
+        (candidate) => candidate.id === parent && isOriginalHomeSection(candidate),
+      )) attached.set(parent, [...(attached.get(parent) ?? []), block]);
+    }
+  }
   return (
-    <div className="mash-visual" lang={locale}>
+    <div className={home ? "mash-visual mash-visual--home" : "mash-visual"} lang={locale}>
       {blocks.map((section, index) => {
         if (section === showroom) return null;
+        if (home && attached.get(homeParent(section.id) ?? "")?.includes(section)) return null;
         if (doc.page === "home" && isLegacyLifestyle(section)) {
           if (index > 0 && isLegacyLifestyle(blocks[index - 1])) return null;
           const entries = [];
@@ -172,7 +187,7 @@ export function VisualDocument({
               id: block.id,
               image: block.media[0],
               label: onSelect ? (
-                <button className="visual-lifestyle-select" type="button" onClick={() => onSelect(block.id)} aria-pressed={selected === block.id}>{name || "Foto de inspiración"}</button>
+                <button className="visual-lifestyle-select" data-section={block.id} type="button" onClick={() => onSelect(block.id)} aria-pressed={selected === block.id}>{name || "Foto de inspiración"}</button>
               ) : name,
             });
           }
@@ -180,11 +195,11 @@ export function VisualDocument({
         }
         const active = selected === section.id && interactive;
         const text = (field: TextField) => textFor(section, field);
-        const content = (field: TextField) => {
-          if (active && onText && (field === "title" || field === "body"))
+        const contentFor = (part: VisualSection, field: TextField) => {
+          if (interactive && selected === part.id && onText && (field === "title" || field === "body"))
             return (
               <span
-                key={section.id + field + locale}
+                key={part.id + field + locale}
                 className="visual-inline-edit"
                 contentEditable
                 suppressContentEditableWarning
@@ -196,22 +211,23 @@ export function VisualDocument({
                 role="textbox"
                 tabIndex={0}
                 onBlur={(e) =>
-                  onText(section.id, field, e.currentTarget.textContent ?? "")
+                  onText(part.id, field, e.currentTarget.textContent ?? "")
                 }
                 onPaste={(e) => {
                   e.preventDefault();
-                  document.execCommand(
+                  e.currentTarget.ownerDocument.execCommand(
                     "insertText",
                     false,
                     e.clipboardData.getData("text/plain"),
                   );
                 }}
               >
-                {text(field)}
+                {textFor(part, field)}
               </span>
             );
-          return text(field);
+          return textFor(part, field);
         };
+        const content = (field: TextField) => contentFor(section, field);
         const heading = firstHeading === section.id ? "h1" : "h2";
         const Heading = heading;
         const meta = blockRegistry[section.type];
@@ -261,16 +277,23 @@ export function VisualDocument({
           </div>
         );
         let node: ReactNode;
+        const editorial = Boolean(home && (isOriginalHomeSection(section) || section.type === "navigation" || section.type === "footer" || section === homeHero));
         if (section.type === "navigation")
           node = (
             <Header
               locale={locale}
               content={chrome}
               previewPath={localizedPath(locale, pagePaths[doc.page || "home"])}
+              publicLayout={Boolean(home)}
             />
           );
         else if (section.type === "footer")
-          node = <Footer locale={locale} content={chrome} preview />;
+          node = (
+            <>
+              {home?.contact && <ContactSection locale={locale} site={chrome} content={home.contact} preview />}
+              <Footer locale={locale} content={chrome} preview={!home} frame={Boolean(home)} />
+            </>
+          );
         else if (section.type === "spacer")
           node = <div className="visual-spacer" aria-hidden="true" />;
         else if (section === homeHero) {
@@ -289,6 +312,7 @@ export function VisualDocument({
               showroomControl={showroom && onSelect && (
                 <button
                   type="button"
+                  data-section={showroom.id}
                   className="visual-select-section visual-select-section--showroom"
                   aria-pressed={selected === showroom.id}
                   onClick={(event) => {
@@ -319,6 +343,23 @@ export function VisualDocument({
                   )}
                 </>
               }
+            />
+          );
+        }
+        else if (home && isOriginalHomeSection(section) && !homeParent(section.id)) {
+          if (section.id === "legacy-news" && !home.news.length && !interactive) return null;
+          node = (
+            <HomeSection
+              section={section}
+              parts={attached.get(section.id) ?? []}
+              view={home}
+              locale={locale}
+              preview={preview}
+              selected={selected}
+              content={contentFor}
+              text={textFor}
+              onSelect={onSelect}
+              slugs={cards.map((card) => card.slug)}
             />
           );
         }
@@ -460,7 +501,7 @@ export function VisualDocument({
             data-section={section.id}
             data-type={section.type}
             aria-label={section.id === "legacy-news" ? text("title") : undefined}
-            className={`visual-section${active ? " visual-section--active" : ""}${!section.visible ? " visual-section--hidden" : ""}`}
+            className={`visual-section${editorial && !homeParent(section.id) ? " visual-section--editorial" : ""}${active ? " visual-section--active" : ""}${!section.visible ? " visual-section--hidden" : ""}`}
             style={style(section)}
             onClick={onSelect ? () => onSelect(section.id) : undefined}
           >
@@ -484,6 +525,7 @@ export function VisualDocument({
       {doc.page === "contact" && !mapSection && (
         <WorkshopLocation locale={locale} map={chrome.workshop} preview={preview} />
       )}
+      {!preview && home?.contact && <ContactSection locale={locale} site={chrome} content={home.contact} />}
     </div>
   );
 }

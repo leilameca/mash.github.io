@@ -9,7 +9,11 @@ import {
   type Publication,
 } from "@/lib/supabase/published";
 import { getSiteChromeContent } from "@/lib/supabase/site-content";
+import { getMarketingPageContent } from "@/lib/supabase/site-content";
+import { getCatalogCollections, getCatalogProducts, getCatalogProjects } from "@/lib/supabase/catalog";
+import { ContentError } from "@/lib/supabase/errors";
 import type { Locale } from "@/lib/i18n";
+import type { HomeView } from "./home";
 import {
   adaptLegacy,
   fromSnapshot,
@@ -56,6 +60,26 @@ function publicHomeSources(rows: Publication[]): LegacyRows {
       }),
   );
 }
+
+export async function readHomeBaseline() {
+  const sources = publicHomeSources(await readPublished("site"));
+  const doc = adaptLegacy("home", sources);
+  return recoverPublishedHomeEnglish({ ...doc, en: {} }, sources);
+}
+
+export const readHomeView = cache(async (locale: Locale): Promise<HomeView> => {
+  const [collections, products, projects, news, contact] = await Promise.all([
+    getCatalogCollections(),
+    getCatalogProducts(locale),
+    getCatalogProjects(locale),
+    getNews(locale),
+    getMarketingPageContent("contact", locale).catch((error: unknown) => {
+      if (error instanceof ContentError && error.code === "missing") return null;
+      throw error;
+    }),
+  ]);
+  return { collections, products, projects, news, contact };
+});
 
 export const visualItems = cache(async (): Promise<VisualItem[]> => {
   const groups = await Promise.all(

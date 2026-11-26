@@ -1,5 +1,6 @@
 import { dictionary } from "@/lib/content";
 import { legacyLifestylePhotos } from "@/lib/lifestyle-images";
+import { restoreOriginalHomeOrder } from "./home";
 import type { Locale } from "@/lib/i18n";
 import type { ContentSnapshot } from "@/lib/supabase/published";
 import {
@@ -24,7 +25,19 @@ export function fromSnapshot(
   const layout = layoutSchema.safeParse(snapshot.value?.composition);
   if (!layout.success) return null;
   const page = pageSchema.catch("home").parse(snapshot.key?.slice(7));
-  const sections = layout.data.sections.map((section) => {
+  const ordered = page === "home" && snapshot.value?.homeLayout !== "editorial"
+    ? restoreOriginalHomeOrder(layout.data.sections)
+    : layout.data.sections;
+  const sections = ordered.map((section) => {
+    if (
+      ordered !== layout.data.sections &&
+      section.id === "legacy-hero" &&
+      section.tablet.titleSize === 62 &&
+      Object.keys(section.tablet).length === 1
+    ) {
+      // Restore the original responsive typography from the prior Home release.
+      return { ...section, tablet: {} };
+    }
     if (page !== "home" || section.type !== "gallery" || section.media.length)
       return section;
     const slot = /^legacy-lifestyle-(one|two|three)$/.exec(section.id)?.[1] as
@@ -197,7 +210,7 @@ export function adaptLegacy(
           "legacy-lifestyle-" + word.toLowerCase(),
           key,
           { title: "lifestyleLabel" + word },
-          [home["lifestyleImage" + word]],
+          [home["lifestyleImage" + word] ?? legacyLifestylePhotos[word.toLowerCase() as keyof typeof legacyLifestylePhotos]],
           opts("lifestyle"),
         );
     });
@@ -215,7 +228,7 @@ export function adaptLegacy(
       key,
       {},
       [home.projectsImage],
-      opts("projects"),
+      opts("collections"),
     );
     add(
       "projects",
@@ -303,5 +316,14 @@ export function adaptLegacy(
     );
   }
   sections.push(newSection("footer", "footer"));
-  return { layout: { schema: 1, sections }, page, es, en, revision: 0 };
+  return {
+    layout: {
+      schema: 1,
+      sections: page === "home" ? restoreOriginalHomeOrder(sections) : sections,
+    },
+    page,
+    es,
+    en,
+    revision: 0,
+  };
 }

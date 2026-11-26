@@ -2,6 +2,7 @@
 import { useId, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
+import { homeParent, isOriginalHomeSection } from "@/lib/visual/home";
 import {
   blockRegistry,
   effectiveDesign,
@@ -105,7 +106,7 @@ export function Inspector({
   items,
   locale,
   device,
-  tab,
+  tab: requestedTab,
   setTab,
   disabled,
   update,
@@ -133,6 +134,14 @@ export function Inspector({
   const [replace, setReplace] = useState<number | null>(null);
   const baseId = useId();
   const info = blockRegistry[section.type];
+  const fixedLayout = doc.page === "home" && (
+    isOriginalHomeSection(section) ||
+    section.id === "legacy-showroom" ||
+    /^legacy-lifestyle-(one|two|three)$/.test(section.id)
+  );
+  const tab = fixedLayout ? "content" : requestedTab;
+  const maxPhotos = fixedLayout && section.id === "legacy-showroom" ? 2 :
+    fixedLayout && (homeParent(section.id) || section.id.startsWith("legacy-lifestyle-")) && info.photos ? 1 : info.photos;
   const target =
     tab === "responsive"
       ? device === "desktop"
@@ -146,7 +155,7 @@ export function Inspector({
   const available = info.controls.filter(
     (key) => target === "design" || Object.hasOwn(responsiveDesign.shape, key),
   );
-  const remaining = info.photos - section.media.length;
+  const remaining = maxPhotos - section.media.length;
   const availableItems = items.filter((i) => i.kind === info.entity);
   const modify = (key: keyof Design, value: string | number | boolean) => {
     groupUpdate(section.id + target + key, (item) => ({
@@ -172,7 +181,7 @@ export function Inspector({
       const next = [...item.media];
       if (indices !== null) next.splice(indices, 1, ...paths.slice(0, 1));
       else next.push(...paths);
-      return { ...item, media: [...new Set(next)].slice(0, info.photos) };
+      return { ...item, media: [...new Set(next)].slice(0, Math.max(item.media.length, maxPhotos)) };
     });
   }
   if (info.protected)
@@ -199,7 +208,7 @@ export function Inspector({
         role="group"
         aria-label="Grupos de propiedades"
       >
-        {(["content", "design", "responsive"] as const).map((key) => (
+        {(fixedLayout ? ["content"] as const : ["content", "design", "responsive"] as const).map((key) => (
           <button
             type="button"
             key={key}

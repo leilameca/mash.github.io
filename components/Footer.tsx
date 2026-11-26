@@ -8,10 +8,12 @@ export function Footer({
   locale,
   content,
   preview = false,
+  frame = false,
 }: {
   locale: Locale;
   content: SiteChromeContent;
   preview?: boolean;
+  frame?: boolean;
 }) {
   const local = (href: string, label: string) =>
     preview ? (
@@ -89,7 +91,7 @@ export function Footer({
       </div>
       <div className="footer-bottom section-shell">
         <p>{content.copyright}</p>
-        {!preview && <PwaInstall locale={locale} />}
+        {!preview && !frame && <PwaInstall locale={locale} />}
       </div>
     </footer>
   );

@@ -9,10 +9,12 @@ export function ProductCard({
   product,
   locale,
   priority = false,
+  preview = false,
 }: {
   product: Product;
   locale: Locale;
   priority?: boolean;
+  preview?: boolean;
 }) {
   const t = dictionary[locale].common;
   const catalogImage = product.galleryVariants?.[0]?.catalog;
@@ -45,7 +47,9 @@ export function ProductCard({
         >
           {t.viewDetails}
         </Link>
-        <AddToQuote slug={product.slug} name={product.name} locale={locale} />
+        {preview ? (
+          <span className="quote-selection-add">{locale === "es" ? "+ Agregar a cotización" : "+ Add to quote"}</span>
+        ) : <AddToQuote slug={product.slug} name={product.name} locale={locale} />}
       </div>
     </article>
   );
